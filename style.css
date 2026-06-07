@@ -1137,6 +1137,24 @@ body {
   font-size: 0.95rem;
 }
 
+.detail-link-prominent {
+  display: block;
+  text-align: center;
+  background: var(--secondary);
+  color: white;
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: background var(--transition);
+}
+.detail-link-prominent:hover {
+  background: var(--secondary-light);
+  text-decoration: none;
+}
+
 .recipe-detail-actions {
   border-top: 1px solid var(--warm);
   padding-top: 20px;
@@ -1146,6 +1164,206 @@ body {
 .dietary-pill {
   background: #eaf4ea;
   color: #2d6a2d;
+}
+
+/* ---- iOS-style toggle ---- */
+
+.units-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.units-toggle-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 46px;
+  text-align: right;
+  user-select: none;
+}
+
+.ios-toggle {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+}
+
+.ios-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.ios-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--warm);
+  border-radius: 31px;
+  transition: background 0.25s ease;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.ios-toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 25px;
+  height: 25px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.22), 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+
+.ios-toggle input:checked + .ios-toggle-track {
+  background: var(--secondary);
+}
+
+.ios-toggle input:checked + .ios-toggle-track::after {
+  transform: translateX(20px);
+}
+
+/* ---- Shopping list ---- */
+
+.planner-shopping-cta {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.shopping-content {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.shopping-section {
+  margin-bottom: 28px;
+}
+
+.shopping-subhead {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--warm);
+}
+
+.shopping-list {
+  list-style: none;
+  padding: 0;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--warm);
+}
+
+.shopping-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--secondary);
+  cursor: pointer;
+}
+
+.shopping-item label {
+  flex: 1;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.shopping-item.checked label {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+.shopping-item .chip-x {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 6px;
+}
+.shopping-item .chip-x:hover { color: var(--secondary); }
+
+.shopping-missing-section {
+  background: var(--bg-card);
+  border: 1px solid var(--warm);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.missing-recipe {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--warm);
+}
+.missing-recipe:last-child { border-bottom: none; }
+
+.missing-recipe-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.missing-recipe-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.missing-recipe-link {
+  color: var(--secondary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.missing-recipe-textarea {
+  width: 100%;
+  border: 1px solid var(--warm);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  margin-bottom: 8px;
+}
+
+.shopping-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.shopping-add-row .search-input { flex: 1; }
+
+.shopping-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.shopping-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0;
 }
 
 /* ---- Responsive ---- */

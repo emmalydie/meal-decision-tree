@@ -114,6 +114,60 @@
 
         <h3 class="planner-subhead">Your week</h3>
         <div class="week-grid" id="week-grid"></div>
+
+        <div class="planner-shopping-cta">
+          <button class="btn btn-primary" id="btn-make-shopping">🛒 Make shopping list</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-shopping" class="screen">
+      <div class="shopping-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-shopping-back" aria-label="Go back">&larr;</button>
+          <h2 class="browse-title">Shopping List</h2>
+          <label class="units-toggle-wrap" title="Switch between metric and imperial">
+            <span class="units-toggle-label" id="units-toggle-label">Metric</span>
+            <span class="ios-toggle">
+              <input type="checkbox" id="toggle-shopping-units">
+              <span class="ios-toggle-track"></span>
+            </span>
+          </label>
+        </div>
+
+        <p class="shopping-empty" id="shopping-empty" style="display:none;">
+          Nothing planned yet. Drag some recipes onto your week first.
+        </p>
+
+        <section class="shopping-section shopping-missing-section" id="shopping-missing" style="display:none;">
+          <h3 class="shopping-subhead">These recipes need their ingredients</h3>
+          <p class="planner-hint">We don't have the full ingredients for these. Open each recipe, copy its ingredients, and paste them in below — we'll remember them next time.</p>
+          <div id="shopping-missing-list"></div>
+        </section>
+
+        <section class="shopping-section" id="shopping-main-section" style="display:none;">
+          <h3 class="shopping-subhead">Shopping list</h3>
+          <ul class="shopping-list" id="shopping-main-list"></ul>
+        </section>
+
+        <section class="shopping-section" id="shopping-staples-section" style="display:none;">
+          <h3 class="shopping-subhead">Staples <span class="planner-hint">— check what you already have</span></h3>
+          <ul class="shopping-list" id="shopping-staples-list"></ul>
+        </section>
+
+        <section class="shopping-section" id="shopping-extras-section">
+          <h3 class="shopping-subhead">My extra items</h3>
+          <ul class="shopping-list" id="shopping-extras-list"></ul>
+          <div class="shopping-add-row">
+            <input type="text" id="shopping-extra-input" class="search-input" placeholder="Add an item (e.g. bin bags)…">
+            <button class="btn btn-secondary btn-small" id="btn-shopping-add-extra">Add item</button>
+          </div>
+        </section>
+
+        <div class="shopping-actions">
+          <button class="btn btn-primary" id="btn-shopping-copy">Copy list</button>
+          <button class="btn btn-ghost" id="btn-shopping-clear">Uncheck all</button>
+        </div>
       </div>
     </div>
 

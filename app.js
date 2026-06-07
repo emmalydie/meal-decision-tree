@@ -6,8 +6,8 @@
   // Common staples ignored when matching recipes by shared ingredients,
   // so leftover suggestions stay meaningful.
   var STAPLES = [
-    "olive oil", "oil", "garlic", "salt", "pepper", "black pepper",
-    "onion", "onions", "butter", "sugar", "water", "eggs", "herbs"
+    "olive oil", "oil", "salt", "pepper", "black pepper",
+    "butter", "sugar", "water", "eggs", "herbs"
   ];
 
   var BUILTIN_RECIPES = [
@@ -1027,6 +1027,731 @@
       "While the pasta water comes to a boil, place the spinach, basil, oil, miso, garlic, and lemon zest and juice in a blender. Blend to a bright green purée. Taste and adjust seasoning with salt and a few grinds of pepper, then blend again.",
       "Transfer the purée to a large bowl big enough to toss all the pasta. Add the pasta and peas, and toss until coated. Season to taste with salt and pepper. Add the Parmesan and more basil leaves. Toss once more before serving."
     ]
+  },
+  {
+    "id": "nyt-miso-honey-chicken-asparagus",
+    "name": "Miso-Honey Chicken and Asparagus",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["quick-fix"],
+    "time": 20,
+    "meal": "dinner",
+    "dietary": ["dairy-free"],
+    "keyIngredients": ["chicken thighs", "asparagus", "white miso", "honey", "soy sauce", "ginger", "scallions"],
+    "pantryFriendly": false,
+    "season": ["spring"],
+    "description": "A fast sheet-pan dinner where chicken thighs are marinated in a punchy miso-honey glaze loaded with garlic, ginger and hot sauce, then broiled alongside asparagus until charred. The reserved marinade doubles as a sauce to spoon over everything.",
+    "notes": "Use tamari to keep it gluten-free. Reduce the soy sauce if you're sensitive to salt — some find it too salty as written. Broccolini works in place of asparagus. Don't marinate longer than 30 minutes or the chicken may dry out. Serve over steamed rice.",
+    "ingredients": [
+      "3 tablespoons white miso",
+      "3 tablespoons mild honey",
+      "3 tablespoons soy sauce or tamari",
+      "1 tablespoon rice vinegar",
+      "2 teaspoons finely grated fresh ginger",
+      "2 teaspoons finely grated garlic",
+      "2 teaspoons chile-garlic sauce or other hot sauce",
+      "1 tablespoon plus 2 teaspoons neutral oil",
+      "1½ to 2 pounds boneless, skinless chicken thighs",
+      "1 large bunch asparagus (about 1 pound), trimmed",
+      "Salt and pepper",
+      "2 scallions, thinly sliced",
+      "Cooked rice (optional), for serving"
+    ],
+    "method": [
+      "Make the marinade: In a bowl, whisk together the miso, honey, soy sauce, rice vinegar, ginger, garlic, chile-garlic sauce, 1 tablespoon oil and 1 tablespoon water. Refrigerate half the marinade for serving.",
+      "Place the chicken in a shallow dish or zip-top bag and pour the remaining marinade over the top. Toss until coated and let marinate in the refrigerator for up to 30 minutes. (A longer marinade may dry out the chicken.)",
+      "When ready to cook, heat the broiler with a rack set 6 inches below it. Line a large baking sheet with aluminum foil. Remove the chicken from the marinade, scraping off and discarding any excess. Place the chicken in a single layer on one side of the baking sheet, flatter side up. Place the asparagus on the other side, drizzle with remaining oil, season and toss to coat.",
+      "Broil until the chicken is cooked through with some charred spots and the asparagus is browned, about 10 minutes.",
+      "To serve, top the chicken with a drizzle of the reserved marinade and a sprinkle of scallions. Serve with rice, if desired."
+    ]
+  },
+  {
+    "id": "nyt-lemony-greek-chicken-spinach-potato-stew",
+    "name": "Lemony Greek Chicken, Spinach and Potato Stew",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "medium",
+    "mood": ["comforting", "fresh"],
+    "time": 35,
+    "meal": "dinner",
+    "dietary": ["gluten-free"],
+    "keyIngredients": ["ground chicken", "yukon gold potatoes", "spinach", "lemon", "dill", "garlic", "feta"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A brothy, one-pot meal-in-a-bowl stew brightened with lemon, garlic and lots of herbs. Ground chicken delivers big flavor fast, with potatoes and spinach simmered until tender and finished with crumbled feta and crushed pita chips.",
+    "notes": "Ground turkey or pork work just as well. Mature or frozen spinach is better than baby spinach here (less tannic); kale is another option. Swap dill for parsley or mint if preferred. Some find 1 tsp red-pepper flakes too spicy — reduce to taste. Great leftovers. Skip the pita chips to keep it gluten-free.",
+    "ingredients": [
+      "¼ cup extra-virgin olive oil",
+      "1 red or yellow onion, finely chopped",
+      "8 large garlic cloves, smashed and finely chopped",
+      "1½ teaspoons coarse kosher salt, plus more to taste",
+      "1 pound ground chicken",
+      "1 heaping tablespoon roughly chopped fresh rosemary (or 1½ teaspoons dried rosemary)",
+      "1½ teaspoons dried oregano",
+      "1 teaspoon red-pepper flakes",
+      "Black pepper",
+      "1½ pounds Yukon gold potatoes (about 3 medium), scrubbed and chopped into ½-inch chunks",
+      "6 cups chicken broth",
+      "Juice of 1 large lemon (about ¼ cup juice)",
+      "1 (8-ounce) bunch mature spinach, stems included, chopped, or 1½ cups frozen leaf spinach",
+      "¼ to ⅓ cup lightly packed roughly chopped dill",
+      "Crumbled feta and crushed pita chips, for topping"
+    ],
+    "method": [
+      "In a large pot or Dutch oven, warm the oil over high heat. Add the onion, garlic and salt and cook, stirring, until softened and just starting to brown, 5 minutes. (Decrease the heat to medium-high if necessary to prevent scorching.)",
+      "Decrease the heat to medium-high and add the chicken, rosemary, oregano, red-pepper flakes and several generous grinds of black pepper. Cook, breaking up the chicken into crumbles, until it starts to lose its pink translucency, about 2 minutes. Add the potatoes and stir to combine. Add the chicken broth and half the lemon juice, scraping up any browned bits. Bring to a rolling boil, then lower the heat to maintain a very brisk simmer. Simmer until the potatoes are nearly tender, 15 minutes.",
+      "Add the spinach and dill, to taste. Continue to simmer briskly until the potatoes are tender, about 5 minutes more. Taste and add some or all of the remaining lemon juice, plus more salt and pepper if desired. Serve in bowls topped with feta and crushed pita chips."
+    ]
+  },
+  {
+    "id": "nyt-lemony-chicken-feta-meatball-soup",
+    "name": "Lemony Chicken-Feta Meatball Soup With Spinach",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "low",
+    "mood": ["comforting", "fresh"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["ground chicken", "feta", "rolled oats", "spinach", "dill", "lemon", "turmeric"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "Light, tender chicken-feta-and-dill meatballs swim in a lemony, spinach-filled broth. Rolled oats stand in for breadcrumbs in the meatballs, and a little more simmered in the broth thickens it for a comforting yet bright one-pot meal.",
+    "notes": "Ground turkey works too (dark meat is best for juiciness). Swap dill for another herb if you're not a fan. For extra brightness, squeeze fresh lemon over leftovers. Some cooks swap the broth oats for 1 cup orzo and bump the broth to 6 cups. Uses oats, so not gluten-free unless using certified GF oats.",
+    "ingredients": [
+      "1 pound ground chicken or turkey, preferably dark meat",
+      "½ cup crumbled feta",
+      "¾ cup old-fashioned rolled oats",
+      "1 small red onion, halved (½ diced, and ½ grated, then squeezed to remove excess liquid)",
+      "⅓ packed cup fresh dill leaves and fine stems, finely chopped",
+      "1 tablespoon ground cumin",
+      "½ teaspoon plus 1 tablespoon ground turmeric",
+      "Kosher salt and black pepper",
+      "3 tablespoons olive oil",
+      "½ teaspoon red-pepper flakes, plus more for serving",
+      "4 cups low-sodium chicken broth or water",
+      "4 packed cups baby spinach (about 5 ounces)",
+      "2 lemons (1 juiced and 1 cut into wedges for serving)"
+    ],
+    "method": [
+      "In a medium bowl, combine the chicken, feta, ¼ cup oats, the grated onion, most of the dill (reserve about 2 tablespoons for garnish), the cumin, ½ teaspoon turmeric and 1 teaspoon salt. Gently combine without overworking the meat. With lightly wet palms, shape into small balls a little smaller than a golf ball, about 1½ inches. (You'll have about 25.)",
+      "Heat the oil in a large Dutch oven or wide pot over medium until shimmering. Add the diced onion, season with salt, and cook until it begins to soften, about 2 minutes. Add the remaining 1 tablespoon turmeric and the red-pepper flakes, and stir until fragrant, about 30 seconds. Push the onions to the sides, then add the meatballs (they'll be close together, that's OK). Cook until browned on two sides, 5 to 7 minutes total.",
+      "Pour in the broth and remaining ½ cup oats, then gently tilt the pot side to side to distribute the oats without disturbing the meatballs. Bring to a gentle boil, then reduce the heat to maintain an active simmer. Season with salt. Cook, gently stirring occasionally so nothing sticks, until the oats have softened and the meatballs are cooked through, about 4 minutes more.",
+      "Stir in the spinach and lemon juice until the spinach is wilted, about 2 minutes more. Adjust the seasoning to taste. Spoon into bowls, top with pepper and the remaining dill. Serve with lemon wedges."
+    ]
+  },
+  {
+    "id": "nyt-spicy-turkey-stir-fry-garlic-ginger",
+    "name": "Spicy Turkey Stir-Fry With Crisp Garlic and Ginger",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["quick-fix", "adventurous"],
+    "time": 25,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["ground turkey", "garlic", "ginger", "fish sauce", "lime", "scallions", "cilantro", "chile"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A fast, larb-inspired stir-fry packed with umami from fish sauce and soy, plus heat from red-pepper flakes and fresh chile. Crisp fried garlic and ginger crown deeply browned ground turkey, finished with lime and a shower of fresh herbs.",
+    "notes": "Let the turkey get deeply brown — don't stir it too much. Ground pork works in place of turkey (dark meat turkey is juiciest). Serve over rice for a hearty meal or crisp lettuce for something lighter. Use tamari instead of soy sauce to keep it strictly gluten-free. Adjust lime, chile and soy to taste.",
+    "ingredients": [
+      "2 tablespoons neutral oil, such as safflower or grapeseed",
+      "4 garlic cloves, thinly sliced",
+      "1 (2-inch) knob ginger, cut into matchsticks",
+      "Fine sea salt",
+      "2 tablespoons coconut oil or more neutral oil",
+      "3 scallions, white and green parts separated, thinly sliced",
+      "¼ teaspoon red-pepper flakes, plus more to taste",
+      "1 pound ground turkey, preferably dark meat (or use ground pork)",
+      "2 tablespoons lime juice, plus more to taste",
+      "1 tablespoon fish sauce",
+      "½ teaspoon soy sauce, plus more to taste",
+      "½ teaspoon sugar or honey (optional)",
+      "Cooked sticky or white rice, for serving",
+      "⅔ cup cilantro leaves and tender stems, for serving",
+      "⅓ cup torn basil leaves (or use more cilantro), for serving",
+      "1 fresh bird's-eye or serrano chile, thinly sliced, for serving"
+    ],
+    "method": [
+      "In a cold 12-inch skillet, combine the neutral oil, garlic and ginger. Place over medium heat until sizzling, then continue to cook, stirring frequently, until the garlic and ginger are golden brown, 5 to 7 minutes. Transfer with a slotted spoon to a paper towel-lined plate and sprinkle lightly with salt.",
+      "Add the coconut oil to the pan, then stir in the scallion whites and cook until starting to brown, about 2 minutes. Stir in the red-pepper flakes and cook for 1 minute.",
+      "Stir in the turkey, raise the heat to medium-high, and cook, breaking up the meat with a spoon, until golden and crisp, about 7 minutes. Don't stir too much, so it can turn deep brown.",
+      "Remove the pan from the heat and stir in the lime juice, fish sauce and soy sauce. Taste and add more lime juice, red-pepper flakes, soy sauce, and sugar or honey if you like.",
+      "Gently mix about two-thirds of the fried garlic and ginger into the turkey. Serve over rice, topped with cilantro, basil, scallion greens and fresh chile, and garnished with the remaining fried ginger and garlic."
+    ]
+  },
+  {
+    "id": "nyt-thai-inspired-chicken-meatball-soup",
+    "name": "Thai-Inspired Chicken Meatball Soup",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["comforting"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["ground chicken", "coconut milk", "ginger", "cilantro", "fish sauce", "spinach", "lime", "jalapeño"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A reviving, cozy one-pot soup of ginger-scented chicken-cilantro meatballs simmered in a fragrant coconut milk broth inspired by tom kha gai. A heap of spinach adds color and a squeeze of lime brings brightness. Serve over rice to make it a full meal.",
+    "notes": "Emma's tweaks: double the broth, use ground pork instead of chicken, double the garlic, double the lime juice, and add lime zest to the meatballs. Brothy, so serve over rice or another grain. If meatballs are falling apart, mix in an egg and ½ cup panko (or bake them at 425°F for ~20 minutes). Double the jalapeño for more heat. Generously serves 6. Use gluten-free fish sauce to keep it strictly gluten-free. Great leftovers and kid-friendly.",
+    "ingredients": [
+      "1 (4-inch) piece fresh ginger, peeled",
+      "6 garlic cloves, peeled",
+      "1 jalapeño",
+      "2 pounds ground chicken",
+      "1 large bunch cilantro, leaves and stems finely chopped, a few whole leaves reserved for serving",
+      "3 tablespoons fish sauce",
+      "Kosher salt",
+      "2 tablespoons vegetable or coconut oil, plus more as needed",
+      "2 cups chicken broth",
+      "1 (14-ounce) can full-fat coconut milk",
+      "½ teaspoon granulated sugar",
+      "5 ounces baby spinach",
+      "1 tablespoon lime juice, plus lime wedges for serving",
+      "Steamed white or brown rice, for serving"
+    ],
+    "method": [
+      "Using the small holes of a box grater or a Microplane, grate the ginger, garlic and jalapeño (or finely chop by hand). Transfer half to a large bowl and set the rest aside. To the large bowl, add the chicken, finely chopped cilantro, 2 tablespoons fish sauce and 1 teaspoon salt. Combine with your hands or a fork but do not overmix.",
+      "Form into 2-inch meatballs (about 2 ounces each). In a large Dutch oven or pot, heat the oil over medium-high. Working in batches, add the meatballs in a single layer and cook, flipping halfway, until golden brown on two sides, 5 to 8 minutes. Transfer to a plate and repeat, adding oil as needed.",
+      "Once all the meatballs are out of the pot, if the oil is burned, wipe it out and add a bit more. Reduce the heat to medium, add the reserved ginger mixture and sauté until fragrant, about 1 minute. Add the chicken broth, coconut milk, sugar and the remaining 1 tablespoon fish sauce, and bring to a simmer. Add the meatballs and any juices, and simmer until the flavors come together and the meatballs are cooked through, 5 to 8 minutes.",
+      "Remove from heat and stir in the spinach and lime juice. Divide rice among bowls, then top with meatballs, broth and cilantro. Serve with lime wedges."
+    ]
+  },
+  {
+    "id": "nyt-italian-wedding-soup",
+    "name": "Italian Wedding Soup",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "italian",
+    "effort": "high",
+    "mood": ["comforting"],
+    "time": 75,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["ground beef", "ground pork", "parmesan", "carrots", "celery", "spinach", "small pasta", "chicken broth"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "The Italian-American classic — mini beef-and-pork meatballs, small pasta and greens simmered in savory chicken broth and topped with Parmesan. The name comes from a mistranslation of 'minestra maritata,' a soup in which meat and vegetables are 'married' together.",
+    "notes": "Emma's tweak: bake the meatballs in the oven instead of pan-frying (try 350°F for ~15 minutes). Cook the pasta separately and add per bowl so it doesn't go mushy in leftovers. Escarole works in place of spinach. Freezer-friendly for up to 3 months. The pasta keeps absorbing liquid as it sits, so add broth when reheating. Forming ~80 mini meatballs is the time sink — the 15-min prep estimate is optimistic.",
+    "ingredients": [
+      "For the meatballs:",
+      "1 large egg",
+      "½ pound ground beef",
+      "½ pound ground pork",
+      "½ cup Italian bread crumbs or panko",
+      "⅓ cup grated Parmesan",
+      "3 tablespoons chopped fresh parsley",
+      "2 large garlic cloves, minced (about 1 tablespoon)",
+      "1 teaspoon dried oregano",
+      "1 teaspoon kosher salt (such as Diamond Crystal)",
+      "½ teaspoon black pepper",
+      "Olive oil, for forming the meatballs",
+      "For the soup:",
+      "3 tablespoons olive oil",
+      "1 large yellow onion, chopped (about 2 cups)",
+      "3 medium carrots, diced (about 2 cups)",
+      "2 to 3 large celery ribs, diced (about 1½ cups)",
+      "2 large garlic cloves, minced (about 1 tablespoon)",
+      "Kosher salt (such as Diamond Crystal) and black pepper",
+      "8 cups (2 quarts) chicken broth, plus more as needed",
+      "½ cup acini di pepe, ditalini or orzo",
+      "3 cups packed baby spinach",
+      "Grated Parmesan, for serving"
+    ],
+    "method": [
+      "Make the meatballs: Crack the egg into a large bowl and beat it lightly with a fork. Add the beef, pork, bread crumbs, Parmesan, parsley, garlic, oregano, salt and pepper. Mix gently but thoroughly until incorporated. Coat your hands with olive oil, then form small meatballs using 1 heaping teaspoon of mixture per meatball; transfer to a plate or sheet pan. You should have about 80 (1-inch) meatballs.",
+      "Make the soup: In a large pot or Dutch oven, heat the olive oil over medium heat. When hot, fry the meatballs in 2 batches, turning occasionally, until mostly browned all over, 3 to 4 minutes. Transfer to a paper towel-lined plate.",
+      "Add the onion, carrots and celery to the pot and cook, stirring occasionally, until crisp-tender, about 10 minutes. Add the garlic, 1 teaspoon salt (or 2 teaspoons if using low-sodium broth) and ½ teaspoon black pepper. Cook until the garlic is fragrant, about 1 minute.",
+      "Return the meatballs to the pot, add the broth and bring to a simmer over medium-high heat. Stir in the pasta, lower the heat and simmer, stirring occasionally, until the pasta is tender, about 10 minutes.",
+      "Turn off the heat and stir in the spinach until wilted. Taste and season with salt and pepper if needed (the broth should taste pleasantly salty). Serve hot, topped with Parmesan. The pasta keeps absorbing liquid as it sits, so add broth when reheating. Keeps up to 5 days refrigerated or 3 months frozen."
+    ]
+  },
+  {
+    "id": "nyt-coconut-fish-tomato-bake",
+    "name": "Coconut Fish and Tomato Bake",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["fresh", "quick-fix"],
+    "time": 20,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["white fish", "coconut milk", "cherry tomatoes", "ginger", "turmeric", "lime", "cilantro"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "A fast sheet-pan dinner where fish fillets are marinated in a coconut-milk dressing infused with garlic, ginger, turmeric and lime, then roasted and broiled with cherry tomatoes that turn jammy and lend their juices to a silky pan sauce. Inspired by a southern Thai way of cooking fish.",
+    "notes": "Works with any fish that looks good — snapper, haddock, striped bass, fluke, sablefish or salmon. Halve the tomatoes so they don't burst in the oven. Add a handful of spinach at the broiling stage for an easy green side. Serve over rice or with crusty bread to sop up the sauce. Time excludes 15–30 min marinating.",
+    "ingredients": [
+      "¾ cup unsweetened coconut milk",
+      "1 (1-inch) piece fresh ginger, scrubbed and finely grated",
+      "1 garlic clove, finely grated",
+      "½ teaspoon ground turmeric",
+      "½ teaspoon red-pepper flakes",
+      "1 tablespoon honey",
+      "Kosher salt",
+      "2 limes",
+      "½ cup chopped cilantro",
+      "4 (6-ounce) fish fillets, such as snapper, haddock, striped bass, fluke, sablefish or salmon, skin on or off",
+      "2 pints cherry or grape tomatoes",
+      "3 tablespoons olive oil"
+    ],
+    "method": [
+      "In a large bowl, whisk together the coconut milk, ginger, garlic, turmeric, red-pepper flakes, honey and 1 teaspoon salt. Zest and juice 1 lime directly into the mixture. Stir in ¼ cup chopped cilantro.",
+      "Add the fish fillets and turn to coat. Marinate in the refrigerator for 15 to 30 minutes.",
+      "Meanwhile, adjust an oven rack to the lower-middle position and another to the position closest to the broiler. Heat oven to 425 degrees.",
+      "Place the tomatoes on a large sheet pan. Drizzle with 2 tablespoons olive oil, season with salt and toss to coat. Nestle the marinated fish between the tomatoes and spoon all the marinade over the fish. Drizzle 1 tablespoon oil over the fish. Roast on the lower-middle rack until the surface of the fish is opaque but the center is not cooked through, 8 to 10 minutes. Remove the pan and heat the broiler to high.",
+      "Move the pan to the broiler and finish cooking, rotating once, until the fish is tender and the tomatoes are just beginning to brown in spots, 5 to 6 minutes. Slice the remaining lime into wedges.",
+      "Divide the tomatoes and fish among dishes and tip the pan juices over the fish. Garnish with the remaining ¼ cup cilantro and serve with lime wedges for squeezing."
+    ]
+  },
+  {
+    "id": "nyt-salmon-cherry-tomato-curry",
+    "name": "Salmon and Cherry Tomato Curry",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "south-asian",
+    "effort": "low",
+    "mood": ["comforting", "quick-fix"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["salmon", "cherry tomatoes", "coconut milk", "ginger", "chile", "spinach", "turmeric"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "Salmon fillets gently poached in a rich, fragrant coconut-milk curry that's sweet with burst cherry tomatoes and spicy from chile and ginger. Poaching keeps the fish from overcooking; serve over rice to soak up the sauce.",
+    "notes": "For wild salmon like sockeye, simmer over the lowest heat and stick to the lower end of the cooking time. Finish with a squeeze of lime. Frozen spinach works fine. A splash of fish sauce and a little brown sugar rounds out the flavor; curry powder can stand in for the coriander. Use coconut oil instead of ghee to keep it fully dairy-free.",
+    "ingredients": [
+      "4 (6-ounce) salmon fillets, skin removed",
+      "Salt and freshly ground black pepper",
+      "2 tablespoons ghee or coconut oil",
+      "3 garlic cloves, minced",
+      "1 tablespoon minced fresh ginger",
+      "1 bird's-eye chile, or other small chile, sliced",
+      "½ teaspoon cumin seeds",
+      "1 pound cherry tomatoes",
+      "½ teaspoon ground coriander",
+      "½ teaspoon ground turmeric",
+      "1 (14-ounce) can coconut milk",
+      "5 ounces chopped fresh spinach or baby spinach",
+      "Cooked rice, for serving",
+      "¼ cup torn or chopped mint, basil or cilantro leaves"
+    ],
+    "method": [
+      "Season the salmon fillets with salt and pepper on both sides. Set aside.",
+      "In a large lidded skillet or saucepan, melt the ghee over medium heat. Add the garlic, ginger and chile, and cook for 2 to 3 minutes, stirring frequently, until golden brown and fragrant. Season with salt and pepper. Add the cumin seeds and toast for 15 seconds, then stir in the tomatoes, coriander and turmeric.",
+      "Stir in the coconut milk and season with salt to taste. Cook for 6 to 8 minutes, uncovered, until the liquid is slightly reduced and the tomato skins are bursting.",
+      "Stir in the spinach and gently nestle the salmon fillets into the curry, submerging as much as possible. Cover and simmer over medium-low until the salmon is cooked through, 4 to 7 minutes. Serve over rice and garnish with herbs."
+    ]
+  },
+  {
+    "id": "nyt-roasted-zucchini-pasta-salad",
+    "name": "Roasted Zucchini Pasta Salad",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "medium",
+    "mood": ["fresh"],
+    "time": 50,
+    "meal": "lunch",
+    "dietary": ["vegetarian"],
+    "keyIngredients": ["zucchini", "short pasta", "tahini", "lemon", "sunflower seeds", "golden raisins", "parmesan"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "A make-ahead pasta salad loaded with two pounds of zucchini roasted until golden and caramelized, then tossed in a tangy garlic-tahini dressing. Roasted sunflower seeds add crunch and golden raisins bring pops of sweetness to balance the tart lemon.",
+    "notes": "Pepitas, slivered almonds or chopped walnuts can replace the sunflower seeds; dried cranberries work for the raisins. Salt and drain the zucchini beforehand for a firmer, less soggy result. Roast the zucchini and make the salad a few hours (or a day) ahead; bring to room temperature and toss before serving. Also great served hot.",
+    "ingredients": [
+      "2 pounds zucchini, halved lengthwise and sliced ¼ inch thick (8 cups)",
+      "1 cup chopped scallions",
+      "½ cup plus 1 tablespoon extra-virgin olive oil",
+      "Kosher salt (such as Diamond Crystal) and black pepper",
+      "1 pound short pasta, such as medium shells or fusilli",
+      "3 tablespoons lemon juice",
+      "3 tablespoons tahini",
+      "1 tablespoon minced garlic",
+      "½ cup roasted sunflower seeds",
+      "½ cup golden raisins",
+      "½ cup freshly grated Parmesan",
+      "½ cup chopped parsley"
+    ],
+    "method": [
+      "Heat oven to 450 degrees. On a rimmed sheet pan, combine the zucchini, scallions and 3 tablespoons of the oil; season with salt and pepper. Toss to coat, then spread in an even layer (it's OK for slices to overlap). Roast until tender, stirring halfway, 20 to 25 minutes.",
+      "When the zucchini is almost done, cook the pasta according to package directions until al dente; drain.",
+      "In a large bowl, combine the lemon juice, tahini, garlic, the remaining 6 tablespoons oil and 3 tablespoons water; season with salt and pepper and whisk until well blended.",
+      "Add the warm pasta, zucchini mixture, sunflower seeds and raisins to the dressing. Season with salt and pepper; toss to coat. Stir in the cheese and parsley.",
+      "The pasta salad can be made a few hours ahead and kept refrigerated. Bring to room temperature and toss well before serving."
+    ]
+  },
+  {
+    "id": "nyt-weeknight-chicken-tagine",
+    "name": "Weeknight Chicken Tagine",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "medium",
+    "mood": ["comforting"],
+    "time": 40,
+    "meal": "dinner",
+    "dietary": ["dairy-free"],
+    "keyIngredients": ["chicken", "preserved lemon", "olives", "onions", "cilantro", "turmeric", "ginger"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A fast, non-traditional take on m'qualli chicken tagine delivering all the classic Moroccan flavors — preserved lemon, olives, garlic, ginger and turmeric in a rich golden sauce — in under an hour. Chicken pieces marinate briefly, then simmer with sweet, slow-cooked onions.",
+    "notes": "Preserved lemon is foundational — don't skip it (zest of 1 lemon is a weaker substitute). Adjust the sauce with a tablespoon of stock or water at a time if too dry, or simmer longer to thicken. Serve with flatbread or baguette traditionally, or rice or potatoes. A pinch of saffron, smoked paprika, or searing the chicken first adds depth.",
+    "ingredients": [
+      "For the chicken:",
+      "2 tablespoons olive oil",
+      "2 large yellow onions, thinly sliced",
+      "1¼ pounds boneless, skinless chicken breasts or thighs, cut into 1- to 1½-inch pieces",
+      "½ cup pitted Castelvetrano or Kalamata olives, for serving",
+      "2 lemons, cut into wedges, for serving",
+      "1 baguette, for serving",
+      "For the marinade:",
+      "½ cup vegetable or chicken stock",
+      "2 tablespoons olive oil, plus more as needed",
+      "1 cup finely chopped cilantro leaves and tender stems, plus more for garnishing",
+      "1 to 2 tablespoons seeded and finely chopped preserved lemon or the zest of 1 lemon",
+      "3 garlic cloves, minced or pressed",
+      "1 teaspoon honey or granulated sugar",
+      "1 teaspoon ground turmeric",
+      "1 teaspoon ground ginger",
+      "Fine sea salt and black pepper"
+    ],
+    "method": [
+      "Start the chicken: Heat the oil in a large pan over medium-low. Add the onions, cover and cook, allowing them to start sweating, about 5 minutes.",
+      "Meanwhile, make the marinade: In a medium bowl or measuring jug, combine the stock, oil, cilantro, 1 tablespoon preserved lemon, garlic, honey, turmeric, ginger, ¾ teaspoon salt and ¼ teaspoon pepper.",
+      "Pour about half the marinade into the pan with the onions, stirring to combine. Cover and cook over low, stirring occasionally, until the onions are soft and translucent, 10 to 15 minutes.",
+      "While the onions cook, add the chicken to the bowl with the remaining marinade. Cover and let marinate in the fridge while the onions finish.",
+      "When the onions are soft, add the chicken and its marinade to the pan. Cover and simmer over medium-low for 15 to 20 minutes, stirring occasionally, until the meat is fully cooked.",
+      "The sauce may have thickened slightly, but the pan should not be dry. If necessary, add 1 tablespoon stock or water at a time until the desired consistency. Taste and adjust seasoning with salt and preserved lemon.",
+      "Garnish with olives and cilantro and serve with lemon wedges and torn pieces of baguette."
+    ]
+  },
+  {
+    "id": "nyt-skillet-meatballs-peaches-basil-lime",
+    "name": "Skillet Meatballs With Peaches, Basil and Lime",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "other",
+    "effort": "low",
+    "mood": ["fresh", "quick-fix"],
+    "time": 25,
+    "meal": "dinner",
+    "dietary": ["dairy-free"],
+    "keyIngredients": ["ground pork", "peaches", "basil", "ginger", "lime", "garlic", "cumin"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "Gingery, cumin-spiced meatballs seared in a skillet, then simmered with juicy ripe peaches that break down into a chunky sweet-savory sauce, finished with fresh basil and tangy lime. A light, summery one-pan supper.",
+    "notes": "Use very ripe or overripe peaches (or nectarines) so they're soft and sweet — frozen diced peaches work in a pinch. Any ground meat or vegan meat works in place of pork. Don't overwork the meatball mix or they turn tough; a couple tablespoons of yogurt keeps the meat moist. Sweeter peaches need more lime; tart ones less. Serve over rice, rice noodles or salad greens. Made dairy-free with panko (use GF crumbs and skip wheat for other diets).",
+    "ingredients": [
+      "1½ tablespoons finely grated or minced fresh ginger",
+      "3 garlic cloves, grated or minced",
+      "1¼ teaspoon ground cumin, plus more for serving",
+      "1¼ teaspoons kosher salt, plus more as needed",
+      "1 pound ground pork (or turkey or chicken, or vegan meat)",
+      "⅓ cup panko or other plain bread crumbs",
+      "3 tablespoons finely chopped fresh basil, plus basil leaves for serving",
+      "2 tablespoons extra-virgin olive oil",
+      "2 tablespoons wine (dry white, rosé or red), or use broth, orange juice or water",
+      "2 cups diced ripe peaches or nectarines (about 3)",
+      "¼ cup thinly sliced white or red onion, or scallions",
+      "1 lime, halved",
+      "White rice or coconut rice, rice noodles, or crisp salad greens, for serving"
+    ],
+    "method": [
+      "In a large bowl, mix together the ginger, garlic, cumin and salt. Add the pork, panko and basil. Using your hands, gently mix everything together without overworking the mixture (otherwise the meatballs get tough). Form into 1¼-inch balls.",
+      "Heat a large skillet over medium-high, then add the oil and let it heat until it thins out. Add the meatballs in one layer. Cook, turning and shaking the pan, until browned all over, 5 to 7 minutes.",
+      "Pour the wine into the skillet and move the meatballs to one side, scraping up the browned bits. Add the peaches, a pinch of salt and 2 tablespoons water to the empty side. When the peaches are simmering, cover the pan, lower the heat to medium and cook until the meatballs are no longer pink at their centers and the peaches are juicy and tender, 5 to 10 minutes longer.",
+      "Uncover the pan. If the mixture seems too runny, let it cook down another minute or so — the peaches should break down into a chunky sauce. Hard or unripe peaches may take a few extra minutes.",
+      "Add the onions and mix them in so they wilt slightly. Squeeze lime juice over everything, then taste and add salt and lime juice as needed (sweeter peaches need more lime, tart ones less).",
+      "Serve the meatballs sprinkled with more cumin and garnished with torn basil leaves, over the rice or greens."
+    ]
+  },
+  {
+    "id": "nyt-chicken-stew-pelosi",
+    "name": "Chicken Stew",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "american",
+    "effort": "medium",
+    "mood": ["comforting"],
+    "time": 60,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["chicken thighs", "baby potatoes", "carrots", "celery", "green beans", "heavy cream", "sweet paprika"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "A creamy, cozy chicken stew that's quick enough for a weeknight yet satisfying enough for a long Sunday dinner. Juicy boneless thighs simmer with sweet paprika, apple cider vinegar, dried herbs and plenty of vegetables, all wrapped in a silky cream-enriched broth.",
+    "notes": "Thighs stay juicier than breasts. Very versatile — add mushrooms or peppers, swap the heavy cream for coconut milk (to make it dairy-free), or leave the cream out. For more depth, sear the chicken first and deglaze with white wine. Freezer-friendly up to 3 months.",
+    "ingredients": [
+      "2 tablespoons butter",
+      "2 tablespoons olive oil",
+      "1 medium onion, diced (about 6 ounces)",
+      "2 medium carrots, peeled and diced (about 5 ounces)",
+      "3 stalks celery, diced (about 3 ounces)",
+      "4 garlic cloves, minced",
+      "½ teaspoon sweet paprika",
+      "Salt and black pepper",
+      "3 tablespoons all-purpose flour",
+      "4 cups chicken broth",
+      "1 tablespoon apple cider vinegar",
+      "1½ pounds boneless, skinless chicken thighs (3 to 4 depending on size)",
+      "1 pound baby potatoes, cut into quarters",
+      "1 cup (1-inch pieces) green beans (about 4 ounces)",
+      "½ cup heavy cream",
+      "½ teaspoon dried sage",
+      "½ teaspoon dried thyme",
+      "½ teaspoon dried oregano",
+      "Fresh parsley, for serving",
+      "Lemon wedges, for serving"
+    ],
+    "method": [
+      "Heat a large pot or Dutch oven over medium. Add the butter, olive oil, onion, carrots, celery, garlic, paprika and a big pinch of salt, and cook, stirring frequently, until the onion is translucent, 5 to 7 minutes.",
+      "Add the flour and stir for 1 minute. Add the chicken broth and vinegar and stir until the flour is incorporated.",
+      "Add the chicken thighs, potatoes, green beans, heavy cream, sage, thyme, oregano, and 1 teaspoon each of salt and black pepper. Bring to a gentle boil over medium-high, then reduce the heat to maintain a simmer. Simmer, with the lid partially covering the pot, until the chicken is cooked through, about 20 minutes.",
+      "Transfer the chicken to a plate. Cover the pot completely and let the vegetables cook 5 to 10 minutes more, until tender. Meanwhile, shred the chicken into bite-size pieces with two forks, then return it to the pot. Season to taste with more salt and pepper. Serve warm, garnished with parsley, with lemon wedges on the side if desired."
+    ]
+  },
+  {
+    "id": "nyt-one-pot-chicken-and-lentils",
+    "name": "One-Pot Chicken and Lentils",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "high",
+    "mood": ["comforting"],
+    "time": 80,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["chicken thighs", "green lentils", "carrots", "onion", "tomato paste", "cumin", "turmeric", "lime"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "A comforting, budget-friendly throw-in-the-pot braise of well-spiced pantry staples — cumin, turmeric, tomato paste — simmered with bone-in chicken thighs and lentils. A finishing squeeze of lime adds a subtle Persian-style sourness to the rich braising liquid.",
+    "notes": "The skin shields the chicken from drying out as it simmers and builds flavor — discard it before serving. Boneless, skinless thighs also work (no skin to remove). Add red-pepper flakes or chili paste for heat. Best with bread or basmati rice. Searing the chicken separately first is an option if you prefer.",
+    "ingredients": [
+      "2 tablespoons olive oil",
+      "1 yellow or red onion, thinly sliced",
+      "2 medium carrots, unpeeled and cut into thin rounds",
+      "Salt and pepper",
+      "4 to 6 bone-in, skin-on chicken thighs (1½ to 2 pounds), patted dry",
+      "2 tablespoons tomato paste",
+      "1 tablespoon ground cumin",
+      "1 teaspoon ground turmeric",
+      "2 garlic cloves, grated or minced",
+      "1 cup green or brown lentils, rinsed",
+      "1 lime, halved",
+      "2 tablespoons chopped cilantro or parsley leaves and tender stems"
+    ],
+    "method": [
+      "Heat the oil in a large Dutch oven or pot over medium-high until shimmering. Add the onion and carrots, season lightly with salt and cook, stirring occasionally, until the onions just start to soften, about 3 minutes.",
+      "Push the carrots and onions to the sides of the pot, creating space in the center. Season the chicken thighs all over with salt and pepper, then add them skin-side down to the center. Cook until the skin easily releases from the pan, 7 to 9 minutes, pushing the vegetables occasionally. (Everything will be snug — that's OK.)",
+      "Add the tomato paste, cumin, turmeric and garlic to the carrots and onions, stirring as best you can. Flip the chicken, stack the pieces to make room to stir, and cook until the tomato paste intensifies and darkens, about 2 minutes.",
+      "Add the lentils and 4 cups water (or more, to fully submerge the lentils and most of the chicken). Bring to a boil and season with salt. Cover with the lid slightly ajar, adjust the heat to maintain a simmer, and cook, stirring occasionally, until the lentils are tender and the chicken is cooked through, 40 to 45 minutes.",
+      "Remove and discard the skin from the chicken. Stir in half the lime juice, spoon some sauce over the chicken, then taste and season with more lime juice or salt. Finish with a few grinds of pepper and sprinkle with the cilantro before dividing among bowls."
+    ]
+  },
+  {
+    "id": "nyt-tomato-ginger-chicken-rice-soup",
+    "name": "Tomato-Ginger Chicken and Rice Soup",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "medium",
+    "mood": ["comforting"],
+    "time": 55,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["chicken thighs", "rice", "cherry tomatoes", "ginger", "tomato paste", "fish sauce", "lime"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A gentle but lively chicken and rice soup, subtly spicy from fried ginger and sweet from tomatoes used twice — as a caramelized paste base and in fresh bursts. Fish sauce, lime and a drizzle of sesame or chile oil make it reminiscent of sizzling rice soup and tom yum.",
+    "notes": "Dial the fish sauce, lime and chile/sesame oil up or down — less for a calming, mild soup, more for something pungent enough to clear your congestion. Use coconut or olive oil instead of butter to keep it dairy-free; use tamari or fish sauce to keep it gluten-free. A final squeeze of lime really brightens it.",
+    "ingredients": [
+      "2 tablespoons unsalted butter, extra-virgin olive oil or virgin coconut oil",
+      "¼ cup tomato paste",
+      "2 tablespoons grated fresh ginger",
+      "Salt and pepper",
+      "6 cups (1½ quarts) chicken broth",
+      "1 to 1½ pounds boneless, skinless chicken thighs",
+      "¾ cup long-grain white rice (unrinsed)",
+      "1 pint (about 10 ounces) cherry or other small tomatoes",
+      "2 tablespoons fish sauce or soy sauce, plus more to taste",
+      "1 lime, cut into wedges, for squeezing",
+      "Toasted sesame oil or chile oil, for serving (optional)"
+    ],
+    "method": [
+      "In a large pot or Dutch oven, heat the butter over medium. Add the tomato paste and ginger, season with salt and pepper and stir until the tomato paste is a shade darker and sticking to the bottom of the pot, 2 to 4 minutes.",
+      "Add the chicken broth, chicken thighs and rice. Season lightly with salt. Bring to a simmer over medium-high heat, then reduce the heat and simmer for 15 minutes.",
+      "Meanwhile, chop the tomatoes until roughly quartered (a serrated knife helps). After the soup has simmered 15 minutes, add the tomatoes and simmer until the chicken is cooked through and the rice starts to break down, a further 10 to 15 minutes.",
+      "Using tongs, remove the chicken and transfer to a bowl. Shred into pieces with two forks, then stir back into the soup. Stir in the fish sauce. Season to taste with more fish sauce (if flat) and pepper (if it needs heat). Serve with a squeeze of lime and a few drops of sesame or chile oil, if using."
+    ]
+  },
+  {
+    "id": "nyt-orzo-salad",
+    "name": "Orzo Salad",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "medium",
+    "mood": ["fresh"],
+    "time": 60,
+    "meal": "lunch",
+    "dietary": ["vegetarian"],
+    "keyIngredients": ["orzo", "chickpeas", "cherry tomatoes", "kalamata olives", "feta", "cucumber", "red wine vinegar"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "A colorful, Greek-inspired orzo salad tossed with chickpeas, tomatoes, olives, cucumber and feta in an oregano red-wine vinaigrette. A crowd-pleasing picnic side or a vegetable-packed lunch that's good for meal prep.",
+    "notes": "Cook the orzo just to al dente — overcooked, it turns mushy once dressed. Dress the pasta while hot so it soaks up flavor as it cools. Swap olives for roasted red peppers or marinated artichokes if you like; mozzarella and basil give it an Italian bend. Doubles easily and keeps well refrigerated.",
+    "ingredients": [
+      "Salt",
+      "1½ cups orzo",
+      "½ cup extra-virgin olive oil",
+      "3 tablespoons red wine vinegar",
+      "¼ cup finely chopped red onion",
+      "1 medium garlic clove, grated or minced",
+      "1 teaspoon dried oregano",
+      "Black pepper",
+      "1 pint cherry or grape tomatoes, halved",
+      "1 (15-ounce) can chickpeas, rinsed",
+      "½ cup pitted Kalamata olives",
+      "6 ounces feta, crumbled or diced ½-inch (about 1½ cups)",
+      "½ English cucumber, diced ½-inch (about 1½ cups)",
+      "⅓ cup chopped fresh parsley, dill or mint (or a combination)"
+    ],
+    "method": [
+      "Bring a pot of salted water to a boil. Add the orzo and cook, stirring occasionally, until tender (but al dente). Drain and transfer to a large serving bowl.",
+      "While the orzo cooks, make the dressing: In a medium bowl, combine the olive oil, vinegar, red onion, garlic, oregano, ¾ teaspoon salt and ½ teaspoon pepper; whisk vigorously until smooth.",
+      "Pour about half the dressing over the hot orzo, then add the tomatoes, chickpeas and olives; toss well. Set aside to come to room temperature, about 20 minutes. Add the feta, cucumbers and herbs along with the remaining dressing. Toss, taste for seasoning and serve."
+    ]
+  },
+  {
+    "id": "nyt-oven-roasted-chicken-shawarma",
+    "name": "Oven-Roasted Chicken Shawarma",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "medium",
+    "mood": ["comforting", "impressive"],
+    "time": 45,
+    "meal": "dinner",
+    "dietary": ["dairy-free", "gluten-free"],
+    "keyIngredients": ["chicken thighs", "lemon", "garlic", "cumin", "paprika", "turmeric", "red onion"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "An oven-roasted version of the street-side classic usually cooked on a rotisserie — chicken thighs marinated in lemon, garlic and warm spices (cumin, paprika, turmeric, cinnamon), then roasted until crisp at the edges. Perfect for a family-and-friends spread.",
+    "notes": "Marinate 1 to 12 hours (overnight is great). For extra crisp, sauté the sliced chicken in a hot pan after roasting, or finish under the broiler 2–3 minutes. Serve with pita, chopped cucumber and tomato, olives, feta, fried eggplant, hummus or rice. White sauce: plain yogurt cut with mayo, lemon juice and garlic. Time excludes marinating. The dish itself is gluten-free; the pita served alongside is not.",
+    "ingredients": [
+      "2 lemons, juiced",
+      "½ cup plus 1 tablespoon olive oil",
+      "6 cloves garlic, peeled, smashed and minced",
+      "1 teaspoon kosher salt",
+      "2 teaspoons freshly ground black pepper",
+      "2 teaspoons ground cumin",
+      "2 teaspoons paprika",
+      "½ teaspoon turmeric",
+      "A pinch of ground cinnamon",
+      "Crushed red pepper, to taste",
+      "2 pounds boneless, skinless chicken thighs",
+      "1 large red onion, peeled and quartered",
+      "2 tablespoons chopped fresh parsley"
+    ],
+    "method": [
+      "Prepare the marinade: Combine the lemon juice, ½ cup olive oil, garlic, salt, pepper, cumin, paprika, turmeric, cinnamon and crushed red pepper in a large bowl and whisk to combine. Add the chicken and toss well to coat. Cover and refrigerate at least 1 hour and up to 12 hours.",
+      "When ready to cook, heat oven to 425 degrees. Use the remaining tablespoon of olive oil to grease a rimmed sheet pan. Add the quartered onion to the chicken and marinade, toss once to combine, then remove the chicken and onion from the marinade and spread evenly across the pan.",
+      "Roast until the chicken is browned, crisp at the edges and cooked through, about 30 to 40 minutes. Remove, rest 2 minutes, then slice into bits. (For extra crisp, sauté the sliced chicken in a large pan over high heat with a tablespoon of oil until everything curls tight.)",
+      "Scatter the parsley over the top and serve with tomatoes, cucumbers, pita, white sauce, hot sauce, olives, fried eggplant, feta or rice — anything you desire."
+    ]
+  },
+  {
+    "id": "nyt-sausage-ragu",
+    "name": "Sausage Ragù",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "italian",
+    "effort": "high",
+    "mood": ["comforting"],
+    "time": 120,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["italian sausage", "san marzano tomatoes", "onion", "carrot", "celery", "tomato paste", "tubular pasta"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A deeply flavored Tuscan-style meat sauce built on patient caramelization rather than shortcuts. Sweet Italian sausage and a soffritto of onion, carrot and celery slowly melt down, then simmer with San Marzano tomatoes into a velvety, dark-red ragù tossed with tubular pasta.",
+    "notes": "Don't rush the browning — the long, low caramelization (step 2 can take 40 min or more) is essential to the flavor. Pork sausage beats beef; dried pasta and canned whole San Marzano tomatoes are best. If the sausage tastes timid, add garlic, chile flakes, fennel seed, oregano or sage as it browns. Mixing hot and sweet sausage adds complexity. Cooking times run long — be patient.",
+    "ingredients": [
+      "1 pound sweet Italian sausage or bulk sausage",
+      "Extra-virgin olive oil",
+      "1 onion, minced",
+      "1 carrot, minced",
+      "1 celery stalk, minced",
+      "¼ cup minced flat-leaf parsley, plus extra for garnish",
+      "1 (28-ounce) can whole tomatoes, preferably San Marzano, with its juice",
+      "1 large sprig fresh thyme",
+      "1 large sprig fresh rosemary",
+      "3 tablespoons tomato paste",
+      "Salt",
+      "Ground black pepper",
+      "1 pound tubular dried pasta such as mezzi rigatoni, paccheri or penne",
+      "Freshly grated Parmesan cheese, for garnish, optional"
+    ],
+    "method": [
+      "Slit open the sausage casings with the tip of a small sharp knife. Crumble the meat into a wide, heavy skillet or Dutch oven over medium-low heat. If it isn't rendering enough fat to coat the pan, add olive oil one tablespoon at a time until the meat fries gently (not steaming). Sauté, breaking up chunks, until all the meat is opaque (don't let it brown), about 5 minutes.",
+      "Add the onion, carrot, celery and parsley and stir. Drizzle in more oil if the pan seems dry. Cook over very low heat, stirring often, until the vegetables have melted into the fat and are beginning to caramelize and the meat is toasty brown. This may take as long as 40 minutes — be patient, it's essential to the flavor.",
+      "Add the tomatoes and their juice, breaking them up with your hands or a spoon. Bring to a simmer, add the thyme and rosemary, and simmer uncovered until thickened and the pan is almost dry, 20 to 25 minutes.",
+      "Mix the tomato paste with 1 cup hot water and add to the pan. Reduce heat to very low and cook until the ragù is velvety and dark red and the top glistens with oil, about 10 minutes more. Remove the herb sprigs. Sprinkle with black pepper, stir and taste.",
+      "Meanwhile, bring a large pot of salted water to a boil. Boil the pasta until just tender. Scoop out 2 cups cooking water, drain the pasta and return it to the pot over low heat. Add a ladleful of ragù and a splash of cooking water, stir and cook 1 minute. Repeat, adding more cooking water or ragù until the pasta is cooked through and seasoned to your liking.",
+      "Pour hot pasta water into a large serving bowl to warm it, then pour it out and add the pasta. Top with the remaining ragù, sprinkle with parsley and serve immediately. Pass grated cheese at the table, if desired."
+    ]
+  },
+  {
+    "id": "nyt-coq-au-vin-blanc-meatballs",
+    "name": "Coq au Vin Blanc Meatballs",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "french",
+    "effort": "medium",
+    "mood": ["comforting", "impressive"],
+    "time": 60,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["ground chicken", "mushrooms", "bacon", "white wine", "heavy cream", "dijon mustard", "shallots", "thyme"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "An easy skillet riff on coq au vin blanc — the creamy white-wine cousin of the red-wine classic. Quick salt-and-pepper chicken meatballs simmer in a rich mushroom sauce spiked with bacon, white wine, thyme and Dijon mustard.",
+    "notes": "Ground turkey works in place of chicken. To avoid curdling, keep the heat moderate when reducing the cream. Some find it intensely flavored — you can scale back the bacon/mustard/herbs for a more subtle sauce. For a bacon-free version, sauté diced portobello until meaty and chewy. Great leftovers.",
+    "ingredients": [
+      "1 pound ground chicken",
+      "1 large egg, beaten",
+      "⅓ cup panko bread crumbs",
+      "Fine pink Himalayan salt and freshly ground black pepper",
+      "1 tablespoon extra-virgin olive oil, plus more for your hands",
+      "2 slices thick-cut bacon, chopped",
+      "8 ounces shiitake (tough stems removed) or cremini mushrooms, sliced (about 3 packed cups)",
+      "2 tablespoons salted butter",
+      "2 shallots, chopped",
+      "1 tablespoon fresh thyme leaves, plus more for serving",
+      "1 pinch crushed red pepper",
+      "3 garlic cloves, finely chopped or grated",
+      "1½ cups dry white wine, such as pinot grigio or sauvignon blanc",
+      "¾ cup heavy cream (or milk of your choice)",
+      "1 tablespoon Dijon mustard"
+    ],
+    "method": [
+      "In a medium bowl, combine the chicken, egg, bread crumbs and a pinch each of salt and pepper. Coat your hands with a bit of olive oil, then roll the mixture into 1-inch balls (15 to 20), placing them on a plate.",
+      "Place the bacon in a large skillet over medium heat. Cook, stirring occasionally, until crispy and the fat has rendered, about 5 minutes. Using a slotted spoon, transfer the bacon to a plate, reserving the fat in the skillet.",
+      "Add the meatballs to the same skillet over medium heat. Cook, turning every couple of minutes, until browned and crisp, 5 to 8 minutes. Transfer to the plate with the bacon.",
+      "Add the 1 tablespoon olive oil to the skillet. When it shimmers, add the mushrooms and cook until slightly softened, about 3 minutes. Add the butter, shallots, thyme and a pinch each of salt, black pepper and crushed red pepper. Cook until the mushrooms are golden and the shallots have softened, 3 to 5 minutes. Add the garlic and stir until fragrant, 1 minute more. Transfer to the plate with the bacon and meatballs.",
+      "Pour the wine and ½ cup water into the skillet. Cook, scraping up the browned bits, until reduced slightly, about 10 minutes. Whisk in the cream and mustard. Return the bacon, meatballs and mushroom mixture to the skillet and simmer over medium, stirring occasionally, until the sauce is slightly thickened and the meatballs are cooked through, 8 to 10 minutes, adding a few tablespoons of water if needed to keep it saucy.",
+      "Transfer the meatballs to plates and spoon the sauce over them. Garnish with additional thyme."
+    ]
   }
 ];
 
@@ -1035,6 +1760,8 @@
   var allRecipes = [];
   var tree = null;
   var userData = null;
+  var webRecipeCache = {}; // temporary store for current Spoonacular results
+  var shoppingUnitMode = "metric"; // "metric" | "imperial" — display preference, not persisted
 
   var state = {
     screen: "landing",
@@ -1069,6 +1796,8 @@
       shortlist: [],
       customRecipes: [],
       apiKey: "",
+      ingredientOverrides: {},
+      shopping: { checked: {}, extras: [] },
     };
   }
 
@@ -1088,6 +1817,10 @@
           if (!Array.isArray(userData.shortlist)) userData.shortlist = [];
           if (!Array.isArray(userData.customRecipes)) userData.customRecipes = [];
           if (typeof userData.apiKey !== "string") userData.apiKey = "";
+          if (!userData.ingredientOverrides || typeof userData.ingredientOverrides !== "object") userData.ingredientOverrides = {};
+          if (!userData.shopping || typeof userData.shopping !== "object") userData.shopping = { checked: {}, extras: [] };
+          if (!userData.shopping.checked || typeof userData.shopping.checked !== "object") userData.shopping.checked = {};
+          if (!Array.isArray(userData.shopping.extras)) userData.shopping.extras = [];
         }
       }
     } catch (e) {
@@ -1143,7 +1876,7 @@
     for (var i = 0; i < allRecipes.length; i++) {
       if (allRecipes[i].id === id) return allRecipes[i];
     }
-    return null;
+    return webRecipeCache[id] || null;
   }
   function isCustom(recipe) { return !!recipe.custom; }
 
@@ -1221,6 +1954,24 @@
 
     document.getElementById("btn-planner-back").addEventListener("click", startOver);
     document.getElementById("planner-search").addEventListener("input", renderPlannerSearch);
+    document.getElementById("btn-make-shopping").addEventListener("click", openShoppingList);
+
+    document.getElementById("btn-shopping-back").addEventListener("click", function () { openPlanner(); });
+    document.getElementById("btn-shopping-copy").addEventListener("click", copyShoppingList);
+    document.getElementById("btn-shopping-clear").addEventListener("click", function () {
+      userData.shopping.checked = {};
+      saveUserData();
+      buildShoppingList();
+    });
+    document.getElementById("toggle-shopping-units").addEventListener("change", function () {
+      shoppingUnitMode = this.checked ? "imperial" : "metric";
+      document.getElementById("units-toggle-label").textContent = this.checked ? "Imperial" : "Metric";
+      buildShoppingList();
+    });
+    document.getElementById("btn-shopping-add-extra").addEventListener("click", addShoppingExtra);
+    document.getElementById("shopping-extra-input").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") { ev.preventDefault(); addShoppingExtra(); }
+    });
 
     document.getElementById("btn-add-back").addEventListener("click", cancelForm);
     document.getElementById("form-cancel").addEventListener("click", cancelForm);
@@ -1611,7 +2362,9 @@
         return;
       }
       status.textContent = "";
+      webRecipeCache = {}; // clear previous results
       fresh.forEach(function (r) {
+        webRecipeCache[r.id] = r; // cache so detail screen can look it up
         grid.appendChild(renderRecipeCard(r, { web: true }));
       });
     });
@@ -1663,13 +2416,14 @@
       descEl.style.display = "none";
     }
 
-    // Ingredients
-    var hasIngredients = recipe.ingredients && recipe.ingredients.length;
+    // Ingredients (uses pasted overrides if present)
+    var detailIngredients = getRecipeIngredients(recipe);
+    var hasIngredients = detailIngredients.length > 0;
     var ingSection = document.getElementById("recipe-detail-ingredients");
     var ingList = document.getElementById("recipe-detail-ingredients-list");
     if (hasIngredients) {
       ingList.innerHTML = "";
-      recipe.ingredients.forEach(function (ing) {
+      detailIngredients.forEach(function (ing) {
         var li = document.createElement("li");
         li.textContent = ing;
         ingList.appendChild(li);
@@ -1699,9 +2453,14 @@
     var linkEl = document.getElementById("recipe-detail-link");
     if (recipe.sourceUrl) {
       linkEl.href = recipe.sourceUrl;
-      linkEl.textContent = (hasIngredients || hasMethod)
-        ? "View on " + escapeHtml(recipe.source || "source") + " →"
-        : "View recipe →";
+      if (hasIngredients || hasMethod) {
+        linkEl.textContent = "View on " + (recipe.source || "source") + " →";
+        linkEl.className = "recipe-link detail-external-link";
+      } else {
+        // No stored content — make the link a proper button so it's obvious
+        linkEl.textContent = "View full recipe on " + (recipe.source || "source") + " →";
+        linkEl.className = "recipe-link detail-external-link detail-link-prominent";
+      }
       linkEl.style.display = "";
     } else {
       linkEl.style.display = "none";
@@ -2512,6 +3271,385 @@
       item.appendChild(add);
       container.appendChild(item);
     });
+  }
+
+  // ---- Shopping list ----
+
+  // Where a recipe's full ingredient list comes from: user paste > stored > none.
+  function getRecipeIngredients(recipe) {
+    if (!recipe) return [];
+    var ov = userData.ingredientOverrides[recipe.id];
+    if (Array.isArray(ov) && ov.length) return ov;
+    if (Array.isArray(recipe.ingredients) && recipe.ingredients.length) return recipe.ingredients;
+    return [];
+  }
+
+  var UNICODE_FRACTIONS = {
+    "½": 0.5, "¼": 0.25, "¾": 0.75, "⅓": 1 / 3, "⅔": 2 / 3,
+    "⅛": 0.125, "⅜": 0.375, "⅝": 0.625, "⅞": 0.875, "⅕": 0.2, "⅖": 0.4
+  };
+
+  // Known measurement units mapped to a canonical short form for combining.
+  var UNIT_MAP = {
+    g: "g", gram: "g", grams: "g", kg: "kg", ml: "ml", l: "l", litre: "l", litres: "l",
+    tbsp: "tbsp", tbsps: "tbsp", tablespoon: "tbsp", tablespoons: "tbsp",
+    tsp: "tsp", tsps: "tsp", teaspoon: "tsp", teaspoons: "tsp",
+    cup: "cup", cups: "cup", clove: "clove", cloves: "clove",
+    tin: "tin", tins: "tin", can: "can", cans: "can",
+    slice: "slice", slices: "slice", handful: "handful", handfuls: "handful",
+    bunch: "bunch", bunches: "bunch", pinch: "pinch", pinches: "pinch",
+    ounce: "oz", ounces: "oz", oz: "oz", pound: "lb", pounds: "lb", lb: "lb", lbs: "lb"
+  };
+
+  function parseIngredient(raw) {
+    var s = String(raw == null ? "" : raw).trim();
+    if (!s) return null;
+    // Separate a unicode fraction stuck to a number, e.g. "1½" -> "1 ½"
+    var normalized = s.replace(/(\d)([½¼¾⅓⅔⅛⅜⅝⅞⅕⅖])/g, "$1 $2");
+    // Split a leading number glued to a unit, e.g. "400g" -> "400 g", "2tbsp" -> "2 tbsp"
+    normalized = normalized.replace(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)/, function (m, num, letters) {
+      return UNIT_MAP[letters.toLowerCase()] ? num + " " + letters : m;
+    });
+    var tokens = normalized.split(/\s+/);
+    var idx = 0;
+    var total = 0;
+    var matched = false;
+    while (idx < tokens.length) {
+      var t = tokens[idx];
+      if (UNICODE_FRACTIONS[t] != null) { total += UNICODE_FRACTIONS[t]; matched = true; idx++; continue; }
+      if (/^\d+\/\d+$/.test(t)) { var p = t.split("/"); total += parseInt(p[0], 10) / parseInt(p[1], 10); matched = true; idx++; continue; }
+      if (/^\d+(\.\d+)?$/.test(t)) { total += parseFloat(t); matched = true; idx++; continue; }
+      break;
+    }
+    // Skip a range like "1 to 2" / "1-2" — keep the first number only.
+    if (tokens[idx] === "to" || tokens[idx] === "-" || tokens[idx] === "–" || tokens[idx] === "or") {
+      idx++;
+      while (idx < tokens.length &&
+        (UNICODE_FRACTIONS[tokens[idx]] != null || /^\d+(\.\d+)?$/.test(tokens[idx]) || /^\d+\/\d+$/.test(tokens[idx]))) idx++;
+    }
+    var unit = "";
+    if (idx < tokens.length) {
+      var maybe = tokens[idx].toLowerCase().replace(/[.,]/g, "");
+      if (UNIT_MAP[maybe]) { unit = UNIT_MAP[maybe]; idx++; }
+    }
+    var name = tokens.slice(idx).join(" ").trim();
+    if (!name) name = s;
+    // Normalise the key used for combining duplicates:
+    var key = name.toLowerCase()
+      .replace(/\(.*?\)/g, "")                        // strip parentheticals: (optional), (about 1lb)
+      .replace(/\bfor serving\b.*|,?\s*to serve\b.*/i, "") // strip "for serving", "to serve"
+      .replace(/\bfor garnish\b.*|,?\s*to garnish\b.*/i, "")
+      .split(",")[0]                                   // drop prep notes after first comma
+      .replace(/.*\bor\b\s*/i, "")                    // "sticky or white rice" → "white rice"
+      .replace(/\b(cooked|raw|frozen|thawed|packed|heaping|sticky|optional|ripe|whole|boneless|skinless|extra-virgin|full-fat|low-fat|unsalted|salted|dried|drained|white|brown|jasmine|basmati|long-grain|short-grain|plain|regular)\b/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!key) key = name.toLowerCase();
+    return { qty: matched ? total : null, unit: unit, name: name, key: key, raw: s };
+  }
+
+  var FRACTION_GLYPHS = [
+    [0.5, "½"], [0.25, "¼"], [0.75, "¾"], [1 / 3, "⅓"], [2 / 3, "⅔"],
+    [0.125, "⅛"], [0.375, "⅜"], [0.625, "⅝"], [0.875, "⅞"]
+  ];
+
+  function formatQty(n) {
+    if (Math.abs(n - Math.round(n)) < 0.001) return String(Math.round(n));
+    var whole = Math.floor(n);
+    var frac = n - whole;
+    for (var i = 0; i < FRACTION_GLYPHS.length; i++) {
+      if (Math.abs(frac - FRACTION_GLYPHS[i][0]) < 0.02) {
+        return (whole > 0 ? whole : "") + FRACTION_GLYPHS[i][1];
+      }
+    }
+    return String(Math.round(n * 100) / 100);
+  }
+
+  // Units that should NEVER be converted (user prefers cups/tbsp/tsp for herbs, sauces, citrus)
+  var KEEP_UNITS = { tbsp: true, tsp: true, cup: true, pinch: true, handful: true, bunch: true, slice: true, clove: true };
+
+  // Convert a parsed ingredient's qty+unit for display based on shoppingUnitMode.
+  // Only converts weight (g/kg) and liquid volume (ml/l). Everything else stays as-is.
+  function applyUnitMode(parsed) {
+    if (!parsed || parsed.qty == null || KEEP_UNITS[parsed.unit]) return parsed;
+    if (shoppingUnitMode === "imperial") {
+      if (parsed.unit === "g") return { qty: parsed.qty * 0.035274, unit: "oz", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "kg") return { qty: parsed.qty * 2.20462, unit: "lb", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "ml") {
+        var cups = parsed.qty / 240;
+        if (cups >= 0.25) return { qty: cups, unit: "cup", name: parsed.name, key: parsed.key, raw: parsed.raw };
+        return { qty: parsed.qty * 0.033814, unit: "fl oz", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      }
+      if (parsed.unit === "l") return { qty: parsed.qty * 4.16667, unit: "cup", name: parsed.name, key: parsed.key, raw: parsed.raw };
+    } else { // metric
+      if (parsed.unit === "oz") return { qty: parsed.qty / 0.035274, unit: "g", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "lb") return { qty: parsed.qty / 2.20462, unit: "kg", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "fl oz") return { qty: parsed.qty / 0.033814, unit: "ml", name: parsed.name, key: parsed.key, raw: parsed.raw };
+    }
+    return parsed;
+  }
+
+  function formatConvertedQty(n, unit) {
+    // For metric weights, round to a sensible value
+    if (unit === "g") return String(Math.round(n));
+    if (unit === "kg") { var r = Math.round(n * 100) / 100; return String(r); }
+    if (unit === "ml") return String(Math.round(n));
+    if (unit === "oz") { var ro = Math.round(n * 10) / 10; return String(ro); }
+    if (unit === "lb") { var rl = Math.round(n * 100) / 100; return String(rl); }
+    if (unit === "fl oz") { var rf = Math.round(n * 10) / 10; return String(rf); }
+    return formatQty(n);
+  }
+
+  function isStapleName(key) {
+    return STAPLES.some(function (st) {
+      var re = new RegExp("(^|\\b)" + st.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(\\b|$)");
+      return re.test(key);
+    });
+  }
+
+  function combineIngredients(parsedList) {
+    var groups = {};
+    var order = [];
+    parsedList.forEach(function (p) {
+      if (!p) return;
+      var gk = p.key + "|" + p.unit;
+      if (!groups[gk]) { groups[gk] = { items: [], name: p.name, unit: p.unit, key: p.key }; order.push(gk); }
+      groups[gk].items.push(p);
+    });
+    var result = [];
+    order.forEach(function (gk) {
+      var g = groups[gk];
+      var allNumeric = g.items.every(function (it) { return it.qty != null; });
+      var display;
+      if (allNumeric) {
+        var sum = g.items.reduce(function (a, it) { return a + it.qty; }, 0);
+        // Apply unit conversion to the summed result
+        var converted = applyUnitMode({ qty: sum, unit: g.unit, name: g.name, key: g.key, raw: "" });
+        var qtyStr = KEEP_UNITS[converted.unit] ? formatQty(converted.qty) : formatConvertedQty(converted.qty, converted.unit);
+        display = (qtyStr + (converted.unit ? " " + converted.unit : "") + " " + g.name).trim();
+      } else {
+        // No numeric quantity — show the shortest (most generic) raw as the representative
+        var raws = [];
+        g.items.forEach(function (it) { if (raws.indexOf(it.raw) === -1) raws.push(it.raw); });
+        if (raws.length > 1) {
+          raws.sort(function (a, b) { return a.length - b.length; });
+        }
+        display = raws[0];
+      }
+      result.push({ display: display, key: g.key, isStaple: isStapleName(g.key) });
+    });
+    return result;
+  }
+
+  function openShoppingList() {
+    shoppingUnitMode = "metric"; // reset to preferred default each time
+    document.getElementById("toggle-shopping-units").checked = false;
+    document.getElementById("units-toggle-label").textContent = "Metric";
+    buildShoppingList();
+    showScreen("shopping");
+  }
+
+  function buildShoppingList() {
+    var plannedIds = [];
+    Object.keys(userData.plan).forEach(function (k) {
+      (userData.plan[k] || []).forEach(function (id) { plannedIds.push(id); });
+    });
+
+    var allParsed = [];
+    var missing = [];
+    var seenMissing = {};
+    plannedIds.forEach(function (id) {
+      var r = recipeById(id);
+      if (!r || isRemoved(id)) return;
+      var ings = getRecipeIngredients(r);
+      if (ings.length === 0) {
+        if (!seenMissing[id]) { seenMissing[id] = true; missing.push(r); }
+        return;
+      }
+      ings.forEach(function (str) { allParsed.push(parseIngredient(str)); });
+    });
+
+    var combined = combineIngredients(allParsed);
+    var mainItems = combined.filter(function (c) { return !c.isStaple; });
+    var stapleItems = combined.filter(function (c) { return c.isStaple; });
+
+    document.getElementById("shopping-empty").style.display = plannedIds.length === 0 ? "" : "none";
+
+    renderMissingRecipes(missing);
+    renderShoppingSection("shopping-main-section", "shopping-main-list", mainItems);
+    renderShoppingSection("shopping-staples-section", "shopping-staples-list", stapleItems);
+    renderShoppingExtras();
+  }
+
+  function renderShoppingSection(sectionId, listId, items) {
+    var section = document.getElementById(sectionId);
+    var list = document.getElementById(listId);
+    list.innerHTML = "";
+    if (!items.length) { section.style.display = "none"; return; }
+    section.style.display = "";
+    items.forEach(function (it) {
+      list.appendChild(makeShoppingItem(it.display, it.display, null));
+    });
+  }
+
+  function makeShoppingItem(label, checkedKey, onRemove) {
+    var li = document.createElement("li");
+    li.className = "shopping-item";
+    var cb = document.createElement("input");
+    cb.type = "checkbox";
+    var cid = "shop-" + Math.random().toString(36).slice(2);
+    cb.id = cid;
+    cb.checked = !!userData.shopping.checked[checkedKey];
+    if (cb.checked) li.classList.add("checked");
+    var lab = document.createElement("label");
+    lab.setAttribute("for", cid);
+    lab.textContent = label;
+    cb.addEventListener("change", function () {
+      if (cb.checked) userData.shopping.checked[checkedKey] = true;
+      else delete userData.shopping.checked[checkedKey];
+      li.classList.toggle("checked", cb.checked);
+      saveUserData();
+    });
+    li.appendChild(cb);
+    li.appendChild(lab);
+    if (onRemove) {
+      var x = document.createElement("button");
+      x.type = "button";
+      x.className = "chip-x";
+      x.textContent = "✕";
+      x.title = "Remove";
+      x.addEventListener("click", onRemove);
+      li.appendChild(x);
+    }
+    return li;
+  }
+
+  function renderShoppingExtras() {
+    var list = document.getElementById("shopping-extras-list");
+    list.innerHTML = "";
+    userData.shopping.extras.forEach(function (item, i) {
+      list.appendChild(makeShoppingItem(item, "extra:" + item, function () {
+        userData.shopping.extras.splice(i, 1);
+        delete userData.shopping.checked["extra:" + item];
+        saveUserData();
+        renderShoppingExtras();
+      }));
+    });
+  }
+
+  function addShoppingExtra() {
+    var input = document.getElementById("shopping-extra-input");
+    var val = input.value.trim();
+    if (!val) return;
+    if (userData.shopping.extras.indexOf(val) === -1) userData.shopping.extras.push(val);
+    input.value = "";
+    saveUserData();
+    renderShoppingExtras();
+  }
+
+  function renderMissingRecipes(missing) {
+    var section = document.getElementById("shopping-missing");
+    var list = document.getElementById("shopping-missing-list");
+    list.innerHTML = "";
+    if (!missing.length) { section.style.display = "none"; return; }
+    section.style.display = "";
+    missing.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "missing-recipe";
+
+      var head = document.createElement("div");
+      head.className = "missing-recipe-head";
+      var nameSpan = document.createElement("span");
+      nameSpan.className = "missing-recipe-name";
+      nameSpan.textContent = r.name;
+      head.appendChild(nameSpan);
+      if (r.sourceUrl) {
+        var link = document.createElement("a");
+        link.href = r.sourceUrl;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.className = "missing-recipe-link";
+        link.textContent = "View recipe ↗";
+        head.appendChild(link);
+      } else {
+        var note = document.createElement("span");
+        note.className = "planner-hint";
+        note.textContent = "(no link saved)";
+        head.appendChild(note);
+      }
+      row.appendChild(head);
+
+      var ta = document.createElement("textarea");
+      ta.className = "missing-recipe-textarea";
+      ta.rows = 3;
+      ta.placeholder = "Paste the ingredients here, one per line…";
+      row.appendChild(ta);
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-small btn-secondary";
+      btn.textContent = "Add ingredients";
+      btn.addEventListener("click", function () {
+        var lines = ta.value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!lines.length) return;
+        userData.ingredientOverrides[r.id] = lines;
+        saveUserData();
+        buildShoppingList();
+        showToast("Ingredients saved for " + r.name + ".", null, null);
+      });
+      row.appendChild(btn);
+
+      list.appendChild(row);
+    });
+  }
+
+  function copyShoppingList() {
+    var lines = [];
+    function collect(listId, header) {
+      var items = document.querySelectorAll("#" + listId + " .shopping-item");
+      if (!items.length) return;
+      lines.push(header);
+      items.forEach(function (li) {
+        var checked = li.classList.contains("checked");
+        var text = li.querySelector("label").textContent;
+        lines.push((checked ? "[x] " : "- ") + text);
+      });
+      lines.push("");
+    }
+    collect("shopping-main-list", "SHOPPING LIST");
+    collect("shopping-staples-list", "STAPLES");
+    collect("shopping-extras-list", "EXTRAS");
+    var text = lines.join("\n").trim();
+    if (!text) { showToast("Nothing to copy yet.", null, null); return; }
+    copyTextToClipboard(text);
+  }
+
+  function copyTextToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { showToast("Copied to clipboard.", null, null); },
+        function () { fallbackCopy(text); }
+      );
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast(ok ? "Copied to clipboard." : "Couldn't copy — select and copy manually.", null, null);
+    } catch (e) {
+      showToast("Couldn't copy — select and copy manually.", null, null);
+    }
   }
 
   // ---- Settings / backup ----

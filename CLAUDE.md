@@ -101,6 +101,8 @@ After the decision tree completes, the results screen automatically fetches matc
 
 **Weekly planner** stores data keyed by ISO date string (`YYYY-MM-DD`) for the current Mon–Sun week. `pruneOldPlan()` removes any keys outside the current week on every planner open.
 
+**Shopping list** (`#screen-shopping`, opened via "🛒 Make shopping list" on the planner) is generated from all recipes planned into the week. `buildShoppingList()` gathers each recipe's ingredients via `getRecipeIngredients()` (priority: `userData.ingredientOverrides[id]` → `recipe.ingredients` → none), then `parseIngredient()` + `combineIngredients()` sum amounts across recipes (best-effort: same units sum, mismatches list side-by-side; quantities render as fractions via `formatQty`). Items are split into a main list and a **Staples** section using the `STAPLES` array. Recipes with no stored ingredients appear in a "needs ingredients" section with a source link and a paste box; pasted lines are saved to `userData.ingredientOverrides` (which also enriches the recipe detail screen). Tick state (`userData.shopping.checked`) and user-added extras (`userData.shopping.extras`) persist in localStorage. "Copy list" uses `navigator.clipboard` with an `execCommand` fallback for `file://`.
+
 **Leftover suggestions** (`suggestByIngredientOverlap`) scores recipes by how many non-staple `keyIngredients` they share with the shortlisted/planned recipes. `STAPLES` at the top of `app.js` defines which ingredients to ignore (garlic, oil, eggs, etc.).
 
 **GitHub / publishing:** The API key is never in source files — safe to push. Exported backup JSON files contain the key and are gitignored. See `.gitignore`.
