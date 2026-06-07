@@ -1,0 +1,97 @@
+{
+  "questions": [
+    {
+      "id": "meal",
+      "text": "What are we eating?",
+      "subtitle": "Pick one to get started.",
+      "field": "meal",
+      "type": "single",
+      "options": [
+        { "value": "breakfast", "label": "Breakfast" },
+        { "value": "lunch", "label": "Lunch" },
+        { "value": "dinner", "label": "Dinner" },
+        { "value": "snack", "label": "Snack" },
+        { "value": "any", "label": "No preference" }
+      ],
+      "allowSkip": false,
+      "filterLogic": "match-or-any"
+    },
+    {
+      "id": "mood",
+      "text": "What's the vibe?",
+      "subtitle": "Pick as many as feel right.",
+      "field": "mood",
+      "type": "multi",
+      "options": [
+        { "value": "comforting", "label": "Something cozy & comforting" },
+        { "value": "fresh", "label": "Something fresh & light" },
+        { "value": "impressive", "label": "Something to show off" },
+        { "value": "quick-fix", "label": "Just feed me, fast" },
+        { "value": "adventurous", "label": "Something new & different" }
+      ],
+      "allowSkip": true,
+      "filterLogic": "overlap"
+    },
+    {
+      "id": "effort",
+      "text": "How much energy do you have?",
+      "subtitle": "Be honest with yourself.",
+      "field": "effort",
+      "type": "single",
+      "options": [
+        { "value": "low", "label": "Minimal — under 30 min, easy" },
+        { "value": "medium", "label": "Some — 30 to 60 min" },
+        { "value": "high", "label": "I want a project — 60+ min" }
+      ],
+      "allowSkip": true,
+      "filterLogic": "match-or-below"
+    },
+    {
+      "id": "cuisine",
+      "text": "Any cuisine calling to you?",
+      "subtitle": "Pick one, or skip to keep options open.",
+      "field": "cuisine",
+      "type": "single",
+      "options": [
+        { "value": "mediterranean", "label": "Mediterranean" },
+        { "value": "east-asian", "label": "East Asian" },
+        { "value": "south-asian", "label": "South Asian" },
+        { "value": "mexican", "label": "Mexican" },
+        { "value": "italian", "label": "Italian" },
+        { "value": "middle-eastern", "label": "Middle Eastern" },
+        { "value": "american", "label": "American" },
+        { "value": "french", "label": "French" }
+      ],
+      "allowSkip": true,
+      "filterLogic": "match"
+    },
+    {
+      "id": "dietary",
+      "text": "Any dietary needs today?",
+      "subtitle": "Select all that apply, or skip.",
+      "field": "dietary",
+      "type": "multi",
+      "options": [
+        { "value": "vegetarian", "label": "Vegetarian" },
+        { "value": "vegan", "label": "Vegan" },
+        { "value": "gluten-free", "label": "Gluten-free" },
+        { "value": "dairy-free", "label": "Dairy-free" }
+      ],
+      "allowSkip": true,
+      "filterLogic": "subset"
+    },
+    {
+      "id": "pantry",
+      "text": "Working with what's on hand?",
+      "subtitle": "Only show recipes you can make from pantry staples.",
+      "field": "pantryFriendly",
+      "type": "single",
+      "options": [
+        { "value": "yes", "label": "Yes, pantry raid mode" },
+        { "value": "no", "label": "I can shop" }
+      ],
+      "allowSkip": true,
+      "filterLogic": "boolean-filter-if-true"
+    }
+  ]
+}

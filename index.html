@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What should I eat?</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+</head>
+<body>
+  <div id="app">
+
+    <button class="settings-gear" id="btn-settings" aria-label="Settings" title="Settings &amp; backup">&#9881;</button>
+
+    <div id="screen-landing" class="screen active">
+      <div class="landing-content">
+        <h1 class="landing-title">What should I eat?</h1>
+        <p class="landing-subtitle">Let's figure it out together.</p>
+        <div class="landing-buttons">
+          <button class="btn btn-primary" id="btn-decide">Help me decide</button>
+          <button class="btn btn-secondary" id="btn-surprise">Surprise me</button>
+          <button class="btn btn-ghost" id="btn-browse">Browse all recipes</button>
+          <button class="btn btn-ghost" id="btn-planner">Plan my week</button>
+          <button class="btn btn-ghost" id="btn-add">Add a recipe</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-question" class="screen">
+      <div class="question-content">
+        <div class="question-header">
+          <button class="btn-icon" id="btn-back" aria-label="Go back">&larr;</button>
+          <div class="progress-dots" id="progress-dots"></div>
+          <button class="btn-text" id="btn-start-over">Start over</button>
+        </div>
+        <div class="question-body">
+          <h2 class="question-text" id="question-text"></h2>
+          <p class="question-subtitle" id="question-subtitle"></p>
+          <div class="options-grid" id="options-grid"></div>
+          <div class="question-footer">
+            <button class="btn-text" id="btn-skip" style="display:none;">Skip this question</button>
+            <button class="btn btn-primary" id="btn-next" style="display:none;">Next</button>
+          </div>
+          <p class="match-count" id="match-count"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-results" class="screen">
+      <div class="results-content">
+        <div class="results-header">
+          <h2 class="results-title" id="results-title">Here's what I'd suggest</h2>
+          <p class="results-subtitle" id="results-subtitle"></p>
+        </div>
+        <div class="top-picks" id="top-picks"></div>
+        <div class="more-options-section" id="more-options-section" style="display:none;">
+          <button class="btn-text more-toggle" id="btn-more-toggle">See more options</button>
+          <div class="more-options-grid" id="more-options-grid" style="display:none;"></div>
+        </div>
+        <div class="web-ideas-section" id="web-ideas-section" style="display:none;">
+          <h3 class="web-ideas-title">New ideas from the web</h3>
+          <p class="web-ideas-status" id="web-ideas-status"></p>
+          <div class="more-options-grid" id="web-ideas-grid"></div>
+        </div>
+        <div class="results-actions">
+          <button class="btn btn-secondary" id="btn-pick-one">Pick one for me</button>
+          <button class="btn btn-ghost" id="btn-results-start-over">Start over</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-browse" class="screen">
+      <div class="browse-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-browse-back" aria-label="Go home">&larr;</button>
+          <h2 class="browse-title">All Recipes</h2>
+          <button class="btn btn-secondary btn-small" id="btn-browse-add">+ Add a recipe</button>
+        </div>
+        <div class="browse-filters">
+          <input type="text" class="search-input" id="search-input" placeholder="Search recipes...">
+          <div class="filter-row">
+            <select class="filter-select" id="filter-cuisine"><option value="">Any cuisine</option></select>
+            <select class="filter-select" id="filter-effort"><option value="">Any effort</option></select>
+            <select class="filter-select" id="filter-source"><option value="">Any source</option></select>
+            <select class="filter-select" id="filter-dietary"><option value="">Any dietary</option></select>
+          </div>
+        </div>
+        <div class="browse-grid" id="browse-grid"></div>
+      </div>
+    </div>
+
+    <div id="screen-planner" class="screen">
+      <div class="planner-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-planner-back" aria-label="Go home">&larr;</button>
+          <h2 class="browse-title">Weekly Planner</h2>
+        </div>
+        <p class="planner-intro">Build a shortlist, then drag recipes onto the days you'll cook them.</p>
+
+        <div class="planner-shortlist-section">
+          <div class="planner-search-wrap">
+            <input type="text" class="search-input" id="planner-search" placeholder="Search recipes to add to your shortlist...">
+            <div class="planner-search-results" id="planner-search-results"></div>
+          </div>
+          <h3 class="planner-subhead">Shortlist <span class="planner-hint">(drag onto a day)</span></h3>
+          <div class="shortlist-tray" id="shortlist-tray"></div>
+        </div>
+
+        <div class="leftover-panel" id="leftover-panel" style="display:none;">
+          <h3 class="planner-subhead">Use up your ingredients</h3>
+          <p class="planner-hint">Recipes that share ingredients with your picks — cook them the same week so nothing goes to waste.</p>
+          <div class="leftover-suggestions" id="leftover-suggestions"></div>
+        </div>
+
+        <h3 class="planner-subhead">Your week</h3>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+    </div>
+
+    <div id="screen-add-recipe" class="screen">
+      <div class="form-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-add-back" aria-label="Go back">&larr;</button>
+          <h2 class="browse-title" id="add-recipe-title">Add a Recipe</h2>
+        </div>
+        <p class="add-recipe-hint">💡 Tip: you can also paste any recipe into Claude Code and type <code>/add</code> — it'll fill in all the fields automatically.</p>
+        <form id="recipe-form" class="recipe-form" autocomplete="off">
+          <label class="form-field">
+            <span class="form-label">Recipe name <em>*</em></span>
+            <input type="text" id="form-name" required>
+          </label>
+
+          <div class="form-row">
+            <label class="form-field">
+              <span class="form-label">Source</span>
+              <input type="text" id="form-source" placeholder="Personal">
+            </label>
+            <label class="form-field">
+              <span class="form-label">Link (optional)</span>
+              <input type="url" id="form-url" placeholder="https://...">
+            </label>
+          </div>
+
+          <div class="form-row">
+            <label class="form-field">
+              <span class="form-label">Cuisine</span>
+              <select id="form-cuisine">
+                <option value="mediterranean">Mediterranean</option>
+                <option value="east-asian">East Asian</option>
+                <option value="south-asian">South Asian</option>
+                <option value="mexican">Mexican</option>
+                <option value="italian">Italian</option>
+                <option value="middle-eastern">Middle Eastern</option>
+                <option value="american">American</option>
+                <option value="french">French</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span class="form-label">Effort</span>
+              <select id="form-effort">
+                <option value="low">Low (under 30 min)</option>
+                <option value="medium">Medium (30-60 min)</option>
+                <option value="high">High (60+ min)</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span class="form-label">Total time (min)</span>
+              <input type="number" id="form-time" min="1" value="30">
+            </label>
+          </div>
+
+          <label class="form-field">
+            <span class="form-label">Meal</span>
+            <select id="form-meal">
+              <option value="dinner">Dinner</option>
+              <option value="lunch">Lunch</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="snack">Snack</option>
+              <option value="any">Any</option>
+            </select>
+          </label>
+
+          <div class="form-field">
+            <span class="form-label">Mood (pick any)</span>
+            <div class="checkbox-group" id="form-mood">
+              <label><input type="checkbox" value="comforting"> Comforting</label>
+              <label><input type="checkbox" value="fresh"> Fresh</label>
+              <label><input type="checkbox" value="impressive"> Impressive</label>
+              <label><input type="checkbox" value="quick-fix"> Quick fix</label>
+              <label><input type="checkbox" value="adventurous"> Adventurous</label>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <span class="form-label">Dietary (pick any)</span>
+            <div class="checkbox-group" id="form-dietary">
+              <label><input type="checkbox" value="vegetarian"> Vegetarian</label>
+              <label><input type="checkbox" value="vegan"> Vegan</label>
+              <label><input type="checkbox" value="gluten-free"> Gluten-free</label>
+              <label><input type="checkbox" value="dairy-free"> Dairy-free</label>
+            </div>
+          </div>
+
+          <label class="form-field checkbox-inline">
+            <input type="checkbox" id="form-pantry">
+            <span class="form-label">Can be made from pantry staples</span>
+          </label>
+
+          <label class="form-field">
+            <span class="form-label">Key ingredients <em>*</em></span>
+            <input type="text" id="form-ingredients" placeholder="e.g. tofu, scallions, soy sauce (comma-separated)">
+          </label>
+
+          <label class="form-field">
+            <span class="form-label">Description</span>
+            <textarea id="form-description" rows="2" placeholder="A short description of the dish."></textarea>
+          </label>
+
+          <label class="form-field">
+            <span class="form-label">Notes (optional)</span>
+            <textarea id="form-notes" rows="2" placeholder="e.g. double the garlic"></textarea>
+          </label>
+
+          <p class="form-error" id="form-error" style="display:none;"></p>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="form-save">Save recipe</button>
+            <button type="button" class="btn btn-ghost" id="form-cancel">Cancel</button>
+            <button type="button" class="btn btn-danger" id="form-delete" style="display:none;">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="screen-settings" class="screen">
+      <div class="settings-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-settings-back" aria-label="Go home">&larr;</button>
+          <h2 class="browse-title">Settings &amp; Backup</h2>
+        </div>
+        <p class="settings-text">Your ratings, notes, removed recipes, weekly plans, and recipes you add are saved automatically in this browser. Use the buttons below to save a backup file or restore one.</p>
+        <div class="settings-key-block">
+          <h3 class="settings-subtitle">Discover new recipes</h3>
+          <p class="settings-text">To get fresh ideas from the web at the end of the decision tree, paste a free Spoonacular API key below. Get one in 2 minutes at <a href="https://spoonacular.com/food-api" target="_blank" rel="noopener">spoonacular.com/food-api</a>. The key is stored only in this browser.</p>
+          <div class="settings-key-row">
+            <input type="text" id="spoonacular-key" class="settings-key-input" placeholder="Paste your Spoonacular key" autocomplete="off" spellcheck="false">
+            <button class="btn btn-primary" id="btn-save-key">Save key</button>
+          </div>
+        </div>
+        <div class="settings-actions">
+          <button class="btn btn-primary" id="btn-export">Export backup</button>
+          <button class="btn btn-secondary" id="btn-import">Import backup</button>
+          <input type="file" id="import-file" accept="application/json,.json" style="display:none;">
+        </div>
+        <p class="settings-stat" id="settings-stat"></p>
+      </div>
+    </div>
+
+    <div id="screen-recipe" class="screen">
+      <div class="recipe-detail-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-recipe-back" aria-label="Go back">&larr;</button>
+          <h2 class="browse-title" id="recipe-detail-name"></h2>
+        </div>
+        <div id="recipe-detail-meta" class="recipe-detail-meta">
+          <div id="recipe-detail-pills" class="card-pills detail-pills"></div>
+        </div>
+        <p id="recipe-detail-description" class="recipe-detail-description"></p>
+        <section id="recipe-detail-ingredients" class="detail-section">
+          <h3 class="detail-section-title">Ingredients</h3>
+          <ul id="recipe-detail-ingredients-list" class="detail-ingredients-list"></ul>
+        </section>
+        <section id="recipe-detail-method" class="detail-section">
+          <h3 class="detail-section-title">Method</h3>
+          <ol id="recipe-detail-method-list" class="detail-method-list"></ol>
+        </section>
+        <a id="recipe-detail-link" class="recipe-link detail-external-link" href="#" target="_blank" rel="noopener" style="display:none;">View recipe &rarr;</a>
+        <div id="recipe-detail-actions" class="recipe-detail-actions"></div>
+      </div>
+    </div>
+
+    <div id="screen-error" class="screen">
+      <div class="error-content">
+        <h2>Oops — something's not right</h2>
+        <p id="error-message"></p>
+        <p>Check that <code>recipes.json</code> and <code>tree.json</code> are valid JSON. A missing comma or extra comma is usually the culprit.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# Exported backup files contain your localStorage data (including API key)
+backup*.json
+*-backup.json
+meal-app-backup*.json
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
