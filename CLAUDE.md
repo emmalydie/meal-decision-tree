@@ -23,7 +23,7 @@ Everything runs in a single IIFE in `app.js`. There is no module system.
 
 **User data** is persisted to `localStorage` under the key `mealAppUserData`. It holds ratings, notes, removed recipe IDs, the weekly plan, custom recipes, and the Spoonacular API key. The `userData` object is loaded on init and written back on every change via `saveUserData()`.
 
-**Screen system:** All screens exist in the HTML simultaneously as `.screen` divs. `showScreen(name)` removes `active` from all and adds it to `#screen-{name}`. The active `state.screen` string tracks where the user is. Screens: `landing`, `question`, `results`, `browse`, `planner`, `add-recipe`, `recipe`, `shopping`, `settings`, `error`.
+**Screen system:** All screens exist in the HTML simultaneously as `.screen` divs. `showScreen(name)` removes `active` from all and adds it to `#screen-{name}`. The active `state.screen` string tracks where the user is. Screens: `landing`, `question`, `results`, `browse`, `planner`, `add-recipe`, `recipe`, `shopping`, `settings`, `error`, `parties`, `dinner-party`.
 
 **Filtering pipeline (`filterRecipes`):**
 1. Starts from `eligibleForSuggestions()` (all recipes minus removed and 1-star rated)
@@ -143,3 +143,35 @@ Conversions: g ↔ oz, kg ↔ lb (lb < 1 kg converts to g rather than kg for rea
 **Leftover suggestions** (`suggestByIngredientOverlap`) scores recipes by how many non-staple `keyIngredients` they share with the shortlisted/planned recipes. `STAPLES` at the top of `app.js` defines which ingredients to ignore — currently: olive oil, oil, salt, pepper, black pepper, butter, sugar, water, eggs, herbs. Garlic and onion are intentionally **not** in STAPLES so they appear on the shopping list.
 
 **GitHub / publishing:** The API key is never in source files — safe to push. Exported backup JSON files contain the key and are gitignored. See `.gitignore`.
+
+## Dinner party planner (`#screen-parties` / `#screen-dinner-party`)
+
+A dedicated feature for planning dinner parties. Entry point: "Plan a dinner party 🎉" on the landing screen → `openParties()`.
+
+**Data** stored in `userData.dinnerParties[]` and `userData.currentPartyId`. Each party object:
+```
+{
+  id, name, date,
+  guests[],          // everyone invited (name strings)
+  seats[],           // one entry per seat; string = guest name, "" = empty
+  shape,             // "round" | "rect"
+  dietary[],         // subset of: vegetarian, vegan, gluten-free, dairy-free
+  menu: { nibbles[], starter[], main[], dessert[], drinks[] }  // recipe id arrays
+}
+```
+
+**Parties hub (`#screen-parties`):** Lists saved parties with a search box (searches by name and guest). `renderPartiesList(query)` handles filtering. Create via `createParty()`, open via `openParty(id)`, delete via `deleteParty(id)` (with undo toast).
+
+**Party editor (`#screen-dinner-party`):**
+- **Dietary box** — toggle chips; toggling re-runs `renderPartyMenu()` and `renderPartyWebIdeas()` so suggestions stay filtered.
+- **Guest pool** — type a name, click Add; names become draggable chips. `makeGuestChip(name)` uses the `.guest-chip` style. Chips carry `{name}` in dataTransfer. Seated guests show a chair icon prefix.
+- **The table** — `renderGuestTable()` draws a plain `.tabletop` div (oval or rounded rect) plus one `.seat` div per slot, positioned via `seatPct(i, n, isRect)` (CSS percentages). Each seated guest gets a unique ceramic tile square (`tileIndexForGuest(name)` hashes the name → 0–44) with their name on a gold-bordered italic label. Empty seats show a faded dashed tile. Seats are directly draggable (HTML `draggable=true`); drop on a seat calls `assignSeat` or `swapSeats`; click on a named seat vacates it.
+  - **Round table**: seats spread evenly on an ellipse around the table.
+  - **Rectangle table**: natural dinner-party layout — 1 head at each short end if n is even, 1 head at left end only if n is odd; remaining seats distributed evenly on both long sides via `rectSeatXYNatural(i, n)`.
+  - Shape toggle (Round / Rectangle) calls `renderShapeToggle()` + `renderGuestTable()`.
+  - `+` / `−` adjust `seats.length` (1–12); `setSeatCount(delta)`.
+- **Menu by course** — five course sections (Nibbles / Starter / Main / Dessert / Drinks) rendered by `renderMenuSection(course)`. Each section has a search box that filters `visibleRecipes()` respecting `party.dietary` (subset rule). Adds via `addDishToCourse`, removes via `removeDishFromCourse`. Dishes shown as standard `renderRecipeCard` tiles.
+- **Print menu** — `printMenu()` builds a `#print-menu` div and calls `window.print()`. CSS `@media print` hides the app and renders an A5 page with a tile header band, party name in display font, guest list, and course dish titles.
+- **Web ideas** — `renderPartyWebIdeas()` calls `fetchWebRecipes()` biased toward `{meal:"dinner", mood:["impressive"], dietary:party.dietary}`. Results show an "Add to [course]" picker; adding saves the recipe via `saveWebRecipe()` then calls `addDishToCourse`.
+
+**Tile assignment for seats** — `tileIndexForGuest(name)` hashes the guest name the same way `tileIndexForRecipe` hashes recipe IDs, so the same person always gets the same tile. The tile image is set as an inline `backgroundImage` style (not via a CSS class), so no extra CSS rules are needed.

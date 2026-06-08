@@ -24,7 +24,12 @@
           <button class="btn btn-secondary" id="btn-surprise">Surprise me</button>
           <button class="btn btn-ghost" id="btn-browse">Browse all recipes</button>
           <button class="btn btn-ghost" id="btn-planner">Plan my week</button>
+          <button class="btn btn-ghost" id="btn-dinner-party">Plan a dinner party 🎉</button>
           <button class="btn btn-ghost" id="btn-add">Add a recipe</button>
+        </div>
+        <div id="landing-foryou" class="landing-foryou" style="display:none;">
+          <p class="foryou-label" id="foryou-label">For you</p>
+          <div id="foryou-cards" class="foryou-cards"></div>
         </div>
       </div>
     </div>
@@ -120,6 +125,71 @@
 
         <div class="planner-shopping-cta">
           <button class="btn btn-primary" id="btn-make-shopping">🛒 Make shopping list</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-parties" class="screen">
+      <div class="parties-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-parties-back" aria-label="Go home">&larr;</button>
+          <h2 class="browse-title">Dinner Parties</h2>
+        </div>
+        <p class="planner-intro">Build a menu, then seat your guests around the table.</p>
+        <div class="parties-hub-controls">
+          <button class="btn btn-primary" id="btn-new-party">＋ New dinner party</button>
+          <input type="text" class="search-input" id="parties-search" placeholder="Search by name or guest…">
+        </div>
+        <div class="parties-list" id="parties-list"></div>
+      </div>
+    </div>
+
+    <div id="screen-dinner-party" class="screen">
+      <div class="party-content">
+        <div class="browse-header">
+          <button class="btn-icon" id="btn-party-back" aria-label="Back to parties">&larr;</button>
+          <input type="text" class="party-name-input" id="party-name" placeholder="Name your party" aria-label="Party name">
+        </div>
+        <label class="party-date-label">When? <input type="date" id="party-date" class="party-date-input"></label>
+
+        <div class="party-section">
+          <h3 class="party-subhead">Dietary needs at the table</h3>
+          <p class="planner-hint">Tick any that apply — suggestions will only show dishes that fit.</p>
+          <div class="dietary-box" id="party-dietary"></div>
+        </div>
+
+        <div class="party-section">
+          <h3 class="party-subhead">Who's coming?</h3>
+          <div class="guest-pool-add">
+            <input type="text" class="search-input" id="guest-name-input" placeholder="Add a guest's name…">
+            <button class="btn btn-small btn-secondary" id="btn-add-guest">Add</button>
+          </div>
+          <div class="guest-pool" id="guest-pool"></div>
+        </div>
+
+        <div class="party-section">
+          <h3 class="party-subhead">The table <span class="planner-hint">(drag names onto seats; drag seated guests to swap)</span></h3>
+          <div class="table-controls-row">
+            <div class="seat-controls">
+              <button class="btn-icon seat-step" id="btn-seat-dec" aria-label="Fewer seats">&minus;</button>
+              <span class="seat-count" id="seat-count">0 seats</span>
+              <button class="btn-icon seat-step" id="btn-seat-inc" aria-label="More seats">＋</button>
+            </div>
+            <div class="shape-toggle" id="table-shape-toggle"></div>
+          </div>
+          <div class="guest-table-wrap shape-round" id="guest-table"></div>
+        </div>
+
+        <div class="party-section">
+          <h3 class="party-subhead">The menu</h3>
+          <button class="btn btn-small btn-ghost party-print-btn" id="btn-print-menu">Print menu</button>
+          <div class="party-menu" id="party-menu"></div>
+        </div>
+
+        <div class="party-section" id="party-web-ideas-section">
+          <h3 class="party-subhead">Impressive ideas from the web</h3>
+          <p class="web-ideas-status" id="party-web-status"></p>
+          <div class="web-ideas-grid" id="party-web-ideas"></div>
         </div>
       </div>
     </div>

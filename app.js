@@ -2026,6 +2026,7 @@
     console.log("Loaded " + BUILTIN_RECIPES.length + " built-in + " +
       (userData.customRecipes.length) + " custom recipes");
     setupEventListeners();
+    renderForYou();
   }
 
   // ---- User data layer (localStorage) ----
@@ -2042,6 +2043,9 @@
       apiKey: "",
       ingredientOverrides: {},
       shopping: { checked: {}, extras: [] },
+      history: {},  // { [id]: { count: number, lastCooked: "YYYY-MM-DD" } }
+      dinnerParties: [],     // array of party objects (newest first)
+      currentPartyId: null,  // id of the party currently being edited
     };
   }
 
@@ -2065,6 +2069,9 @@
           if (!userData.shopping || typeof userData.shopping !== "object") userData.shopping = { checked: {}, extras: [] };
           if (!userData.shopping.checked || typeof userData.shopping.checked !== "object") userData.shopping.checked = {};
           if (!Array.isArray(userData.shopping.extras)) userData.shopping.extras = [];
+          if (!userData.history || typeof userData.history !== "object") userData.history = {};
+          if (!Array.isArray(userData.dinnerParties)) userData.dinnerParties = [];
+          if (typeof userData.currentPartyId !== "string") userData.currentPartyId = null;
         }
       }
     } catch (e) {
@@ -2211,6 +2218,29 @@
     document.getElementById("btn-planner-back").addEventListener("click", startOver);
     document.getElementById("planner-search").addEventListener("input", renderPlannerSearch);
     document.getElementById("btn-make-shopping").addEventListener("click", openShoppingList);
+
+    document.getElementById("btn-dinner-party").addEventListener("click", openParties);
+    document.getElementById("btn-parties-back").addEventListener("click", startOver);
+    document.getElementById("btn-new-party").addEventListener("click", createParty);
+    document.getElementById("parties-search").addEventListener("input", function () {
+      renderPartiesList(this.value);
+    });
+    document.getElementById("btn-party-back").addEventListener("click", openParties);
+    document.getElementById("btn-print-menu").addEventListener("click", printMenu);
+    document.getElementById("btn-add-guest").addEventListener("click", addGuest);
+    document.getElementById("guest-name-input").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") { ev.preventDefault(); addGuest(); }
+    });
+    document.getElementById("party-name").addEventListener("input", function () {
+      var p = currentParty();
+      if (p) { p.name = this.value; saveUserData(); }
+    });
+    document.getElementById("party-date").addEventListener("change", function () {
+      var p = currentParty();
+      if (p) { p.date = this.value; saveUserData(); }
+    });
+    document.getElementById("btn-seat-inc").addEventListener("click", function () { setSeatCount(1); });
+    document.getElementById("btn-seat-dec").addEventListener("click", function () { setSeatCount(-1); });
 
     document.getElementById("btn-shopping-back").addEventListener("click", function () { openPlanner(); });
     document.getElementById("btn-shopping-copy").addEventListener("click", copyShoppingList);
@@ -2457,10 +2487,138 @@
   }
 
   // Order a pool so higher-rated float up, with randomness within equal ratings.
+  function renderForYou() {
+    var section = document.getElementById("landing-foryou");
+    if (!section) return;
+    var profile = buildAffinityProfile();
+    if (!profile.active) { section.style.display = "none"; return; }
+
+    // Score and pick top 3, excluding recently cooked (< 5 days)
+    var picks = eligibleForSuggestions()
+      .map(function (r) {
+        var h = userData.history && userData.history[r.id];
+        var daysSince = h && h.lastCooked
+          ? (Date.now() - new Date(h.lastCooked).getTime()) / 86400000
+          : 999;
+        return { r: r, score: scoreRecipe(r.id, profile), daysSince: daysSince };
+      })
+      .filter(function (x) { return x.daysSince >= 5; })
+      .sort(function (a, b) { return b.score - a.score; })
+      .slice(0, 3)
+      .map(function (x) { return x.r; });
+
+    if (!picks.length) { section.style.display = "none"; return; }
+
+    // Label: surface the top affinity ingredient for context
+    var topIngredients = Object.keys(profile.ingredients).slice(0, 2).join(" & ");
+    var labelEl = document.getElementById("foryou-label");
+    if (labelEl) labelEl.textContent = topIngredients
+      ? "Because you love " + topIngredients
+      : "For you";
+
+    var container = document.getElementById("foryou-cards");
+    container.innerHTML = "";
+    picks.forEach(function (recipe) {
+      var card = document.createElement("button");
+      card.className = "foryou-card tile-" + tileIndexForRecipe(recipe.id);
+      card.setAttribute("aria-label", recipe.name);
+      card.addEventListener("click", function () { showRecipeDetail(recipe.id); });
+
+      var inner = document.createElement("div");
+      inner.className = "foryou-card-inner";
+
+      var name = document.createElement("span");
+      name.className = "foryou-card-name";
+      name.textContent = recipe.name;
+      inner.appendChild(name);
+
+      // Find top shared ingredient for the "why" tag
+      var sharedIngs = (recipe.keyIngredients || []).filter(function (ing) {
+        return profile.ingredients[ing.toLowerCase().trim()];
+      });
+      if (sharedIngs.length) {
+        var why = document.createElement("span");
+        why.className = "foryou-why";
+        why.textContent = sharedIngs[0];
+        inner.appendChild(why);
+      }
+
+      card.appendChild(inner);
+      container.appendChild(card);
+    });
+
+    section.style.display = "";
+  }
+
+  // Build a set of non-staple ingredients from highly-rated and recently cooked recipes.
+  // Returns { ingredients: {norm: true}, active: bool } — active only with enough data.
+  function buildAffinityProfile() {
+    var highRated = allRecipes.filter(function (r) { return getRating(r.id) >= 4; });
+    var historyCount = Object.keys(userData.history || {}).length;
+    if (highRated.length < 2 && historyCount < 3) {
+      return { ingredients: {}, active: false };
+    }
+    var ingredients = {};
+    highRated.forEach(function (r) {
+      (r.keyIngredients || []).forEach(function (ing) {
+        var norm = ing.toLowerCase().trim();
+        if (STAPLES.indexOf(norm) === -1) ingredients[norm] = true;
+      });
+    });
+    Object.keys(userData.history || {}).forEach(function (hid) {
+      var h = userData.history[hid];
+      if (!h || !h.lastCooked) return;
+      var days = (Date.now() - new Date(h.lastCooked).getTime()) / 86400000;
+      if (days <= 30) {
+        var r = recipeById(hid);
+        if (r) {
+          (r.keyIngredients || []).forEach(function (ing) {
+            var norm = ing.toLowerCase().trim();
+            if (STAPLES.indexOf(norm) === -1) ingredients[norm] = true;
+          });
+        }
+      }
+    });
+    return { ingredients: ingredients, active: true };
+  }
+
+  // Composite score: rating + ingredient affinity + cook frequency/recency + small random.
+  // Cold-start: when data is sparse, collapses to rating-only (same as before).
+  function scoreRecipe(id, affinityProfile) {
+    var ratingPart = ratingForSort(id); // 1-5, unrated → 3
+
+    var historyPart = 0;
+    var h = userData.history && userData.history[id];
+    if (h && h.lastCooked) {
+      var daysSince = (Date.now() - new Date(h.lastCooked).getTime()) / 86400000;
+      if (daysSince < 5) {
+        historyPart = -1.5; // just cooked — nudge away from it
+      } else {
+        var count = Math.min(h.count || 1, 6);
+        historyPart = count * Math.max(0, 1 - daysSince / 60) * 0.5;
+      }
+    }
+
+    var affinityPart = 0;
+    if (affinityProfile && affinityProfile.active) {
+      var r = recipeById(id);
+      if (r) {
+        var shared = 0;
+        (r.keyIngredients || []).forEach(function (ing) {
+          if (affinityProfile.ingredients[ing.toLowerCase().trim()]) shared++;
+        });
+        affinityPart = Math.min(shared, 3) * 0.4; // up to 1.2 bonus
+      }
+    }
+
+    return ratingPart + historyPart + affinityPart + (Math.random() * 0.3);
+  }
+
   function orderForSuggestions(arr) {
+    var profile = buildAffinityProfile();
     return arr
-      .map(function (r) { return { r: r, key: ratingForSort(r.id), rand: Math.random() }; })
-      .sort(function (a, b) { return b.key - a.key || a.rand - b.rand; })
+      .map(function (r) { return { r: r, score: scoreRecipe(r.id, profile) }; })
+      .sort(function (a, b) { return b.score - a.score; })
       .map(function (o) { return o.r; });
   }
 
@@ -3356,6 +3514,674 @@
     showScreen("planner");
   }
 
+  // ---- Dinner party planner ----
+
+  var PARTY_COURSES = [
+    { key: "nibbles", label: "Nibbles" },
+    { key: "starter", label: "Starter" },
+    { key: "main", label: "Main" },
+    { key: "dessert", label: "Dessert" },
+    { key: "drinks", label: "Drinks" },
+  ];
+  var DIETARY_OPTIONS = [
+    { value: "vegetarian", label: "Vegetarian" },
+    { value: "vegan", label: "Vegan" },
+    { value: "gluten-free", label: "Gluten-free" },
+    { value: "dairy-free", label: "Dairy-free" },
+  ];
+
+  function currentParty() {
+    if (!userData.currentPartyId) return null;
+    for (var i = 0; i < userData.dinnerParties.length; i++) {
+      if (userData.dinnerParties[i].id === userData.currentPartyId) return userData.dinnerParties[i];
+    }
+    return null;
+  }
+
+  function openParties() {
+    var searchEl = document.getElementById("parties-search");
+    if (searchEl) searchEl.value = "";
+    renderPartiesList("");
+    showScreen("parties");
+  }
+
+  function formatPartyDate(iso) {
+    var parts = String(iso).split("-");
+    if (parts.length !== 3) return iso;
+    var d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  }
+
+  function renderPartiesList(query) {
+    var list = document.getElementById("parties-list");
+    list.innerHTML = "";
+    var q = (query || "").toLowerCase().trim();
+    var parties = userData.dinnerParties.filter(function (p) {
+      if (!q) return true;
+      if ((p.name || "").toLowerCase().indexOf(q) !== -1) return true;
+      return (p.guests || []).some(function (g) { return g.toLowerCase().indexOf(q) !== -1; });
+    });
+    if (!userData.dinnerParties.length) {
+      list.innerHTML = '<p class="planner-hint">No parties yet — create one to start planning.</p>';
+      return;
+    }
+    if (!parties.length) {
+      list.innerHTML = '<p class="planner-hint">No parties match that search.</p>';
+      return;
+    }
+    parties.forEach(function (p) {
+      var card = document.createElement("div");
+      card.className = "party-card";
+
+      var seated = (p.seats || []).filter(function (s) { return s; }).length;
+      var dishes = PARTY_COURSES.reduce(function (n, c) {
+        return n + (((p.menu || {})[c.key]) || []).length;
+      }, 0);
+      var meta = [];
+      if (p.date) meta.push(formatPartyDate(p.date));
+      meta.push((p.seats || []).length + " seats");
+      if (seated) meta.push(seated + " seated");
+      meta.push(dishes + " dish" + (dishes === 1 ? "" : "es"));
+
+      var info = document.createElement("button");
+      info.type = "button";
+      info.className = "party-card-body";
+      info.innerHTML = '<span class="party-card-name">' + escapeHtml(p.name || "Dinner party") + "</span>" +
+        '<span class="party-card-meta">' + escapeHtml(meta.join(" · ")) + "</span>";
+      info.addEventListener("click", function () { openParty(p.id); });
+      card.appendChild(info);
+
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "party-card-delete";
+      del.textContent = "✕";
+      del.title = "Delete this party";
+      del.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        deleteParty(p.id);
+      });
+      card.appendChild(del);
+
+      list.appendChild(card);
+    });
+  }
+
+  function createParty() {
+    var party = {
+      id: "party-" + Date.now(),
+      name: "Dinner party",
+      date: "",
+      guests: [],
+      seats: ["", "", "", ""],
+      shape: "round",   // "round" | "rect"
+      dietary: [],
+      menu: { nibbles: [], starter: [], main: [], dessert: [], drinks: [] },
+    };
+    userData.dinnerParties.unshift(party);
+    userData.currentPartyId = party.id;
+    saveUserData();
+    openParty(party.id);
+  }
+
+  function openParty(id) {
+    userData.currentPartyId = id;
+    saveUserData();
+    renderPartyEditor();
+    showScreen("dinner-party");
+  }
+
+  function deleteParty(id) {
+    var idx = -1;
+    userData.dinnerParties.forEach(function (p, i) { if (p.id === id) idx = i; });
+    if (idx === -1) return;
+    var removed = userData.dinnerParties.splice(idx, 1)[0];
+    if (userData.currentPartyId === id) userData.currentPartyId = null;
+    saveUserData();
+    renderPartiesList();
+    showToast("Party deleted.", "Undo", function () {
+      userData.dinnerParties.splice(Math.min(idx, userData.dinnerParties.length), 0, removed);
+      saveUserData();
+      renderPartiesList();
+    });
+  }
+
+  function renderPartyEditor() {
+    var p = currentParty();
+    if (!p) { openParties(); return; }
+    // Defensive shape fixes for older saved data
+    if (!Array.isArray(p.guests)) p.guests = [];
+    if (!Array.isArray(p.seats)) p.seats = ["", "", "", ""];
+    if (p.shape !== "round" && p.shape !== "rect") p.shape = "round";
+    if (!Array.isArray(p.dietary)) p.dietary = [];
+    if (!p.menu || typeof p.menu !== "object") p.menu = {};
+    PARTY_COURSES.forEach(function (c) { if (!Array.isArray(p.menu[c.key])) p.menu[c.key] = []; });
+
+    document.getElementById("party-name").value = p.name || "";
+    document.getElementById("party-date").value = p.date || "";
+
+    renderDietaryBox();
+    renderGuestPool();
+    renderShapeToggle();
+    renderGuestTable();
+    renderPartyMenu();
+    renderPartyWebIdeas();
+  }
+
+  function renderDietaryBox() {
+    var p = currentParty();
+    var box = document.getElementById("party-dietary");
+    box.innerHTML = "";
+    DIETARY_OPTIONS.forEach(function (opt) {
+      var active = p.dietary.indexOf(opt.value) !== -1;
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "dietary-chip" + (active ? " active" : "");
+      chip.textContent = opt.label;
+      chip.addEventListener("click", function () {
+        var i = p.dietary.indexOf(opt.value);
+        if (i === -1) p.dietary.push(opt.value);
+        else p.dietary.splice(i, 1);
+        saveUserData();
+        renderDietaryBox();
+        renderPartyMenu();      // clears in-progress searches so they re-filter
+        renderPartyWebIdeas();
+      });
+      box.appendChild(chip);
+    });
+  }
+
+  // --- Guest pool + draggable name chips ---
+
+  function renderGuestPool() {
+    var p = currentParty();
+    var pool = document.getElementById("guest-pool");
+    pool.innerHTML = "";
+    if (!p.guests.length) {
+      pool.innerHTML = '<p class="planner-hint">Add the people you\'re inviting, then drag them onto seats.</p>';
+      return;
+    }
+    p.guests.forEach(function (name) { pool.appendChild(makeGuestChip(name)); });
+  }
+
+  function makeGuestChip(name) {
+    var p = currentParty();
+    var seated = p.seats.indexOf(name) !== -1;
+    var chip = document.createElement("div");
+    chip.className = "guest-chip draggable" + (seated ? " seated" : "");
+    chip.setAttribute("draggable", "true");
+    chip.dataset.name = name;
+    chip.innerHTML = '<span class="chip-name">' + escapeHtml(name) + "</span>";
+
+    var x = document.createElement("button");
+    x.type = "button";
+    x.className = "chip-x";
+    x.textContent = "✕";
+    x.title = "Remove guest";
+    x.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      removeGuest(name);
+    });
+    chip.appendChild(x);
+
+    chip.addEventListener("dragstart", function (ev) {
+      ev.dataTransfer.setData("text/plain", JSON.stringify({ name: name }));
+      ev.dataTransfer.effectAllowed = "move";
+      chip.classList.add("dragging");
+    });
+    chip.addEventListener("dragend", function () { chip.classList.remove("dragging"); });
+    return chip;
+  }
+
+  function addGuest() {
+    var p = currentParty();
+    if (!p) return;
+    var input = document.getElementById("guest-name-input");
+    var name = (input.value || "").trim();
+    if (!name) return;
+    if (p.guests.indexOf(name) !== -1) {
+      showToast("That guest is already on the list.", null, null);
+      input.value = "";
+      return;
+    }
+    p.guests.push(name);
+    saveUserData();
+    input.value = "";
+    renderGuestPool();
+  }
+
+  function removeGuest(name) {
+    var p = currentParty();
+    var i = p.guests.indexOf(name);
+    if (i !== -1) p.guests.splice(i, 1);
+    for (var s = 0; s < p.seats.length; s++) {
+      if (p.seats[s] === name) p.seats[s] = "";
+    }
+    saveUserData();
+    renderGuestPool();
+    renderGuestTable();
+  }
+
+  // --- Table shape toggle ---
+
+  function renderShapeToggle() {
+    var p = currentParty();
+    var wrap = document.getElementById("table-shape-toggle");
+    wrap.innerHTML = "";
+    ["round", "rect"].forEach(function (shape) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "shape-btn" + (p.shape === shape ? " active" : "");
+      btn.textContent = shape === "round" ? "Round" : "Rectangle";
+      btn.addEventListener("click", function () {
+        p.shape = shape;
+        saveUserData();
+        renderShapeToggle();
+        renderGuestTable();
+      });
+      wrap.appendChild(btn);
+    });
+    // Mirror shape class on the wrap itself so CSS can adjust tabletop style
+    var tableWrap = document.getElementById("guest-table");
+    tableWrap.className = "guest-table-wrap shape-" + p.shape;
+  }
+
+  // --- SVG table illustration ---
+
+  // Hash a guest name to a stable tile index (0 … TILE_COUNT-1)
+  function tileIndexForGuest(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0x7fffffff;
+    return h % TILE_COUNT;
+  }
+
+  // Seat centre in SVG coordinates (420×420 viewBox, cx=cy=210).
+  // Natural rectangle seat positions:
+  //   Even n → 1 head at each short end; odd n → 1 head at left end only.
+  //   Remaining seats fill both long sides, interleaved top/bottom.
+  function rectSeatXYNatural(i, n) {
+    var cx = 210, cy = 210;
+    var tableW = 200, tableH = 124;
+    var tableL = cx - tableW / 2, tableR = cx + tableW / 2;
+    var headOff = 40; // chair centre distance beyond short edge
+    var sideOff = tableH / 2 + 38; // chair centre distance below/above long edge
+    var usesBothHeads = (n % 2 === 0);
+    var headCount = usesBothHeads ? 2 : 1;
+
+    if (i === 0) return { x: tableL - headOff, y: cy };
+    if (usesBothHeads && i === 1) return { x: tableR + headOff, y: cy };
+
+    var sIdx = i - headCount;
+    var rem = n - headCount;
+    var topCount = Math.ceil(rem / 2);
+    var botCount = Math.floor(rem / 2);
+    if (sIdx % 2 === 0) {
+      var t = sIdx / 2;
+      return { x: tableL + tableW / (topCount + 1) * (t + 1), y: cy - sideOff };
+    } else {
+      var b = (sIdx - 1) / 2;
+      return { x: tableL + tableW / (botCount + 1) * (b + 1), y: cy + sideOff };
+    }
+  }
+
+  // Seat position as CSS percentages (0-100) within the wrap.
+  function seatPct(i, n, isRect) {
+    if (isRect) {
+      var pos = rectSeatXYNatural(i, n); // 420×420 space
+      return { x: pos.x / 420 * 100, y: pos.y / 420 * 100 };
+    }
+    var angle = (i / n) * 2 * Math.PI - Math.PI / 2;
+    return { x: 50 + 44 * Math.cos(angle), y: 50 + 42 * Math.sin(angle) };
+  }
+
+  function renderGuestTable() {
+    var p = currentParty();
+    var wrap = document.getElementById("guest-table");
+    wrap.innerHTML = "";
+    wrap.className = "guest-table-wrap";
+    document.getElementById("seat-count").textContent =
+      p.seats.length + (p.seats.length === 1 ? " seat" : " seats");
+
+    // Simple table shape
+    var tabletop = document.createElement("div");
+    tabletop.className = "tabletop" + (p.shape === "rect" ? " tabletop-rect" : "");
+    wrap.appendChild(tabletop);
+
+    var n = p.seats.length;
+    var isRect = p.shape === "rect";
+
+    p.seats.forEach(function (name, i) {
+      var pos = seatPct(i, n, isRect);
+
+      var seat = document.createElement("div");
+      seat.className = "seat" + (name ? " named" : " empty");
+      seat.style.left = pos.x + "%";
+      seat.style.top  = pos.y + "%";
+
+      // Ceramic tile square
+      var tile = document.createElement("div");
+      tile.className = "seat-tile";
+      if (name) {
+        tile.style.backgroundImage = 'url("images/tiles/t' + (tileIndexForGuest(name) + 1) + '.jpg")';
+      }
+      seat.appendChild(tile);
+
+      // Name label
+      var label = document.createElement("span");
+      label.className = "seat-label";
+      label.textContent = name || "drop";
+      seat.appendChild(label);
+
+      if (name) {
+        seat.setAttribute("draggable", "true");
+        seat.title = name + " — click to remove from seat";
+        seat.addEventListener("dragstart", function (ev) {
+          ev.dataTransfer.setData("text/plain", JSON.stringify({ name: name, fromSeat: i }));
+          ev.dataTransfer.effectAllowed = "move";
+          seat.classList.add("dragging");
+        });
+        seat.addEventListener("dragend", function () { seat.classList.remove("dragging"); });
+        seat.addEventListener("click", function () {
+          vacateSeat(i);
+          showToast(name + " removed from seat.", "Undo", function () { assignSeat(i, name); });
+        });
+      }
+
+      seat.addEventListener("dragover",  function (ev) { ev.preventDefault(); seat.classList.add("drag-over"); });
+      seat.addEventListener("dragleave", function ()     { seat.classList.remove("drag-over"); });
+      seat.addEventListener("drop", function (ev) {
+        ev.preventDefault();
+        seat.classList.remove("drag-over");
+        var data;
+        try { data = JSON.parse(ev.dataTransfer.getData("text/plain")); } catch (e) { return; }
+        if (!data || !data.name) return;
+        if (typeof data.fromSeat === "number") swapSeats(data.fromSeat, i);
+        else assignSeat(i, data.name);
+      });
+
+      wrap.appendChild(seat);
+    });
+  }
+
+
+  function assignSeat(i, name) {
+    var p = currentParty();
+    for (var s = 0; s < p.seats.length; s++) {
+      if (p.seats[s] === name) p.seats[s] = "";
+    }
+    p.seats[i] = name;
+    if (p.guests.indexOf(name) === -1) p.guests.push(name);
+    saveUserData();
+    renderGuestPool();
+    renderGuestTable();
+  }
+
+  function swapSeats(fromIdx, toIdx) {
+    if (fromIdx === toIdx) return;
+    var p = currentParty();
+    var tmp = p.seats[fromIdx];
+    p.seats[fromIdx] = p.seats[toIdx];
+    p.seats[toIdx] = tmp;
+    saveUserData();
+    renderGuestPool();
+    renderGuestTable();
+  }
+
+  function vacateSeat(i) {
+    var p = currentParty();
+    p.seats[i] = "";
+    saveUserData();
+    renderGuestPool();
+    renderGuestTable();
+  }
+
+  function setSeatCount(delta) {
+    var p = currentParty();
+    if (!p) return;
+    var n = p.seats.length + delta;
+    if (n < 1 || n > 12) return;
+    if (delta > 0) p.seats.push("");
+    else p.seats.pop();
+    saveUserData();
+    renderGuestPool();
+    renderGuestTable();
+  }
+
+  // --- Menu by course ---
+
+  function recipeMatchesDietary(recipe, dietary) {
+    if (!dietary || !dietary.length) return true;
+    var arr = Array.isArray(recipe.dietary) ? recipe.dietary : [];
+    return dietary.every(function (d) { return arr.indexOf(d) !== -1; });
+  }
+
+  function renderPartyMenu() {
+    var container = document.getElementById("party-menu");
+    container.innerHTML = "";
+    PARTY_COURSES.forEach(function (course) {
+      container.appendChild(renderMenuSection(course));
+    });
+  }
+
+  function renderMenuSection(course) {
+    var p = currentParty();
+    var section = document.createElement("div");
+    section.className = "course-section";
+
+    var label = document.createElement("h4");
+    label.className = "course-label";
+    label.textContent = course.label;
+    section.appendChild(label);
+
+    var dishes = document.createElement("div");
+    dishes.className = "course-dishes";
+    var ids = p.menu[course.key] || [];
+    if (!ids.length) {
+      dishes.innerHTML = '<p class="planner-hint course-empty">Nothing here yet.</p>';
+    } else {
+      ids.forEach(function (id) {
+        var r = recipeById(id);
+        if (!r) return;
+        var card = renderRecipeCard(r, { showActions: false });
+        var rm = document.createElement("button");
+        rm.type = "button";
+        rm.className = "btn btn-small course-remove";
+        rm.textContent = "✕ Remove from menu";
+        rm.addEventListener("click", function () { removeDishFromCourse(course.key, id); });
+        card.appendChild(rm);
+        dishes.appendChild(card);
+      });
+    }
+    section.appendChild(dishes);
+
+    var searchWrap = document.createElement("div");
+    searchWrap.className = "course-search-wrap";
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "search-input course-search";
+    input.placeholder = "Add a dish to " + course.label.toLowerCase() + "…";
+    var results = document.createElement("div");
+    results.className = "planner-search-results";
+    input.addEventListener("input", function () {
+      renderCourseSearchResults(course.key, input.value, results, input);
+    });
+    searchWrap.appendChild(input);
+    searchWrap.appendChild(results);
+    section.appendChild(searchWrap);
+
+    return section;
+  }
+
+  function renderCourseSearchResults(courseKey, q, box, input) {
+    var p = currentParty();
+    box.innerHTML = "";
+    q = (q || "").toLowerCase().trim();
+    if (!q) return;
+    var existing = p.menu[courseKey] || [];
+    var matches = visibleRecipes().filter(function (r) {
+      if (existing.indexOf(r.id) !== -1) return false;
+      if (!recipeMatchesDietary(r, p.dietary)) return false;
+      var haystack = (r.name + " " + (r.keyIngredients || []).join(" ")).toLowerCase();
+      return haystack.indexOf(q) !== -1;
+    }).slice(0, 8);
+
+    if (!matches.length) {
+      box.innerHTML = '<div class="search-result-empty">No matches</div>';
+      return;
+    }
+    matches.forEach(function (r) {
+      var item = document.createElement("button");
+      item.type = "button";
+      item.className = "search-result-item";
+      item.innerHTML = "<span>" + escapeHtml(r.name) + "</span><span class='search-result-meta'>" +
+        capitalize(String(r.cuisine).replace(/-/g, " ")) + " · " + r.time + " min</span>";
+      item.addEventListener("click", function () {
+        addDishToCourse(courseKey, r.id);
+        input.value = "";
+        box.innerHTML = "";
+      });
+      box.appendChild(item);
+    });
+  }
+
+  function addDishToCourse(courseKey, id) {
+    var p = currentParty();
+    if (!p.menu[courseKey]) p.menu[courseKey] = [];
+    if (p.menu[courseKey].indexOf(id) === -1) p.menu[courseKey].push(id);
+    saveUserData();
+    renderPartyMenu();
+  }
+
+  function removeDishFromCourse(courseKey, id) {
+    var p = currentParty();
+    var arr = p.menu[courseKey] || [];
+    var i = arr.indexOf(id);
+    if (i !== -1) arr.splice(i, 1);
+    saveUserData();
+    renderPartyMenu();
+  }
+
+  // --- Printable menu ---
+
+  function printMenu() {
+    var p = currentParty();
+    if (!p) return;
+
+    // Pick a tile index to decorate the header strip
+    var tileIdx = Math.abs(p.id.split("").reduce(function (a, c) { return a + c.charCodeAt(0); }, 0)) % 45;
+    var tileUrl = "images/tiles/t" + (tileIdx + 1) + ".jpg";
+
+    // Build or reuse the print container
+    var el = document.getElementById("print-menu");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "print-menu";
+      document.body.appendChild(el);
+    }
+
+    var html = "";
+    // Tile header band
+    html += '<div class="pm-tile-band" style="background-image:url(\'' + escapeHtml(tileUrl) + '\')"></div>';
+    // Inner body
+    html += '<div class="pm-body">';
+    html += '<h1 class="pm-title">' + escapeHtml(p.name || "Dinner party") + "</h1>";
+    if (p.date) html += '<p class="pm-date">' + escapeHtml(formatPartyDate(p.date)) + "</p>";
+    // Guests
+    var seated = (p.seats || []).filter(Boolean);
+    if (seated.length) {
+      html += '<p class="pm-guests">' + escapeHtml(seated.join("  ·  ")) + "</p>";
+    }
+    html += '<div class="pm-courses">';
+    PARTY_COURSES.forEach(function (course) {
+      var ids = (p.menu[course.key] || []);
+      if (!ids.length) return;
+      html += '<div class="pm-course">';
+      html += '<h2 class="pm-course-label">' + escapeHtml(course.label) + "</h2>";
+      html += "<ul class='pm-dish-list'>";
+      ids.forEach(function (id) {
+        var r = recipeById(id);
+        if (r) html += "<li>" + escapeHtml(r.name) + "</li>";
+      });
+      html += "</ul></div>";
+    });
+    html += "</div>";
+    // Bottom tile strip
+    html += '<div class="pm-tile-band pm-tile-bottom" style="background-image:url(\'' + escapeHtml(tileUrl) + '\')"></div>';
+    html += "</div>";
+
+    el.innerHTML = html;
+    window.print();
+  }
+
+  // --- Web ideas (reuses Spoonacular discovery) ---
+
+  function renderPartyWebIdeas() {
+    var p = currentParty();
+    var status = document.getElementById("party-web-status");
+    var grid = document.getElementById("party-web-ideas");
+    grid.innerHTML = "";
+
+    if (!(userData.apiKey || "").trim()) {
+      status.textContent = "Add your free Spoonacular key in Settings ⚙️ to discover impressive new dishes.";
+      return;
+    }
+    status.textContent = "Finding impressive ideas…";
+
+    var answers = { meal: "dinner", mood: ["impressive"], dietary: p.dietary };
+    fetchWebRecipes(answers, function (res) {
+      if (res.error) {
+        status.textContent = "Couldn't reach the recipe service. Check your connection or key and try again.";
+        return;
+      }
+      var fresh = res.recipes.filter(function (r) {
+        if (recipeById(r.id)) return false;
+        if (isRemoved(r.id)) return false;
+        var nameLower = r.name.toLowerCase();
+        return !allRecipes.some(function (e) { return e.name.toLowerCase() === nameLower; });
+      }).slice(0, 3);
+
+      if (!fresh.length) {
+        status.textContent = "No new ideas this time — your collection already covers it.";
+        return;
+      }
+      status.textContent = "";
+      fresh.forEach(function (r) {
+        webRecipeCache[r.id] = r; // cache so detail screen can look it up
+        grid.appendChild(renderPartyWebCard(r));
+      });
+    });
+  }
+
+  function renderPartyWebCard(recipe) {
+    // Render without the default "Save to my recipes" web row; we add a course picker instead.
+    var displayCopy = Object.assign({}, recipe);
+    delete displayCopy.web;
+    var card = renderRecipeCard(displayCopy, { showActions: false });
+
+    var row = document.createElement("div");
+    row.className = "card-actions party-web-actions";
+    var lbl = document.createElement("span");
+    lbl.className = "party-web-add-label";
+    lbl.textContent = "Add to:";
+    row.appendChild(lbl);
+    PARTY_COURSES.forEach(function (course) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn btn-small course-add-web";
+      b.textContent = course.label;
+      b.addEventListener("click", function () { addWebIdeaToCourse(recipe, course.key); });
+      row.appendChild(b);
+    });
+    card.appendChild(row);
+    return card;
+  }
+
+  function addWebIdeaToCourse(recipe, courseKey) {
+    saveWebRecipe(recipe);              // strips web flag, sets custom, gives it a stable id
+    addDishToCourse(courseKey, recipe.id);
+    renderPartyWebIdeas();              // recipe is now in the collection, so it drops off the web list
+  }
+
   function getWeekDays() {
     var today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -3489,7 +4315,13 @@
       removeFromShortlist(data.id, true);
     }
     if (!userData.plan[dateK]) userData.plan[dateK] = [];
-    if (userData.plan[dateK].indexOf(data.id) === -1) userData.plan[dateK].push(data.id);
+    if (userData.plan[dateK].indexOf(data.id) === -1) {
+      userData.plan[dateK].push(data.id);
+      // Record cook history — persists beyond the weekly plan window
+      if (!userData.history[data.id]) userData.history[data.id] = { count: 0, lastCooked: null };
+      userData.history[data.id].count++;
+      userData.history[data.id].lastCooked = dateK;
+    }
     saveUserData();
     renderPlanner();
   }
