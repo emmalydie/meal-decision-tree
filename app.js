@@ -2648,6 +2648,10 @@
     state.detailFromScreen = state.screen;
     state.currentDetailId = id;
 
+    // Tile header band — same tile as the recipe's card
+    var tileHeader = document.getElementById("recipe-detail-tile-header");
+    tileHeader.className = "recipe-detail-tile-header tile-" + tileIndexForRecipe(id);
+
     // Name
     document.getElementById("recipe-detail-name").textContent = recipe.name;
 
