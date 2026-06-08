@@ -14,7 +14,7 @@
   // To add tiles: drop t34.jpg, t35.jpg etc. into images/tiles/ and increase TILE_COUNT.
   // To remove tiles from the end: decrease TILE_COUNT.
   // Tiles must be named t1.jpg, t2.jpg ... tN.jpg with no gaps.
-  var TILE_COUNT = 42;
+  var TILE_COUNT = 45;
   var TILE_FRAMES = (function () {
     var frames = [];
     for (var i = 1; i <= TILE_COUNT; i++) { frames.push("t" + i + ".jpg"); }
@@ -2004,6 +2004,7 @@
   var webRecipeCache = {}; // temporary store for current Spoonacular results
   var shoppingUnitMode = "metric"; // "metric" | "imperial" — display preference, not persisted
   var recipeUnitMode = "metric";   // same for the recipe detail screen
+  var recipeCurrentServings = null; // absolute serving count being displayed; null = not scalable
 
   var state = {
     screen: "landing",
@@ -2137,18 +2138,30 @@
 
   function showScreen(name) {
     state.screen = name;
-    document.querySelectorAll(".screen").forEach(function (el) {
-      el.classList.remove("active");
-    });
+    var current = document.querySelector(".screen.active");
     var target = document.getElementById("screen-" + name);
-    if (target) {
-      target.classList.add("active");
-      target.style.animation = "none";
-      target.offsetHeight;
-      target.style.animation = "";
-    }
     var gear = document.getElementById("btn-settings");
     gear.style.display = name === "landing" ? "" : "none";
+
+    function doSwitch() {
+      document.querySelectorAll(".screen").forEach(function (el) {
+        el.classList.remove("active", "screen-exiting");
+      });
+      if (target) {
+        target.classList.add("active");
+        target.style.animation = "none";
+        target.offsetHeight;
+        target.style.animation = "";
+      }
+      window.scrollTo(0, 0);
+    }
+
+    if (current && current !== target) {
+      current.classList.add("screen-exiting");
+      setTimeout(doSwitch, 150);
+    } else {
+      doSwitch();
+    }
   }
 
   function showError(msg) {
@@ -2211,8 +2224,29 @@
       document.getElementById("recipe-units-toggle-label").textContent = this.checked ? "Imperial" : "Metric";
       if (state.currentDetailId) {
         var r = recipeById(state.currentDetailId);
-        if (r) renderDetailIngredients(getRecipeIngredients(r));
+        if (r) {
+          var scale = (recipeCurrentServings && r.servings) ? recipeCurrentServings / r.servings : 1;
+          renderDetailIngredients(getRecipeIngredients(r), scale);
+        }
       }
+    });
+
+    document.getElementById("btn-servings-dec").addEventListener("click", function () {
+      if (recipeCurrentServings == null || recipeCurrentServings <= 1) return;
+      recipeCurrentServings--;
+      var r = recipeById(state.currentDetailId);
+      if (!r) return;
+      document.getElementById("servings-display").textContent = "Serves " + recipeCurrentServings;
+      renderDetailIngredients(getRecipeIngredients(r), recipeCurrentServings / r.servings);
+    });
+
+    document.getElementById("btn-servings-inc").addEventListener("click", function () {
+      if (recipeCurrentServings == null) return;
+      recipeCurrentServings++;
+      var r = recipeById(state.currentDetailId);
+      if (!r) return;
+      document.getElementById("servings-display").textContent = "Serves " + recipeCurrentServings;
+      renderDetailIngredients(getRecipeIngredients(r), recipeCurrentServings / r.servings);
     });
     document.getElementById("toggle-shopping-units").addEventListener("change", function () {
       shoppingUnitMode = this.checked ? "imperial" : "metric";
@@ -2267,7 +2301,10 @@
     tree.questions.forEach(function (_, i) {
       var dot = document.createElement("span");
       dot.className = "dot";
-      if (i < state.questionIndex) dot.classList.add("done");
+      if (i < state.questionIndex) {
+        dot.classList.add("done");
+        if (i === state.questionIndex - 1) dot.classList.add("just-done");
+      }
       if (i === state.questionIndex) dot.classList.add("active");
       dotsContainer.appendChild(dot);
     });
@@ -2568,6 +2605,7 @@
       season: [],
       description: stripHtml(r.summary || ""),
       notes: "",
+      servings: r.servings || null,
       web: true,
     };
   }
@@ -2623,14 +2661,16 @@
 
   // ---- Recipe Detail ----
 
-  function renderDetailIngredients(ingredients) {
+  function renderDetailIngredients(ingredients, scale) {
+    scale = scale || 1;
     var ingList = document.getElementById("recipe-detail-ingredients-list");
     ingList.innerHTML = "";
     ingredients.forEach(function (ing) {
       var parsed = parseIngredient(ing);
       var li = document.createElement("li");
       if (parsed && parsed.qty != null) {
-        var converted = applyUnitMode(parsed, recipeUnitMode);
+        var scaledParsed = { qty: parsed.qty * scale, unit: parsed.unit, name: parsed.name };
+        var converted = applyUnitMode(scaledParsed, recipeUnitMode);
         var qtyStr = KEEP_UNITS[converted.unit] ? formatQty(converted.qty) : formatConvertedQty(converted.qty, converted.unit);
         var display = (qtyStr + (converted.unit ? " " + converted.unit : "") + " " + converted.name).trim();
         li.textContent = convertInlineUnits(display, recipeUnitMode);
@@ -2640,6 +2680,7 @@
       ingList.appendChild(li);
     });
   }
+
 
   function showRecipeDetail(id) {
     var recipe = recipeById(id);
@@ -2746,6 +2787,19 @@
     recipeUnitMode = "metric";
     document.getElementById("toggle-recipe-units").checked = false;
     document.getElementById("recipe-units-toggle-label").textContent = "Metric";
+
+    // Servings stepper
+    var stepperEl = document.getElementById("recipe-servings-stepper");
+    var servingsDisplay = document.getElementById("servings-display");
+    if (recipe.servings) {
+      recipeCurrentServings = recipe.servings;
+      servingsDisplay.textContent = "Serves " + recipeCurrentServings;
+      stepperEl.style.display = "";
+    } else {
+      recipeCurrentServings = null;
+      stepperEl.style.display = "none";
+    }
+
     showScreen("recipe");
   }
 
@@ -2794,8 +2848,10 @@
 
     var topContainer = document.getElementById("top-picks");
     topContainer.innerHTML = "";
-    topPicks.forEach(function (pick) {
-      topContainer.appendChild(renderRecipeCard(pick.recipe, { featured: true, wildcard: pick.wildcard }));
+    topPicks.forEach(function (pick, i) {
+      var card = renderRecipeCard(pick.recipe, { featured: true, wildcard: pick.wildcard });
+      card.style.setProperty("--card-index", i);
+      topContainer.appendChild(card);
     });
 
     var moreSection = document.getElementById("more-options-section");
@@ -2807,8 +2863,10 @@
       moreGrid.style.display = "none";
       document.getElementById("btn-more-toggle").textContent =
         "See " + moreOptions.length + " more option" + (moreOptions.length !== 1 ? "s" : "");
-      moreOptions.forEach(function (r) {
-        moreGrid.appendChild(renderRecipeCard(r, {}));
+      moreOptions.forEach(function (r, i) {
+        var card = renderRecipeCard(r, {});
+        card.style.setProperty("--card-index", i);
+        moreGrid.appendChild(card);
       });
     } else {
       moreSection.style.display = "none";
@@ -3174,6 +3232,7 @@
       document.getElementById("form-ingredients").value = (r.keyIngredients || []).join(", ");
       document.getElementById("form-description").value = r.description || "";
       document.getElementById("form-notes").value = r.notes || "";
+      document.getElementById("form-servings").value = r.servings || "";
       setChecks("form-mood", r.mood || []);
       setChecks("form-dietary", r.dietary || []);
     } else {
@@ -3227,6 +3286,7 @@
       season: [],
       description: document.getElementById("form-description").value.trim(),
       notes: document.getElementById("form-notes").value.trim(),
+      servings: parseInt(document.getElementById("form-servings").value, 10) || null,
       custom: true,
     };
 

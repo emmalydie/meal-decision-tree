@@ -6,7 +6,7 @@
   <title>What should I eat?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400;1,600&family=Lora:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
 </head>
@@ -279,6 +279,14 @@
             <textarea id="form-notes" rows="2" placeholder="e.g. double the garlic"></textarea>
           </label>
 
+          <div class="form-section-label">Servings <span class="form-optional">(optional)</span></div>
+          <div class="form-row">
+            <label class="form-field">
+              <span class="form-label">Serves</span>
+              <input type="number" id="form-servings" min="1" placeholder="e.g. 4">
+            </label>
+          </div>
+
           <p class="form-error" id="form-error" style="display:none;"></p>
 
           <div class="form-actions">
@@ -328,13 +336,20 @@
         <section id="recipe-detail-ingredients" class="detail-section">
           <div class="detail-section-header">
             <h3 class="detail-section-title">Ingredients</h3>
-            <label class="units-toggle-wrap" title="Switch between metric and imperial">
-              <span class="units-toggle-label" id="recipe-units-toggle-label">Metric</span>
-              <span class="ios-toggle">
-                <input type="checkbox" id="toggle-recipe-units">
-                <span class="ios-toggle-track"></span>
-              </span>
-            </label>
+            <div class="detail-controls">
+              <div id="recipe-servings-stepper" class="servings-stepper" style="display:none;">
+                <button type="button" class="servings-btn" id="btn-servings-dec">−</button>
+                <span id="servings-display" class="servings-display"></span>
+                <button type="button" class="servings-btn" id="btn-servings-inc">+</button>
+              </div>
+              <label class="units-toggle-wrap" title="Switch between metric and imperial">
+                <span class="units-toggle-label" id="recipe-units-toggle-label">Metric</span>
+                <span class="ios-toggle">
+                  <input type="checkbox" id="toggle-recipe-units">
+                  <span class="ios-toggle-track"></span>
+                </span>
+              </label>
+            </div>
           </div>
           <ul id="recipe-detail-ingredients-list" class="detail-ingredients-list"></ul>
         </section>
