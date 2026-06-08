@@ -91,6 +91,33 @@ After the decision tree completes, the results screen automatically fetches matc
 - Web recipe cards show a "＋ Save to my recipes" button; `saveWebRecipe()` strips the `web` flag, sets `custom: true`, and pushes to `userData.customRecipes`.
 - If no key is set, a prompt to add one in Settings is shown instead.
 
+## Visual design — ceramic tile frames
+
+Each recipe card has a decorative ceramic tile frame (Mediterranean/Middle-Eastern style). The implementation uses CSS `::before`/`::after` pseudo-elements:
+
+- `::before` — repeating mosaic tile background covers the whole card (`background-size: 52px 52px; background-position: center` for symmetry)
+- `::after` — cream inner panel (`inset: 28px`) sits on top, leaving the tile ring visible
+- Card children have `position: relative; z-index: 2` to float above both pseudo-elements
+
+**Tile images** live in `images/tiles/` and are named `t1.jpg`, `t2.jpg` … `tN.jpg` in sequence.
+
+**Managing the tile set:**
+- `TILE_COUNT` near the top of `app.js` controls how many tiles are active.
+- To add tiles: drop new files named `t(N+1).jpg` etc. into `images/tiles/`, increase `TILE_COUNT`, and add matching CSS rules at the bottom of `style.css` (one `::before { background-image }` rule per new tile index).
+- To remove tiles from the end: delete the files and decrease `TILE_COUNT`. Remove the corresponding CSS rules too.
+- Tiles must be named in sequence with no gaps.
+
+**Per-tile CSS rules** at the bottom of `style.css` follow this pattern:
+```css
+.recipe-card.tile-0::before  { background-image: url("images/tiles/t1.jpg"); }
+.recipe-card.tile-1::before  { background-image: url("images/tiles/t2.jpg"); }
+/* ... one rule per tile index ... */
+```
+
+**Tile assignment** — `tileIndexForRecipe(id)` in `app.js` hashes the recipe ID so the same recipe always gets the same tile regardless of render order.
+
+**Recipe title font** — `.recipe-name` uses *Lora italic* (Google Fonts), loaded via `<link>` in `index.html`. Requires an internet connection; falls back to serif if offline.
+
 ## Key things to keep in mind
 
 **Adding/editing built-in recipes:** Use `/add` (paste recipe text) or edit `BUILTIN_RECIPES` directly in `app.js`. The `recipes.json` file is a now-unused reference copy — it has no effect on the running app.

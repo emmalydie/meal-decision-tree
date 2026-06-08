@@ -307,8 +307,8 @@ body {
   box-shadow: 0 2px 12px var(--shadow);
   transition: all var(--transition);
   position: relative;
-  /* Extra padding makes room for the tile frame ring */
-  padding: 36px 34px 34px;
+  /* Extra padding makes room for the tile frame ring (28px inset + inner breathing room) */
+  padding: 36px 52px 40px;
 }
 
 /* Tile frame: repeating mosaic background fills the whole card.
