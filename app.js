@@ -10,6 +10,26 @@
     "butter", "sugar", "water", "eggs", "herbs"
   ];
 
+  // Ceramic tile images used as decorative card frames (images/tiles/).
+  // To add tiles: drop t34.jpg, t35.jpg etc. into images/tiles/ and increase TILE_COUNT.
+  // To remove tiles from the end: decrease TILE_COUNT.
+  // Tiles must be named t1.jpg, t2.jpg ... tN.jpg with no gaps.
+  var TILE_COUNT = 42;
+  var TILE_FRAMES = (function () {
+    var frames = [];
+    for (var i = 1; i <= TILE_COUNT; i++) { frames.push("t" + i + ".jpg"); }
+    return frames;
+  }());
+
+  // Simple string hash so a recipe always maps to the same tile.
+  function tileIndexForRecipe(id) {
+    var h = 0;
+    for (var i = 0; i < id.length; i++) {
+      h = (h * 31 + id.charCodeAt(i)) & 0xffff;
+    }
+    return h % TILE_FRAMES.length;
+  }
+
   var BUILTIN_RECIPES = [
   {
     "id": "ottolenghi-cauliflower-cake",
@@ -1752,6 +1772,227 @@
       "Pour the wine and ½ cup water into the skillet. Cook, scraping up the browned bits, until reduced slightly, about 10 minutes. Whisk in the cream and mustard. Return the bacon, meatballs and mushroom mixture to the skillet and simmer over medium, stirring occasionally, until the sauce is slightly thickened and the meatballs are cooked through, 8 to 10 minutes, adding a few tablespoons of water if needed to keep it saucy.",
       "Transfer the meatballs to plates and spoon the sauce over them. Garnish with additional thyme."
     ]
+  },
+  {
+    "id": "wok-of-life-taiwanese-braised-minced-pork-rice",
+    "name": "Taiwanese Braised Minced Pork Over Rice (肉燥饭)",
+    "source": "The Woks of Life",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "high",
+    "mood": ["comforting"],
+    "time": 170,
+    "meal": "dinner",
+    "dietary": ["dairy-free"],
+    "keyIngredients": ["ground pork", "shiitake mushrooms", "shallots", "soy sauce", "five spice powder", "star anise", "rice"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "Rou Zao Fan — a savory Taiwanese braise of ground pork and shiitake mushrooms simmered with soy, five spice, star anise and shallots, ladled over rice. Same deep, comforting flavors as lu rou fan but made with mince instead of pork belly.",
+    "notes": "Emma's tweaks: skip the eggs, use fresh portobello mushrooms instead of dried shiitake, and thicken the sauce with cornflour. Hand-chopping pork shoulder/butt gives the best texture, but store-bought ground pork is fine. Most of the time is hands-off mushroom soaking (2 hrs+). Contains soy and oyster sauce, so not gluten-free as written.",
+    "ingredients": [
+      "1½ ounces dried shiitake mushrooms",
+      "1 pound ground pork (hand-chopped pork shoulder or pork butt is ideal)",
+      "3 tablespoons neutral oil (such as vegetable or canola)",
+      "1 tablespoon ginger, minced",
+      "1 cup shallots, finely diced",
+      "2 star anise",
+      "3 tablespoons Shaoxing wine",
+      "0.5 ounce rock sugar (or 1 tablespoon granulated sugar)",
+      "2 tablespoons light soy sauce",
+      "1 tablespoon dark soy sauce",
+      "1 tablespoon oyster sauce",
+      "½ teaspoon ground white pepper",
+      "¼ teaspoon five spice powder",
+      "2-3 cups water (including shiitake mushroom soaking water)",
+      "5 eggs",
+      "¼ cup scallions, chopped (white and green parts)",
+      "Salt to taste (optional, likely not needed)"
+    ],
+    "method": [
+      "Rehydrate the dried shiitake mushrooms: rinse off any dust and soak in hot water for at least 2 hours (or overnight). Squeeze out the liquid and dice into ¼-inch pieces. Set aside the soaking liquid for later.",
+      "If desired, hand-chop a 1-pound piece of pork shoulder/butt for the best texture. Store-bought ground pork is also fine.",
+      "Heat 2 tablespoons oil in a wok or large skillet over medium heat. Cook the ginger and shallots for 1-2 minutes, until the shallots turn translucent. Stir in the mushrooms and cook for 2 minutes.",
+      "Increase the heat to high. Add 1 more tablespoon oil along with the ground pork and star anise. Cook until the meat is opaque.",
+      "Stir in the Shaoxing wine to deglaze. Add the rock sugar, light soy sauce, dark soy sauce, oyster sauce, white pepper, five spice powder and 2 cups water (including the mushroom soaking water — leave behind any sediment). Bring to a boil, then cover, reduce the heat to medium/medium-low and simmer for 20 minutes.",
+      "Meanwhile, hard-boil the eggs: bring a pot of water to a rolling boil, gently lower in the eggs, boil rapidly for 30 seconds, then reduce the heat to low, cover and simmer 10 minutes. Transfer to ice water, then peel and rinse.",
+      "After the pork has simmered 20 minutes, add the eggs, submerging them in the sauce (add another ½ to 1 cup water if needed). Cover and simmer 10 minutes more.",
+      "Uncover. If the sauce is too thin, raise the heat to medium-high and reduce, stirring carefully so as not to break the eggs.",
+      "Stir in the scallions and salt to taste. Serve each person an egg (halved if desired) with the pork ladled over rice."
+    ]
+  },
+  {
+    "id": "personal-risotto-alla-pesto",
+    "name": "Risotto alla Pesto",
+    "source": "Personal",
+    "sourceUrl": "",
+    "cuisine": "italian",
+    "effort": "low",
+    "mood": ["comforting"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": ["vegetarian", "gluten-free"],
+    "keyIngredients": ["risotto rice", "pesto", "parmesan", "onion", "chicken broth", "butter"],
+    "pantryFriendly": true,
+    "season": [],
+    "description": "A simple, creamy pesto risotto — onion softened in butter, arborio rice toasted, then slowly cooked with ladlefuls of broth and finished with pesto and Parmesan. A quick, comforting base risotto.",
+    "notes": "Emma's note: this is a base risotto recipe — literally any ingredient can be added. Can also add 1 glass of white wine (stir in after toasting the rice, before the broth). Use vegetable broth and check the pesto to keep it fully vegetarian.",
+    "ingredients": [
+      "4 cups (950 ml) chicken broth",
+      "4 tbsp butter",
+      "1 tbsp olive oil",
+      "1 cup onion, finely chopped",
+      "1 cup risotto rice",
+      "1 tbsp pesto (bought or homemade)",
+      "½ cup parmesan",
+      "Salt and pepper"
+    ],
+    "method": [
+      "In a large pot, heat the olive oil over high heat until just shimmering.",
+      "Add half the butter (2 tbsp) and reduce to medium heat.",
+      "Add the onion and cook until just translucent.",
+      "Add the rice and stir well to coat. Cook for one minute.",
+      "Stirring constantly, add the broth one ladle at a time, letting each be absorbed before adding the next, until the rice is fully cooked.",
+      "Stirring constantly, add the pesto, Parmesan, and the remaining butter if needed.",
+      "Season with salt and pepper to taste and serve immediately."
+    ]
+  },
+  {
+    "id": "justonecookbook-mapo-tofu",
+    "name": "Mapo Tofu (Mabo Dofu)",
+    "source": "Just One Cookbook",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["comforting", "quick-fix"],
+    "time": 25,
+    "meal": "dinner",
+    "dietary": ["dairy-free"],
+    "keyIngredients": ["silken tofu", "ground pork", "doubanjiang", "miso", "ginger", "garlic", "scallions"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A Japanese-style mapo tofu (mabo dofu) — milder than the original Sichuan version — with ground pork and silken tofu simmered in a savory doubanjiang, miso and mirin sauce. A family-friendly one-bowl meal ready in about 25 minutes.",
+    "notes": "Emma's tweak: add ground Sichuan peppercorns. For less spice, use 1½ Tbsp non-spicy doubanjiang plus 1 Tbsp spicy la doubanjiang. Make it vegetarian/vegan by swapping the pork for mushrooms or veggies and using a vegetarian stir-fry sauce in place of oyster sauce. Use gluten-free doubanjiang and tamari for GF. Serve over steamed rice donburi-style, with optional sansho pepper.",
+    "ingredients": [
+      "For the sauce:",
+      "2½ Tbsp doubanjiang (spicy chili bean paste)",
+      "1 Tbsp oyster sauce (or vegetarian stir-fry sauce for veg/vegan)",
+      "1 Tbsp miso",
+      "½ Tbsp soy sauce",
+      "2 Tbsp mirin",
+      "1 tsp toasted sesame oil",
+      "1 tsp potato starch or cornstarch",
+      "4 Tbsp water",
+      "For the mapo tofu:",
+      "2 cloves garlic",
+      "1 Tbsp ginger, minced",
+      "2 green onions/scallions",
+      "14 oz soft/silken tofu (kinugoshi dofu), drained 15–30 minutes",
+      "1 Tbsp neutral oil",
+      "½ lb ground pork (or mushrooms/veggies for vegetarian)",
+      "Japanese sansho pepper, optional, for serving"
+    ],
+    "method": [
+      "Combine the sauce ingredients in a small bowl: doubanjiang, oyster sauce, miso, soy sauce, mirin, sesame oil, potato starch and water. Whisk well.",
+      "Finely mince the garlic. Peel and mince the ginger (measure 1 Tbsp). Slice the green onions into thin rounds, reserving some for garnish. Drain the tofu and cut into ¾-inch (2-cm) cubes.",
+      "Heat a wok or large frying pan over medium heat. Add the neutral oil, then the garlic and ginger. Sauté until fragrant, making sure they don't burn.",
+      "Add the ground pork and cook, breaking up the chunks, until no longer pink.",
+      "Give the sauce a final stir, then add it to the wok. Stir thoroughly as you bring it to a simmer.",
+      "Add the tofu and gently coat it with the sauce. Stir frequently, without mashing the tofu, until heated through.",
+      "Add most of the green onions and stir to incorporate just before taking the pan off the heat. Serve immediately over steamed rice, garnished with the reserved green onions and optional sansho pepper."
+    ]
+  },
+  {
+    "id": "recipetineats-coq-au-vin",
+    "name": "Coq au Vin",
+    "source": "RecipeTin Eats",
+    "sourceUrl": "",
+    "cuisine": "french",
+    "effort": "high",
+    "mood": ["comforting", "impressive"],
+    "time": 105,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["chicken", "red wine", "bacon", "white mushrooms", "pearl onions", "beef stock", "garlic"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "The French classic — bone-in chicken pieces marinated in red wine, then braised with bacon, mushrooms and pearl onions into a luscious, glossy sauce. Luxurious yet simple, much like beef bourguignon.",
+    "notes": "Best started 2 days ahead: a 12–24 hour red-wine marinade is essential, and resting the finished stew overnight deepens the flavor (recommended). Don't skip the bacon — it's key for seasoning. Beef stock gives a deeper color than chicken stock (it won't taste beefy). No need for expensive wine; cheap dry red works. If using chicken breast, only add it for the last 20 minutes so it doesn't dry out. Time shown excludes marinating/resting. Serve over mashed potato or tagliatelle.",
+    "ingredients": [
+      "For the red wine chicken marinade:",
+      "4 chicken thighs, bone-in, skin on (~220g/7oz each)",
+      "4 chicken drumsticks",
+      "16 pearl onions or pickling onions (or 2 brown/yellow onions, cut into wedges)",
+      "1 bay leaf, fresh (dry also ok)",
+      "3 thyme sprigs (or 1 tsp dried thyme)",
+      "750 ml / 3 cups pinot noir or other dry red wine",
+      "For browning the chicken:",
+      "3–4 tbsp vegetable or canola oil",
+      "¾ tsp salt",
+      "½ tsp pepper",
+      "For the stew:",
+      "400g / 14oz white mushrooms, halved (quartered if large)",
+      "150g / 5oz bacon piece (speck), cut into 1 x 2.5cm batons",
+      "60g / 4 tbsp unsalted butter",
+      "3 garlic cloves, finely minced",
+      "2 tbsp tomato paste",
+      "7 tbsp plain/all-purpose flour",
+      "750 ml / 3 cups beef stock, low sodium, preferably homemade",
+      "¼ tsp salt",
+      "¼ tsp black pepper",
+      "To garnish and serve:",
+      "2 tbsp parsley, chopped",
+      "Mashed potato (or tagliatelle)"
+    ],
+    "method": [
+      "Marinate the chicken: place the marinade ingredients (chicken, onions, bay leaf, thyme, red wine) in a large glass or ceramic bowl. Marinate in the fridge for 12 to 24 hours.",
+      "Strain, reserving the wine and herbs. Separate the chicken and onions. Spread the chicken on a paper-towel-lined tray and pat dry.",
+      "Reduce the wine: pour it into a saucepan, bring to a boil over medium-high and simmer vigorously, skimming off impurities, until reduced by half. Set aside.",
+      "Preheat the oven to 180°C / 350°F (160°C fan). Season the chicken with ¾ tsp salt and ½ tsp black pepper.",
+      "Brown the chicken: heat 3 tbsp oil in a large, heavy oven-proof pot over medium-high. Cook the thighs skin-side down 2–3 minutes until browned (darker than usual from the wine), flip and cook 1 minute more; remove. Brown the drumsticks on 3–4 sides, ~5 minutes total; remove.",
+      "Fry the bacon: remove any burnt bits, add a little oil if needed, and cook the bacon 3 minutes until golden. Add to the chicken tray.",
+      "Sauté the mushrooms 5 minutes until golden; remove to a bowl. Sauté the onions 5 minutes until golden-patched.",
+      "Add the butter to the pot. Once melted, add the garlic and cook 1 minute. Add the tomato paste and cook 2 minutes. Add the flour and cook 2 minutes.",
+      "While stirring, slowly pour in the beef stock (this dissolves the flour lump-free), then add the reduced wine and mix until mostly smooth (a few lumps will dissolve during cooking).",
+      "Add the chicken, bacon, mushrooms, thyme, bay leaf, salt and pepper back into the pot and stir. Bring to a simmer, then cover and transfer to the oven for 45 minutes, until the chicken is very tender but not falling apart.",
+      "Taste the sauce and adjust salt. If time permits, cool and rest overnight before reheating gently (the flavor improves). Serve over mashed potato or tagliatelle, sprinkled with parsley."
+    ]
+  },
+  {
+    "id": "cookieandkate-baba-ganoush",
+    "name": "Baba Ganoush",
+    "source": "Cookie and Kate",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "medium",
+    "mood": ["fresh"],
+    "time": 55,
+    "meal": "snack",
+    "dietary": ["vegetarian", "vegan", "gluten-free", "dairy-free"],
+    "keyIngredients": ["eggplant", "tahini", "lemon", "garlic", "olive oil", "parsley", "cumin"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A creamy, smoky Middle Eastern eggplant dip — roasted eggplant flesh stirred (no food processor needed) with tahini, lemon, garlic and olive oil, finished with parsley and smoked paprika. Great with pita, crudités, or on sandwiches.",
+    "notes": "Use 2 small-to-medium eggplants (~2 lbs total) rather than 1 large — big ones have more seeds and a bothersome texture. Choose shiny, smooth eggplants that feel heavy; use them promptly as overripe ones taste bitter. Draining as much moisture from the roasted flesh as possible is key to a creamy (not watery) dip. Add extra lemon for a more tart flavor.",
+    "ingredients": [
+      "2 pounds Italian eggplants (about 2 small-to-medium eggplants)",
+      "2 medium cloves garlic, pressed or minced",
+      "2 tablespoons lemon juice, more if necessary",
+      "¼ cup tahini",
+      "⅓ cup extra-virgin olive oil, plus more for brushing and garnish",
+      "2 tablespoons chopped fresh flat-leaf parsley, plus extra for garnish",
+      "¾ teaspoon salt, to taste",
+      "¼ teaspoon ground cumin",
+      "Pinch of smoked paprika, for garnish",
+      "To serve: warmed pita wedges, carrot sticks, bell pepper strips, cucumber slices, etc."
+    ],
+    "method": [
+      "Preheat the oven to 450°F with a rack in the upper third. Line a large rimmed baking sheet with parchment. Halve the eggplants lengthwise, brush the cut sides lightly with olive oil, and place them cut-side down on the pan.",
+      "Roast until the interior is very tender and the skin is collapsing, about 35 to 40 minutes. Set aside to cool a few minutes, then flip and scoop out the flesh with a large spoon, leaving the skin behind.",
+      "Place a mesh strainer over a mixing bowl and transfer the flesh to the strainer, discarding the skins and any stray bits. Let it rest a few minutes, shaking/stirring to release as much moisture as possible.",
+      "Discard the drippings, wipe out the bowl, and add the drained eggplant. Add the garlic and lemon juice and stir vigorously with a fork until the eggplant breaks down. Stir in the tahini until incorporated, then slowly drizzle in the olive oil while stirring until pale and creamy, breaking up any long strings.",
+      "Stir in the parsley, salt and cumin. Season to taste with more salt (about another ¼ tsp) and more lemon juice if you'd like it tarter.",
+      "Transfer to a serving bowl, drizzle with olive oil, and sprinkle with parsley and smoked paprika. Serve with your chosen accompaniments — also great on sandwiches."
+    ]
   }
 ];
 
@@ -1762,6 +2003,7 @@
   var userData = null;
   var webRecipeCache = {}; // temporary store for current Spoonacular results
   var shoppingUnitMode = "metric"; // "metric" | "imperial" — display preference, not persisted
+  var recipeUnitMode = "metric";   // same for the recipe detail screen
 
   var state = {
     screen: "landing",
@@ -1771,6 +2013,7 @@
     resultsMode: "tree", // "tree" or "surprise"
     editingId: null,
     detailFromScreen: null,
+    currentDetailId: null,
   };
 
   // ---- Data loading ----
@@ -1962,6 +2205,14 @@
       userData.shopping.checked = {};
       saveUserData();
       buildShoppingList();
+    });
+    document.getElementById("toggle-recipe-units").addEventListener("change", function () {
+      recipeUnitMode = this.checked ? "imperial" : "metric";
+      document.getElementById("recipe-units-toggle-label").textContent = this.checked ? "Imperial" : "Metric";
+      if (state.currentDetailId) {
+        var r = recipeById(state.currentDetailId);
+        if (r) renderDetailIngredients(getRecipeIngredients(r));
+      }
     });
     document.getElementById("toggle-shopping-units").addEventListener("change", function () {
       shoppingUnitMode = this.checked ? "imperial" : "metric";
@@ -2372,11 +2623,30 @@
 
   // ---- Recipe Detail ----
 
+  function renderDetailIngredients(ingredients) {
+    var ingList = document.getElementById("recipe-detail-ingredients-list");
+    ingList.innerHTML = "";
+    ingredients.forEach(function (ing) {
+      var parsed = parseIngredient(ing);
+      var li = document.createElement("li");
+      if (parsed && parsed.qty != null) {
+        var converted = applyUnitMode(parsed, recipeUnitMode);
+        var qtyStr = KEEP_UNITS[converted.unit] ? formatQty(converted.qty) : formatConvertedQty(converted.qty, converted.unit);
+        var display = (qtyStr + (converted.unit ? " " + converted.unit : "") + " " + converted.name).trim();
+        li.textContent = convertInlineUnits(display, recipeUnitMode);
+      } else {
+        li.textContent = convertInlineUnits(ing, recipeUnitMode);
+      }
+      ingList.appendChild(li);
+    });
+  }
+
   function showRecipeDetail(id) {
     var recipe = recipeById(id);
     if (!recipe) return;
 
     state.detailFromScreen = state.screen;
+    state.currentDetailId = id;
 
     // Name
     document.getElementById("recipe-detail-name").textContent = recipe.name;
@@ -2420,14 +2690,8 @@
     var detailIngredients = getRecipeIngredients(recipe);
     var hasIngredients = detailIngredients.length > 0;
     var ingSection = document.getElementById("recipe-detail-ingredients");
-    var ingList = document.getElementById("recipe-detail-ingredients-list");
     if (hasIngredients) {
-      ingList.innerHTML = "";
-      detailIngredients.forEach(function (ing) {
-        var li = document.createElement("li");
-        li.textContent = ing;
-        ingList.appendChild(li);
-      });
+      renderDetailIngredients(detailIngredients);
       ingSection.style.display = "";
     } else {
       ingSection.style.display = "none";
@@ -2475,6 +2739,9 @@
       actionsEl.appendChild(buildActionRow(recipe));
     }
 
+    recipeUnitMode = "metric";
+    document.getElementById("toggle-recipe-units").checked = false;
+    document.getElementById("recipe-units-toggle-label").textContent = "Metric";
     showScreen("recipe");
   }
 
@@ -2607,6 +2874,7 @@
     opts = opts || {};
     var card = document.createElement("div");
     card.className = "recipe-card" + (opts.featured ? " featured" : "");
+    card.classList.add("tile-" + tileIndexForRecipe(recipe.id));
     card.dataset.id = recipe.id;
 
     if (opts.draggable) {
@@ -3366,13 +3634,14 @@
   }
 
   // Units that should NEVER be converted (user prefers cups/tbsp/tsp for herbs, sauces, citrus)
-  var KEEP_UNITS = { tbsp: true, tsp: true, cup: true, pinch: true, handful: true, bunch: true, slice: true, clove: true };
+  var KEEP_UNITS = { tbsp: true, tsp: true, pinch: true, handful: true, bunch: true, slice: true, clove: true };
 
-  // Convert a parsed ingredient's qty+unit for display based on shoppingUnitMode.
+  // Convert a parsed ingredient's qty+unit for display.
+  // mode defaults to shoppingUnitMode if not supplied.
   // Only converts weight (g/kg) and liquid volume (ml/l). Everything else stays as-is.
-  function applyUnitMode(parsed) {
+  function applyUnitMode(parsed, mode) {
     if (!parsed || parsed.qty == null || KEEP_UNITS[parsed.unit]) return parsed;
-    if (shoppingUnitMode === "imperial") {
+    if ((mode || shoppingUnitMode) === "imperial") {
       if (parsed.unit === "g") return { qty: parsed.qty * 0.035274, unit: "oz", name: parsed.name, key: parsed.key, raw: parsed.raw };
       if (parsed.unit === "kg") return { qty: parsed.qty * 2.20462, unit: "lb", name: parsed.name, key: parsed.key, raw: parsed.raw };
       if (parsed.unit === "ml") {
@@ -3383,8 +3652,14 @@
       if (parsed.unit === "l") return { qty: parsed.qty * 4.16667, unit: "cup", name: parsed.name, key: parsed.key, raw: parsed.raw };
     } else { // metric
       if (parsed.unit === "oz") return { qty: parsed.qty / 0.035274, unit: "g", name: parsed.name, key: parsed.key, raw: parsed.raw };
-      if (parsed.unit === "lb") return { qty: parsed.qty / 2.20462, unit: "kg", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "lb") {
+        var grams = parsed.qty * 453.592;
+        return grams < 1000
+          ? { qty: grams, unit: "g", name: parsed.name, key: parsed.key, raw: parsed.raw }
+          : { qty: grams / 1000, unit: "kg", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      }
       if (parsed.unit === "fl oz") return { qty: parsed.qty / 0.033814, unit: "ml", name: parsed.name, key: parsed.key, raw: parsed.raw };
+      if (parsed.unit === "cup") return { qty: parsed.qty * 240, unit: "ml", name: parsed.name, key: parsed.key, raw: parsed.raw };
     }
     return parsed;
   }
@@ -3398,6 +3673,33 @@
     if (unit === "lb") { var rl = Math.round(n * 100) / 100; return String(rl); }
     if (unit === "fl oz") { var rf = Math.round(n * 10) / 10; return String(rf); }
     return formatQty(n);
+  }
+
+  // Convert unit amounts that appear inside parentheses in ingredient text,
+  // e.g. "(about 1 pound)" → "(about 450 g)" in metric mode.
+  function convertInlineUnits(text, mode) {
+    return text.replace(
+      /\(\s*(about\s+)?([\d½¼¾⅓⅔⅛⅜⅝⅞]+(?:\.\d+)?(?:\s+[\d\/]+)?)\s*(ounces?|oz|pounds?|lbs?|lb|grams?|g|kg|ml|litres?|liters?|l|cups?|fl\.?\s*oz)\s*\)/gi,
+      function (match, about, numStr, unitStr) {
+        var u = unitStr.toLowerCase().replace(/s$/, "").replace(/\.$/, "").replace(/\s+/g, "");
+        var canonical = UNIT_MAP[u] || UNIT_MAP[u.replace(/s$/, "")] || null;
+        if (!canonical || KEEP_UNITS[canonical]) return match;
+        // Parse the number (handle unicode fractions)
+        var qty = 0;
+        var parts = numStr.trim().split(/\s+/);
+        parts.forEach(function (p) {
+          if (UNICODE_FRACTIONS[p] != null) { qty += UNICODE_FRACTIONS[p]; }
+          else if (/^\d+\/\d+$/.test(p)) { var sp = p.split("/"); qty += parseInt(sp[0]) / parseInt(sp[1]); }
+          else if (/^\d+(\.\d+)?$/.test(p)) { qty += parseFloat(p); }
+        });
+        if (!qty) return match;
+        var fake = { qty: qty, unit: canonical, name: "", key: "", raw: "" };
+        var converted = applyUnitMode(fake, mode);
+        if (converted.unit === canonical) return match; // no conversion applied
+        var qtyStr = KEEP_UNITS[converted.unit] ? formatQty(converted.qty) : formatConvertedQty(converted.qty, converted.unit);
+        return "(" + (about || "") + qtyStr + " " + converted.unit + ")";
+      }
+    );
   }
 
   function isStapleName(key) {
@@ -3426,7 +3728,7 @@
         // Apply unit conversion to the summed result
         var converted = applyUnitMode({ qty: sum, unit: g.unit, name: g.name, key: g.key, raw: "" });
         var qtyStr = KEEP_UNITS[converted.unit] ? formatQty(converted.qty) : formatConvertedQty(converted.qty, converted.unit);
-        display = (qtyStr + (converted.unit ? " " + converted.unit : "") + " " + g.name).trim();
+        display = convertInlineUnits((qtyStr + (converted.unit ? " " + converted.unit : "") + " " + g.name).trim(), shoppingUnitMode);
       } else {
         // No numeric quantity — show the shortest (most generic) raw as the representative
         var raws = [];

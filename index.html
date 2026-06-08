@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What should I eat?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
 </head>
@@ -322,7 +325,16 @@
         </div>
         <p id="recipe-detail-description" class="recipe-detail-description"></p>
         <section id="recipe-detail-ingredients" class="detail-section">
-          <h3 class="detail-section-title">Ingredients</h3>
+          <div class="detail-section-header">
+            <h3 class="detail-section-title">Ingredients</h3>
+            <label class="units-toggle-wrap" title="Switch between metric and imperial">
+              <span class="units-toggle-label" id="recipe-units-toggle-label">Metric</span>
+              <span class="ios-toggle">
+                <input type="checkbox" id="toggle-recipe-units">
+                <span class="ios-toggle-track"></span>
+              </span>
+            </label>
+          </div>
           <ul id="recipe-detail-ingredients-list" class="detail-ingredients-list"></ul>
         </section>
         <section id="recipe-detail-method" class="detail-section">

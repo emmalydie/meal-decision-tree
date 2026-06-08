@@ -301,12 +301,44 @@ body {
 }
 
 .recipe-card {
-  background: var(--bg-card);
+  background: transparent;
   border-radius: var(--radius);
   padding: 24px;
   box-shadow: 0 2px 12px var(--shadow);
   transition: all var(--transition);
   position: relative;
+  /* Extra padding makes room for the tile frame ring */
+  padding: 36px 34px 34px;
+}
+
+/* Tile frame: repeating mosaic background fills the whole card.
+   background-position: center ensures any partial tile at the edges
+   is clipped equally on both sides — keeping the frame symmetrical. */
+.recipe-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background-repeat: repeat;
+  background-size: 52px 52px;
+  background-position: center center;
+  z-index: 0;
+}
+
+/* Cream inner panel sits on top, leaving a tile-wide border all around */
+.recipe-card::after {
+  content: "";
+  position: absolute;
+  inset: 28px;
+  background: var(--bg-card);
+  border-radius: calc(var(--radius) - 4px);
+  z-index: 1;
+}
+
+/* All direct card children float above the pseudo-elements */
+.recipe-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .recipe-card:hover {
@@ -334,11 +366,15 @@ body {
 .recipe-name {
   font-size: 1.25rem;
   font-weight: 700;
+  font-family: 'Lora', serif;
+  font-style: italic;
   color: var(--text);
 }
 
 .recipe-card.featured .recipe-name {
   font-size: 1.4rem;
+  font-family: 'Lora', serif;
+  font-style: italic;
 }
 
 .source-badge {
@@ -1056,6 +1092,21 @@ body {
   margin-bottom: 32px;
 }
 
+.detail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--warm);
+}
+
+.detail-section-header .detail-section-title {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
 .detail-section-title {
   font-size: 1rem;
   font-weight: 700;
@@ -1404,3 +1455,51 @@ body {
     font-size: 1.5rem;
   }
 }
+
+/* ---- Ceramic tile frame — per-tile mosaic backgrounds ---- */
+/* Each recipe is stably assigned one tile via tileIndexForRecipe() in app.js. */
+/* The tile image repeats at background-size: 52px 52px to form a mosaic ring. */
+/* To curate the set, trim TILE_FRAMES in app.js.                             */
+
+.recipe-card.tile-0::before  { background-image: url("images/tiles/t1.jpg"); }
+.recipe-card.tile-1::before  { background-image: url("images/tiles/t2.jpg"); }
+.recipe-card.tile-2::before  { background-image: url("images/tiles/t3.jpg"); }
+.recipe-card.tile-3::before  { background-image: url("images/tiles/t4.jpg"); }
+.recipe-card.tile-4::before  { background-image: url("images/tiles/t5.jpg"); }
+.recipe-card.tile-5::before  { background-image: url("images/tiles/t6.jpg"); }
+.recipe-card.tile-6::before  { background-image: url("images/tiles/t7.jpg"); }
+.recipe-card.tile-7::before  { background-image: url("images/tiles/t8.jpg"); }
+.recipe-card.tile-8::before  { background-image: url("images/tiles/t9.jpg"); }
+.recipe-card.tile-9::before  { background-image: url("images/tiles/t10.jpg"); }
+.recipe-card.tile-10::before { background-image: url("images/tiles/t11.jpg"); }
+.recipe-card.tile-11::before { background-image: url("images/tiles/t12.jpg"); }
+.recipe-card.tile-12::before { background-image: url("images/tiles/t13.jpg"); }
+.recipe-card.tile-13::before { background-image: url("images/tiles/t14.jpg"); }
+.recipe-card.tile-14::before { background-image: url("images/tiles/t15.jpg"); }
+.recipe-card.tile-15::before { background-image: url("images/tiles/t16.jpg"); }
+.recipe-card.tile-16::before { background-image: url("images/tiles/t17.jpg"); }
+.recipe-card.tile-17::before { background-image: url("images/tiles/t18.jpg"); }
+.recipe-card.tile-18::before { background-image: url("images/tiles/t19.jpg"); }
+.recipe-card.tile-19::before { background-image: url("images/tiles/t20.jpg"); }
+.recipe-card.tile-20::before { background-image: url("images/tiles/t21.jpg"); }
+.recipe-card.tile-21::before { background-image: url("images/tiles/t22.jpg"); }
+.recipe-card.tile-22::before { background-image: url("images/tiles/t23.jpg"); }
+.recipe-card.tile-23::before { background-image: url("images/tiles/t24.jpg"); }
+.recipe-card.tile-24::before { background-image: url("images/tiles/t25.jpg"); }
+.recipe-card.tile-25::before { background-image: url("images/tiles/t26.jpg"); }
+.recipe-card.tile-26::before { background-image: url("images/tiles/t27.jpg"); }
+.recipe-card.tile-27::before { background-image: url("images/tiles/t28.jpg"); }
+.recipe-card.tile-28::before { background-image: url("images/tiles/t29.jpg"); }
+.recipe-card.tile-29::before { background-image: url("images/tiles/t30.jpg"); }
+.recipe-card.tile-30::before { background-image: url("images/tiles/t31.jpg"); }
+.recipe-card.tile-31::before { background-image: url("images/tiles/t32.jpg"); }
+.recipe-card.tile-32::before { background-image: url("images/tiles/t33.jpg"); }
+.recipe-card.tile-33::before { background-image: url("images/tiles/t34.jpg"); }
+.recipe-card.tile-34::before { background-image: url("images/tiles/t35.jpg"); }
+.recipe-card.tile-35::before { background-image: url("images/tiles/t36.jpg"); }
+.recipe-card.tile-36::before { background-image: url("images/tiles/t37.jpg"); }
+.recipe-card.tile-37::before { background-image: url("images/tiles/t38.jpg"); }
+.recipe-card.tile-38::before { background-image: url("images/tiles/t39.jpg"); }
+.recipe-card.tile-39::before { background-image: url("images/tiles/t40.jpg"); }
+.recipe-card.tile-40::before { background-image: url("images/tiles/t41.jpg"); }
+.recipe-card.tile-41::before { background-image: url("images/tiles/t42.jpg"); }

@@ -73,12 +73,12 @@ Recipes added this way appear immediately in the decision tree, browse, planner,
 Tapping any recipe card opens a full-screen detail view (`showRecipeDetail(id)`). It shows:
 - All metadata pills (time, cuisine, effort, meal, mood, dietary)
 - Description
-- Ingredients list (if `ingredients[]` is populated)
+- Ingredients list (if `ingredients[]` is populated) with a metric/imperial toggle next to the heading
 - Numbered method steps (if `method[]` is populated)
 - External link (always shown when `sourceUrl` exists, labelled "View on [source]" if full content is stored, "View recipe →" if not)
 - Action row (ratings, notes, edit/remove)
 
-`state.detailFromScreen` tracks which screen opened the detail so the back button returns correctly.
+`state.detailFromScreen` tracks which screen opened the detail so the back button returns correctly. `state.currentDetailId` holds the id of the currently displayed recipe so the unit toggle can re-render ingredients without reopening the screen.
 
 ## Web recipe discovery (Spoonacular)
 
@@ -103,7 +103,13 @@ After the decision tree completes, the results screen automatically fetches matc
 
 **Shopping list** (`#screen-shopping`, opened via "🛒 Make shopping list" on the planner) is generated from all recipes planned into the week. `buildShoppingList()` gathers each recipe's ingredients via `getRecipeIngredients()` (priority: `userData.ingredientOverrides[id]` → `recipe.ingredients` → none), then `parseIngredient()` + `combineIngredients()` sum amounts across recipes (best-effort: same units sum, mismatches list side-by-side; quantities render as fractions via `formatQty`). Items are split into a **main list** and a **Staples** section using the `STAPLES` array. Recipes with no stored ingredients appear in a "needs ingredients" section with a source link and a paste box; pasted lines are saved to `userData.ingredientOverrides` (which also enriches the recipe detail screen). Tick state (`userData.shopping.checked`) and user-added extras (`userData.shopping.extras`) persist in localStorage. "Copy list" uses `navigator.clipboard` with an `execCommand` fallback for `file://`.
 
-**Metric/Imperial toggle** — an iOS-style toggle in the shopping list header (using the app's colour scheme, not Apple green). `shoppingUnitMode` is a non-persisted JS variable (default `"metric"`). Converts g/kg ↔ oz/lb and ml/l ↔ cups/fl oz. Never converts tbsp, tsp, cup, pinch, handful, bunch (the user prefers these for herbs, sauces, and citrus). Conversion applied in `combineIngredients()` via `applyUnitMode()` after quantities are summed.
+**Metric/Imperial toggle** — an iOS-style toggle (app colour scheme, not Apple green) present in two places:
+- **Shopping list header** — controls `shoppingUnitMode` (non-persisted, default `"metric"`), applied in `combineIngredients()` via `applyUnitMode()` after quantities are summed.
+- **Recipe detail screen**, next to the "Ingredients" heading — controls `recipeUnitMode` (non-persisted, default `"metric"`), applied in `renderDetailIngredients()`.
+
+Both toggles reset to metric each time the screen opens. `applyUnitMode(parsed, mode)` takes an explicit mode argument so both screens share the same conversion logic.
+
+Conversions: g ↔ oz, kg ↔ lb (lb < 1 kg converts to g rather than kg for readability), ml ↔ fl oz, l/cup ↔ ml (1 cup = 240 ml). **Never converts** tbsp, tsp, pinch, handful, bunch, slice, clove. `convertInlineUnits(text, mode)` additionally converts unit amounts buried inside parentheses in ingredient text, e.g. `(about 1 pound)` → `(about 454 g)`.
 
 **Ingredient key normalisation** (in `parseIngredient`) — when grouping duplicates, the key strips: parentheticals `(optional)`, trailing `for serving`/`to serve`, prep adjectives (`cooked`, `frozen`, `sticky`, etc.), variety adjectives (`white`, `brown`, `jasmine`, etc.), and `"A or B"` alternates (keeps the part after `or`). When multiple items with no numeric quantity share a key, the shortest raw string is shown as the representative.
 
