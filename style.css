@@ -317,6 +317,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
+  padding-left: 52px;
 }
 
 .progress-dots {
@@ -456,12 +457,11 @@ body {
 .recipe-card {
   background: transparent;
   border-radius: var(--radius);
-  padding: 24px;
   box-shadow: 0 2px 12px var(--shadow);
   transition: all var(--transition);
   position: relative;
   /* Extra padding makes room for the tile frame ring (28px inset + inner breathing room) */
-  padding: 36px 52px 40px;
+  padding: 46px 62px 50px;
 }
 
 /* Tile frame: repeating mosaic background fills the whole card.
@@ -519,6 +519,14 @@ body {
   justify-content: space-between;
   margin-bottom: 10px;
   gap: 12px;
+}
+
+.card-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
 }
 
 .recipe-name {
@@ -620,15 +628,13 @@ body {
 }
 
 .wildcard-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 20px;
   background: var(--rose);
   color: #fff;
+  white-space: nowrap;
 }
 
 .web-badge {
@@ -788,6 +794,12 @@ body {
   margin-bottom: 16px;
 }
 
+.browse-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+}
+
 .browse-empty {
   text-align: center;
   padding: 40px 0;
@@ -839,6 +851,28 @@ body {
 .settings-gear:hover {
   color: var(--primary);
   transform: rotate(40deg);
+}
+
+.home-btn {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: all var(--transition);
+  z-index: 50;
+}
+.home-btn:hover {
+  color: var(--primary);
+  transform: scale(1.08);
 }
 
 /* ---- Small / danger buttons ---- */
@@ -1899,8 +1933,14 @@ body {
 .party-card-delete:hover { background: var(--secondary); color: #fff; }
 
 /* Editor header */
+.party-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  max-width: calc(100% - 48px);
+}
 .party-name-input {
-  flex: 1;
   font-family: var(--font-display);
   font-style: italic;
   font-size: 2rem;
@@ -1913,6 +1953,19 @@ body {
 .party-name-input:focus {
   outline: none;
   border-bottom-color: var(--gold);
+}
+.party-name-pencil {
+  width: 15px;
+  height: 15px;
+  color: #9A7220;
+  opacity: 0.85;
+  flex-shrink: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  margin-top: 2px;
+}
+.party-name-input:focus ~ .party-name-pencil {
+  opacity: 0;
 }
 .party-date-label {
   display: inline-flex;
@@ -2155,6 +2208,7 @@ body {
   float: right;
 }
 .party-print-btn::after { content: none; }
+#party-menu { clear: both; }
 
 /* Printable menu */
 #print-menu { display: none; }
@@ -2165,62 +2219,55 @@ body {
   #print-menu {
     display: block !important;
     width: 148mm;
-    min-height: 210mm;
+    height: 210mm;
+    overflow: hidden;
     font-family: 'Cormorant Garamond', Georgia, serif;
     background: #FFF8F0;
     color: #2A1F1A;
     box-sizing: border-box;
     position: fixed;
     top: 0; left: 0;
-  }
-  .pm-tile-band {
-    height: 38mm;
-    background-size: 52px 52px;
-    background-position: center;
-    background-repeat: repeat;
-  }
-  .pm-tile-bottom {
-    height: 18mm;
-    margin-top: auto;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   .pm-body {
-    padding: 10mm 14mm 6mm;
+    padding: 5mm 12mm 4mm;
   }
   .pm-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-style: italic;
-    font-size: 28pt;
+    font-size: 24pt;
     color: #1B3A6B;
-    margin: 0 0 2mm;
+    margin: 0 0 1.5mm;
     line-height: 1.1;
   }
   .pm-date {
-    font-size: 11pt;
+    font-size: 10pt;
     color: #7A6A5E;
-    margin: 0 0 3mm;
+    margin: 0 0 2mm;
   }
   .pm-guests {
-    font-size: 10pt;
+    font-size: 9.5pt;
     color: #7A6A5E;
     border-top: 1px solid #E8C4A0;
     border-bottom: 1px solid #E8C4A0;
-    padding: 2mm 0;
-    margin: 0 0 6mm;
+    padding: 1.5mm 0;
+    margin: 0 0 4mm;
     letter-spacing: 0.5px;
   }
   .pm-courses {
     display: flex;
     flex-direction: column;
-    gap: 5mm;
+    gap: 3mm;
   }
   .pm-course-label {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-style: italic;
-    font-size: 15pt;
+    font-size: 13pt;
     color: #B85C38;
     margin: 0 0 1mm;
     border-bottom: 1px solid #E8C4A0;
-    padding-bottom: 1mm;
+    padding-bottom: 0.5mm;
   }
   .pm-dish-list {
     list-style: none;
@@ -2228,13 +2275,34 @@ body {
     margin: 0;
   }
   .pm-dish-list li {
-    font-size: 12pt;
-    padding: 1mm 0;
+    display: flex;
+    align-items: center;
+    gap: 2.5mm;
+    padding: 0.8mm 0;
     color: #2A1F1A;
   }
-  .pm-dish-list li::before {
-    content: '— ';
-    color: #C49A3C;
+  .pm-dish-tile {
+    flex: 0 0 auto;
+    width: 7mm;
+    height: 7mm;
+    object-fit: cover;
+    border-radius: 1mm;
+    border: 0.4mm solid #C49A3C;
+  }
+  .pm-dish-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .pm-dish-name {
+    font-size: 11.5pt;
+    color: #2A1F1A;
+    line-height: 1.15;
+  }
+  .pm-dish-desc {
+    font-size: 9pt;
+    font-style: italic;
+    color: #7A6A5E;
+    line-height: 1.2;
   }
 }
 
@@ -2254,7 +2322,7 @@ body {
 }
 .course-dishes {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
   margin-bottom: 10px;
 }
@@ -2274,7 +2342,61 @@ body {
 .course-remove:hover { background: var(--secondary); color: #fff; }
 .course-search-wrap { position: relative; }
 
+/* Type-your-own custom dish (wine, shop-bought items, etc.) */
+.course-custom-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+.course-custom-input { flex: 1; }
+.course-custom-add {
+  background: var(--bg);
+  border: 1px solid var(--warm);
+  color: var(--primary);
+  white-space: nowrap;
+}
+.course-custom-add:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.course-custom-dish {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--warm);
+  border-radius: var(--radius);
+}
+.course-custom-tile {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+}
+.course-custom-name {
+  flex: 1;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+.course-custom-dish .course-remove {
+  margin-top: 0;
+  padding: 4px 9px;
+}
+
 /* Web idea course picker */
+.web-ideas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
 .party-web-actions {
   flex-wrap: wrap;
   align-items: center;

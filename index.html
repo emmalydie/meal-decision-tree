@@ -14,6 +14,7 @@
   <div id="app">
 
     <button class="settings-gear" id="btn-settings" aria-label="Settings" title="Settings &amp; backup">&#9881;</button>
+    <button class="home-btn" id="btn-home" aria-label="Home" title="Return home" style="display:none;">&#127968;</button>
 
     <div id="screen-landing" class="screen active">
       <div class="landing-content">
@@ -46,7 +47,7 @@
           <p class="question-subtitle" id="question-subtitle"></p>
           <div class="options-grid" id="options-grid"></div>
           <div class="question-footer">
-            <button class="btn-text" id="btn-skip" style="display:none;">Skip this question</button>
+            <button class="btn-text" id="btn-skip" style="display:none;">No preference</button>
             <button class="btn btn-primary" id="btn-next" style="display:none;">Next</button>
           </div>
           <p class="match-count" id="match-count"></p>
@@ -93,6 +94,7 @@
             <select class="filter-select" id="filter-dietary"><option value="">Any dietary</option></select>
           </div>
         </div>
+        <p class="browse-count" id="browse-count"></p>
         <div class="browse-grid" id="browse-grid"></div>
       </div>
     </div>
@@ -148,7 +150,13 @@
       <div class="party-content">
         <div class="browse-header">
           <button class="btn-icon" id="btn-party-back" aria-label="Back to parties">&larr;</button>
-          <input type="text" class="party-name-input" id="party-name" placeholder="Name your party" aria-label="Party name">
+          <div class="party-name-wrap">
+            <input type="text" class="party-name-input" id="party-name" placeholder="Name your party" aria-label="Party name">
+            <svg class="party-name-pencil" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M11 2.5L13.5 5L5.5 13H3V10.5L11 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M9.5 4L12 6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
         </div>
         <label class="party-date-label">When? <input type="date" id="party-date" class="party-date-input"></label>
 
