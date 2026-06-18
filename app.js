@@ -30,874 +30,28 @@
     return h % TILE_FRAMES.length;
   }
 
+  // Returns an array of tile indices for an ordered list of recipe IDs,
+  // ensuring no two tiles within a window of 2 are the same (covers 2-column grids).
+  function assignTilesNoAdjacent(ids) {
+    var result = [];
+    for (var i = 0; i < ids.length; i++) {
+      var preferred = tileIndexForRecipe(ids[i]);
+      var recent = result.slice(Math.max(0, result.length - 2));
+      if (recent.indexOf(preferred) === -1) {
+        result.push(preferred);
+      } else {
+        var chosen = preferred;
+        for (var offset = 1; offset < TILE_FRAMES.length; offset++) {
+          var candidate = (preferred + offset) % TILE_FRAMES.length;
+          if (recent.indexOf(candidate) === -1) { chosen = candidate; break; }
+        }
+        result.push(chosen);
+      }
+    }
+    return result;
+  }
+
   var BUILTIN_RECIPES = [
-  {
-    "id": "ottolenghi-cauliflower-cake",
-    "name": "Cauliflower Cake",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/cauliflower-cake",
-    "cuisine": "mediterranean",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 75,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["cauliflower", "eggs", "cheese", "herbs"],
-    "pantryFriendly": false,
-    "season": ["fall", "winter"],
-    "description": "A showstopper vegetable cake with golden top and creamy center.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-roasted-aubergine",
-    "name": "Roasted Aubergine with Anchovies and Oregano",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/roasted-aubergine-with-anchovies-and-oregano",
-    "cuisine": "mediterranean",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 50,
-    "meal": "dinner",
-    "dietary": [],
-    "keyIngredients": ["aubergine", "anchovies", "oregano", "garlic", "tomatoes"],
-    "pantryFriendly": false,
-    "season": ["summer", "fall"],
-    "description": "Silky roasted aubergine with a punchy anchovy and herb dressing.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-shakshuka",
-    "name": "Shakshuka",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/shakshuka",
-    "cuisine": "middle-eastern",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 30,
-    "meal": "any",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["eggs", "tomatoes", "peppers", "cumin", "feta"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Eggs poached in a spiced tomato sauce. The ultimate one-pan meal.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-mejadra",
-    "name": "Mejadra",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/mejadra",
-    "cuisine": "middle-eastern",
-    "effort": "medium",
-    "mood": ["comforting"],
-    "time": 60,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["lentils", "rice", "onions", "cumin", "cinnamon"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Spiced lentils and rice topped with deeply caramelised onions. Pure comfort.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-burnt-aubergine-with-tahini",
-    "name": "Burnt Aubergine with Tahini",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/burnt-aubergine-with-tahini",
-    "cuisine": "middle-eastern",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 25,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["aubergine", "tahini", "lemon", "pomegranate", "herbs"],
-    "pantryFriendly": false,
-    "season": ["summer"],
-    "description": "Smoky charred aubergine with creamy tahini and jewel-like pomegranate seeds.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-green-pancakes",
-    "name": "Green Pancakes with Lime Butter",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/green-pancakes-with-lime-butter",
-    "cuisine": "mediterranean",
-    "effort": "medium",
-    "mood": ["fresh", "impressive"],
-    "time": 40,
-    "meal": "breakfast",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["spinach", "herbs", "flour", "eggs", "lime", "butter"],
-    "pantryFriendly": false,
-    "season": ["spring", "summer"],
-    "description": "Vibrant green herb pancakes with a zingy lime butter. Weekend brunch perfection.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-fattoush",
-    "name": "Fattoush",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/fattoush",
-    "cuisine": "middle-eastern",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 20,
-    "meal": "lunch",
-    "dietary": ["vegan"],
-    "keyIngredients": ["pita", "tomatoes", "cucumber", "radish", "sumac", "herbs"],
-    "pantryFriendly": false,
-    "season": ["spring", "summer"],
-    "description": "Crunchy pita salad with sumac dressing. Bright, tangy, and satisfying.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-roasted-butternut-squash",
-    "name": "Roasted Butternut Squash with Lentils and Gorgonzola",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/roasted-butternut-squash-with-lentils-and-gorgonzola",
-    "cuisine": "mediterranean",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 55,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["butternut squash", "lentils", "gorgonzola", "pecans", "herbs"],
-    "pantryFriendly": false,
-    "season": ["fall", "winter"],
-    "description": "Sweet roasted squash with earthy lentils and salty gorgonzola. Autumn on a plate.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-stuffed-peppers",
-    "name": "Stuffed Peppers with Ricotta and Mascarpone",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/romano-peppers-stuffed-with-ricotta-and-mascarpone",
-    "cuisine": "mediterranean",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 50,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["romano peppers", "ricotta", "mascarpone", "herbs", "pine nuts"],
-    "pantryFriendly": false,
-    "season": ["summer", "fall"],
-    "description": "Sweet peppers stuffed with creamy cheese and herbs. Elegant but easy.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-herb-crust-fish",
-    "name": "Herb-Crusted Fish with Lemon",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/herb-crusted-fish",
-    "cuisine": "mediterranean",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 25,
-    "meal": "dinner",
-    "dietary": ["gluten-free"],
-    "keyIngredients": ["white fish", "herbs", "lemon", "capers", "olive oil"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Flaky white fish under a fragrant herb crust. Light, fast, and fresh.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-zaatar-roast-chicken",
-    "name": "Za'atar Roast Chicken",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/zaatar-roast-chicken",
-    "cuisine": "middle-eastern",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 75,
-    "meal": "dinner",
-    "dietary": ["gluten-free", "dairy-free"],
-    "keyIngredients": ["chicken", "za'atar", "lemon", "onions", "sumac"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Aromatic roast chicken rubbed with za'atar and sumac. A crowd-pleaser.",
-    "notes": ""
-  },
-  {
-    "id": "ottolenghi-orzo-tomato",
-    "name": "Orzo with Roasted Tomatoes and Feta",
-    "source": "Ottolenghi",
-    "sourceUrl": "https://ottolenghi.co.uk/recipes/orzo-with-roasted-tomatoes",
-    "cuisine": "mediterranean",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 30,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["orzo", "tomatoes", "feta", "olives", "basil"],
-    "pantryFriendly": true,
-    "season": ["summer"],
-    "description": "Creamy orzo with sweet roasted tomatoes and salty feta. One pot, big flavour.",
-    "notes": ""
-  },
-  {
-    "id": "wol-mapo-tofu",
-    "name": "Mapo Tofu",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/ma-po-tofu-recipe/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 25,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["tofu", "doubanjiang", "sichuan peppercorn", "scallions"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Numbing, spicy, and deeply savory. A Sichuan classic that comes together fast.",
-    "notes": ""
-  },
-  {
-    "id": "wol-dan-dan-noodles",
-    "name": "Dan Dan Noodles",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/dan-dan-noodles/",
-    "cuisine": "east-asian",
-    "effort": "medium",
-    "mood": ["comforting", "adventurous"],
-    "time": 35,
-    "meal": "dinner",
-    "dietary": [],
-    "keyIngredients": ["noodles", "pork", "chilli oil", "sesame paste", "sichuan peppercorn"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Spicy, nutty, and complex. Street food noodles with a tingly sesame sauce.",
-    "notes": ""
-  },
-  {
-    "id": "wol-egg-fried-rice",
-    "name": "Classic Egg Fried Rice",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/classic-chinese-fried-rice/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 15,
-    "meal": "any",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["rice", "eggs", "scallions", "soy sauce", "sesame oil"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "The ultimate fridge-clearing meal. Leftover rice + eggs = dinner in 15 minutes.",
-    "notes": ""
-  },
-  {
-    "id": "wol-kung-pao-tofu",
-    "name": "Kung Pao Tofu",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/kung-pao-tofu/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["quick-fix", "comforting"],
-    "time": 25,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["tofu", "peanuts", "dried chillies", "soy sauce", "vinegar"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Crispy tofu in a sweet-sour-spicy sauce with crunchy peanuts.",
-    "notes": ""
-  },
-  {
-    "id": "wol-scallion-pancakes",
-    "name": "Scallion Pancakes",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/chinese-scallion-pancakes/",
-    "cuisine": "east-asian",
-    "effort": "medium",
-    "mood": ["comforting", "adventurous"],
-    "time": 45,
-    "meal": "snack",
-    "dietary": ["vegan"],
-    "keyIngredients": ["flour", "scallions", "sesame oil", "salt"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Flaky, crispy, and oniony. Addictive hand-pulled pancakes.",
-    "notes": ""
-  },
-  {
-    "id": "wol-hot-sour-soup",
-    "name": "Hot and Sour Soup",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/hot-sour-soup/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 25,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["tofu", "mushrooms", "bamboo shoots", "vinegar", "white pepper"],
-    "pantryFriendly": false,
-    "season": ["fall", "winter"],
-    "description": "Warming, tangy broth with silky tofu and mushrooms. Better than takeout.",
-    "notes": ""
-  },
-  {
-    "id": "wol-congee",
-    "name": "Rice Congee (Jook)",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/rice-congee-recipe-jook/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting"],
-    "time": 60,
-    "meal": "breakfast",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["rice", "ginger", "scallions", "sesame oil"],
-    "pantryFriendly": true,
-    "season": ["fall", "winter"],
-    "description": "Silky slow-cooked rice porridge. The ultimate comfort food when you need a hug.",
-    "notes": "Hands-off cooking time — mostly just simmering."
-  },
-  {
-    "id": "wol-tomato-egg",
-    "name": "Tomato and Egg Stir-Fry",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/chinese-tomato-egg-stir-fry/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 15,
-    "meal": "any",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["tomatoes", "eggs", "sugar", "scallions"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Sweet, savoury, silky eggs with juicy tomatoes. Chinese home cooking at its purest.",
-    "notes": ""
-  },
-  {
-    "id": "wol-char-siu",
-    "name": "Char Siu (BBQ Pork)",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/chinese-bbq-pork-cha-siu/",
-    "cuisine": "east-asian",
-    "effort": "high",
-    "mood": ["impressive", "adventurous"],
-    "time": 180,
-    "meal": "dinner",
-    "dietary": ["dairy-free"],
-    "keyIngredients": ["pork shoulder", "hoisin", "honey", "five spice", "soy sauce"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Lacquered, sticky, and caramelised. A weekend project that makes everything better.",
-    "notes": "Marinade overnight for best results."
-  },
-  {
-    "id": "wol-thai-basil-tofu",
-    "name": "Thai Basil Tofu",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/thai-basil-tofu/",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 20,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["tofu", "thai basil", "chillies", "garlic", "soy sauce"],
-    "pantryFriendly": false,
-    "season": ["summer"],
-    "description": "Aromatic, spicy, and herbaceous. Fragrant basil meets crispy tofu.",
-    "notes": ""
-  },
-  {
-    "id": "wol-pad-thai",
-    "name": "Pad Thai",
-    "source": "Woks of Life",
-    "sourceUrl": "https://thewoksoflife.com/pad-thai/",
-    "cuisine": "east-asian",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 35,
-    "meal": "dinner",
-    "dietary": [],
-    "keyIngredients": ["rice noodles", "shrimp", "tamarind", "peanuts", "bean sprouts", "lime"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Sweet, sour, salty, and crunchy. The Thai street food classic done right at home.",
-    "notes": ""
-  },
-  {
-    "id": "dal-tadka",
-    "name": "Dal Tadka",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 30,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["red lentils", "cumin", "turmeric", "garlic", "tomatoes", "ghee"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Creamy spiced lentils finished with a sizzling garlic and cumin tadka. Soul food.",
-    "notes": ""
-  },
-  {
-    "id": "chana-masala",
-    "name": "Chana Masala",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "low",
-    "mood": ["comforting"],
-    "time": 35,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["chickpeas", "tomatoes", "onion", "garam masala", "ginger"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Hearty, tangy chickpea curry. A staple that gets better every time you make it.",
-    "notes": ""
-  },
-  {
-    "id": "aloo-gobi",
-    "name": "Aloo Gobi",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 30,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["potatoes", "cauliflower", "turmeric", "cumin", "tomatoes"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Golden potatoes and cauliflower with warm spices. Simple, satisfying, and cheap.",
-    "notes": ""
-  },
-  {
-    "id": "palak-paneer",
-    "name": "Palak Paneer",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 40,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["spinach", "paneer", "cream", "garlic", "garam masala"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Velvety spinach sauce with cubes of golden paneer. Restaurant-quality at home.",
-    "notes": ""
-  },
-  {
-    "id": "vegetable-biryani",
-    "name": "Vegetable Biryani",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "high",
-    "mood": ["impressive", "comforting"],
-    "time": 90,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["basmati rice", "mixed vegetables", "saffron", "yoghurt", "fried onions"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Layered, fragrant, and celebratory. A weekend rice project worth every minute.",
-    "notes": ""
-  },
-  {
-    "id": "saag-dal",
-    "name": "Saag Dal",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "low",
-    "mood": ["comforting"],
-    "time": 35,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["spinach", "red lentils", "garlic", "cumin", "turmeric"],
-    "pantryFriendly": true,
-    "season": ["fall", "winter"],
-    "description": "Earthy lentils melted with spinach and warm spices. Deeply nourishing.",
-    "notes": ""
-  },
-  {
-    "id": "masala-dosa",
-    "name": "Masala Dosa",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "south-asian",
-    "effort": "high",
-    "mood": ["adventurous", "impressive"],
-    "time": 120,
-    "meal": "breakfast",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["rice", "urad dal", "potatoes", "mustard seeds", "curry leaves"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Crispy fermented crepes filled with spiced potatoes. Requires planning ahead but worth it.",
-    "notes": "Batter needs to ferment overnight."
-  },
-  {
-    "id": "cacio-e-pepe",
-    "name": "Cacio e Pepe",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 20,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["spaghetti", "pecorino", "black pepper"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Three ingredients, infinite satisfaction. Technique is everything here.",
-    "notes": ""
-  },
-  {
-    "id": "ratatouille",
-    "name": "Ratatouille",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "french",
-    "effort": "medium",
-    "mood": ["fresh", "impressive"],
-    "time": 60,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["aubergine", "courgette", "peppers", "tomatoes", "herbs de provence"],
-    "pantryFriendly": false,
-    "season": ["summer"],
-    "description": "Layered summer vegetables, slow-roasted until meltingly tender. Provencal elegance.",
-    "notes": ""
-  },
-  {
-    "id": "mushroom-risotto",
-    "name": "Mushroom Risotto",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 45,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["arborio rice", "mushrooms", "parmesan", "white wine", "butter"],
-    "pantryFriendly": false,
-    "season": ["fall", "winter"],
-    "description": "Creamy, earthy, and deeply umami. Stirring is meditative, the result is luxurious.",
-    "notes": ""
-  },
-  {
-    "id": "ribollita",
-    "name": "Ribollita",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "medium",
-    "mood": ["comforting"],
-    "time": 60,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["cannellini beans", "cavolo nero", "bread", "tomatoes", "olive oil"],
-    "pantryFriendly": true,
-    "season": ["fall", "winter"],
-    "description": "Thick Tuscan bread soup. Rustic, thrifty, and impossibly good the next day.",
-    "notes": ""
-  },
-  {
-    "id": "spanakopita",
-    "name": "Spanakopita",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "mediterranean",
-    "effort": "high",
-    "mood": ["impressive", "comforting"],
-    "time": 75,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["spinach", "feta", "filo pastry", "dill", "eggs"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Flaky golden filo wrapped around a salty spinach and feta filling. Greek perfection.",
-    "notes": ""
-  },
-  {
-    "id": "pasta-aglio-olio",
-    "name": "Pasta Aglio e Olio",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "low",
-    "mood": ["quick-fix", "comforting"],
-    "time": 15,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["spaghetti", "garlic", "chilli flakes", "olive oil", "parsley"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Garlic, oil, chilli, pasta. Done in the time it takes to boil water.",
-    "notes": ""
-  },
-  {
-    "id": "french-onion-soup",
-    "name": "French Onion Soup",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "french",
-    "effort": "high",
-    "mood": ["comforting", "impressive"],
-    "time": 90,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["onions", "butter", "gruyere", "bread", "beef stock"],
-    "pantryFriendly": true,
-    "season": ["fall", "winter"],
-    "description": "Deeply caramelised onion broth under a bubbling cheese crust. Worth the slow cook.",
-    "notes": ""
-  },
-  {
-    "id": "pesto-pasta",
-    "name": "Pasta al Pesto",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 15,
-    "meal": "dinner",
-    "dietary": ["vegetarian"],
-    "keyIngredients": ["pasta", "basil", "pine nuts", "parmesan", "garlic", "olive oil"],
-    "pantryFriendly": false,
-    "season": ["summer"],
-    "description": "Bright, herby, and summery. Best with fresh basil and good olive oil.",
-    "notes": ""
-  },
-  {
-    "id": "niçoise-salad",
-    "name": "Salade Niçoise",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "french",
-    "effort": "medium",
-    "mood": ["fresh", "impressive"],
-    "time": 35,
-    "meal": "lunch",
-    "dietary": ["gluten-free", "dairy-free"],
-    "keyIngredients": ["tuna", "green beans", "eggs", "olives", "potatoes", "anchovies"],
-    "pantryFriendly": false,
-    "season": ["spring", "summer"],
-    "description": "A composed salad that's really a full meal. Elegant, fresh, and satisfying.",
-    "notes": ""
-  },
-  {
-    "id": "sheet-pan-roasted-veg",
-    "name": "Sheet Pan Roasted Vegetables",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "american",
-    "effort": "low",
-    "mood": ["quick-fix", "comforting"],
-    "time": 35,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["seasonal vegetables", "olive oil", "garlic", "herbs"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Whatever vegetables you have, tossed in olive oil and roasted until golden. Always works.",
-    "notes": "Use high heat (220C) for best caramelisation."
-  },
-  {
-    "id": "grain-bowl",
-    "name": "Build-Your-Own Grain Bowl",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "american",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 20,
-    "meal": "lunch",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["quinoa", "roasted vegetables", "avocado", "tahini", "greens"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Grains + veg + protein + dressing. Infinitely customisable lunch.",
-    "notes": "Cook grains in batch on Sunday for easy weekday bowls."
-  },
-  {
-    "id": "frittata",
-    "name": "Vegetable Frittata",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "italian",
-    "effort": "low",
-    "mood": ["quick-fix", "comforting"],
-    "time": 25,
-    "meal": "any",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["eggs", "whatever vegetables", "cheese", "herbs"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "The ultimate fridge-cleaner. Eggs + any veg + cheese = done.",
-    "notes": ""
-  },
-  {
-    "id": "black-bean-tacos",
-    "name": "Black Bean Tacos",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "mexican",
-    "effort": "low",
-    "mood": ["quick-fix", "fresh"],
-    "time": 20,
-    "meal": "dinner",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["black beans", "corn tortillas", "avocado", "lime", "coriander", "salsa"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Spiced black beans, creamy avocado, sharp lime. Dinner in 20 minutes.",
-    "notes": ""
-  },
-  {
-    "id": "japanese-curry",
-    "name": "Japanese Curry",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "east-asian",
-    "effort": "medium",
-    "mood": ["comforting"],
-    "time": 50,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["potatoes", "carrots", "onions", "curry roux", "rice"],
-    "pantryFriendly": true,
-    "season": ["fall", "winter"],
-    "description": "Thick, sweet, and warming. Japanese comfort food at its finest.",
-    "notes": ""
-  },
-  {
-    "id": "miso-soup",
-    "name": "Miso Soup with Tofu",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["comforting", "quick-fix"],
-    "time": 10,
-    "meal": "any",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["miso paste", "tofu", "wakame", "scallions", "dashi"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Warming, umami-rich broth in 10 minutes. The perfect side or light meal.",
-    "notes": ""
-  },
-  {
-    "id": "japchae",
-    "name": "Japchae (Korean Glass Noodles)",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "east-asian",
-    "effort": "medium",
-    "mood": ["impressive", "adventurous"],
-    "time": 40,
-    "meal": "dinner",
-    "dietary": ["vegan"],
-    "keyIngredients": ["sweet potato noodles", "mushrooms", "spinach", "soy sauce", "sesame oil"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Bouncy glass noodles with colourful stir-fried vegetables. A Korean celebration dish.",
-    "notes": ""
-  },
-  {
-    "id": "enchiladas-verdes",
-    "name": "Enchiladas Verdes",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "mexican",
-    "effort": "medium",
-    "mood": ["comforting", "impressive"],
-    "time": 50,
-    "meal": "dinner",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["tortillas", "tomatillos", "cheese", "sour cream", "jalapeños"],
-    "pantryFriendly": false,
-    "season": [],
-    "description": "Corn tortillas rolled in tangy green salsa, smothered in cheese. Deeply satisfying.",
-    "notes": ""
-  },
-  {
-    "id": "granola",
-    "name": "Homemade Granola",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "american",
-    "effort": "low",
-    "mood": ["comforting"],
-    "time": 30,
-    "meal": "breakfast",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["oats", "nuts", "maple syrup", "coconut oil", "dried fruit"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Crunchy, golden clusters. Make a batch on Sunday, eat all week.",
-    "notes": ""
-  },
-  {
-    "id": "shakshuka-green",
-    "name": "Green Shakshuka",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "middle-eastern",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 25,
-    "meal": "any",
-    "dietary": ["vegetarian", "gluten-free"],
-    "keyIngredients": ["eggs", "spinach", "leeks", "feta", "herbs", "chilli"],
-    "pantryFriendly": false,
-    "season": ["spring", "summer"],
-    "description": "A verdant twist on shakshuka — eggs nestled in garlicky greens with feta.",
-    "notes": ""
-  },
-  {
-    "id": "hummus",
-    "name": "Hummus from Scratch",
-    "source": "Personal",
-    "sourceUrl": "",
-    "cuisine": "middle-eastern",
-    "effort": "medium",
-    "mood": ["fresh", "impressive"],
-    "time": 90,
-    "meal": "snack",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["dried chickpeas", "tahini", "lemon", "garlic", "cumin"],
-    "pantryFriendly": true,
-    "season": [],
-    "description": "Impossibly smooth hummus from dried chickpeas. Night-and-day better than shop-bought.",
-    "notes": "Soak chickpeas overnight. Peel skins for extra smoothness."
-  },
-  {
-    "id": "nyt-smashed-cucumber",
-    "name": "Smashed Cucumber Salad",
-    "source": "NYT Cooking",
-    "sourceUrl": "",
-    "cuisine": "east-asian",
-    "effort": "low",
-    "mood": ["fresh", "quick-fix"],
-    "time": 10,
-    "meal": "snack",
-    "dietary": ["vegan", "gluten-free"],
-    "keyIngredients": ["cucumber", "garlic", "chilli oil", "rice vinegar", "sesame"],
-    "pantryFriendly": false,
-    "season": ["summer"],
-    "description": "Crunchy, garlicky, and addictive. Smash, dress, devour.",
-    "notes": "Add your NYT Cooking link here."
-  },
   {
     "id": "nyt-chicken-florentine",
     "name": "Chicken Florentine",
@@ -937,7 +91,8 @@
       "Add the remaining 2 tbsp butter to the pan and melt. Add the shallot, garlic and a pinch of salt and cook, stirring, until softened and aromatic, about 2 minutes.",
       "Add the wine, broth, basil and oregano. Stir, scraping up the browned bits, until the liquid has reduced by about half, 3–4 minutes. Add the heavy cream and cream cheese and stir until the cream cheese melts into a thick sauce, about 6 minutes. Add the spinach and stir until it wilts into the sauce, about 1 minute.",
       "Return the chicken to the pan and simmer until cooked through, 4–5 minutes. Serve immediately with freshly grated Parmesan on top."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-chicken-piccata-pasta",
@@ -975,7 +130,8 @@
       "In a large skillet, heat 2 tablespoons butter and the olive oil over high. Once the butter is melted and bubbling, add the chicken, working in batches if necessary to avoid crowding and promote browning. Cook, stirring occasionally to break apart any stuck pieces, until cooked through with some golden spots, transferring cooked pieces to a plate as they finish.",
       "Reduce heat to medium-high. Add the shallot and garlic and cook, stirring occasionally, until softened and fragrant, 1 to 2 minutes. Add the stock and simmer until reduced by half, 3 to 5 minutes. Lower the heat and stir in the remaining 4 tablespoons butter, the lemon juice and the capers.",
       "Season the sauce with salt and pepper to taste, then return the chicken to the skillet. Add the pasta and toss very well to coat (stir in splashes of reserved pasta water if more sauce is desired), then take the skillet off the heat. Serve topped with parsley and more black pepper."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-miso-mushroom-leek-pasta",
@@ -1011,7 +167,8 @@
       "When the water is ready, add the pasta and cook until al dente. Halfway through cooking, reserve 1 cup of water and let cool slightly. Drain the pasta and drizzle with olive oil if done before the mushrooms.",
       "When both the mushrooms and pasta are done, stir the miso into the reserved pasta water until mostly dissolved. Add it to the skillet over medium-high heat along with the pasta, cheese and vinegar, stirring vigorously until a cheesy sauce forms and coats the noodles, 1 to 2 minutes. Remove from heat and season to taste with more vinegar if needed.",
       "Garnish with the parsley and more cheese; serve with a final drizzle of oil."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-extra-green-pasta-salad",
@@ -1046,7 +203,8 @@
       "Bring a large pot of water to a boil, then throw in a handful of salt. Add the pasta, give it a stir and cook until al dente. Just before draining, add the snap peas and English peas to the boiling water to barely soften, 20 to 30 seconds. Drain the pasta and peas, and rinse lightly with cold water; set aside.",
       "While the pasta water comes to a boil, place the spinach, basil, oil, miso, garlic, and lemon zest and juice in a blender. Blend to a bright green purée. Taste and adjust seasoning with salt and a few grinds of pepper, then blend again.",
       "Transfer the purée to a large bowl big enough to toss all the pasta. Add the pasta and peas, and toss until coated. Season to taste with salt and pepper. Add the Parmesan and more basil leaves. Toss once more before serving."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-miso-honey-chicken-asparagus",
@@ -1085,7 +243,8 @@
       "When ready to cook, heat the broiler with a rack set 6 inches below it. Line a large baking sheet with aluminum foil. Remove the chicken from the marinade, scraping off and discarding any excess. Place the chicken in a single layer on one side of the baking sheet, flatter side up. Place the asparagus on the other side, drizzle with remaining oil, season and toss to coat.",
       "Broil until the chicken is cooked through with some charred spots and the asparagus is browned, about 10 minutes.",
       "To serve, top the chicken with a drizzle of the reserved marinade and a sprinkle of scallions. Serve with rice, if desired."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-lemony-greek-chicken-spinach-potato-stew",
@@ -1124,7 +283,8 @@
       "In a large pot or Dutch oven, warm the oil over high heat. Add the onion, garlic and salt and cook, stirring, until softened and just starting to brown, 5 minutes. (Decrease the heat to medium-high if necessary to prevent scorching.)",
       "Decrease the heat to medium-high and add the chicken, rosemary, oregano, red-pepper flakes and several generous grinds of black pepper. Cook, breaking up the chicken into crumbles, until it starts to lose its pink translucency, about 2 minutes. Add the potatoes and stir to combine. Add the chicken broth and half the lemon juice, scraping up any browned bits. Bring to a rolling boil, then lower the heat to maintain a very brisk simmer. Simmer until the potatoes are nearly tender, 15 minutes.",
       "Add the spinach and dill, to taste. Continue to simmer briskly until the potatoes are tender, about 5 minutes more. Taste and add some or all of the remaining lemon juice, plus more salt and pepper if desired. Serve in bowls topped with feta and crushed pita chips."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-lemony-chicken-feta-meatball-soup",
@@ -1162,7 +322,8 @@
       "Heat the oil in a large Dutch oven or wide pot over medium until shimmering. Add the diced onion, season with salt, and cook until it begins to soften, about 2 minutes. Add the remaining 1 tablespoon turmeric and the red-pepper flakes, and stir until fragrant, about 30 seconds. Push the onions to the sides, then add the meatballs (they'll be close together, that's OK). Cook until browned on two sides, 5 to 7 minutes total.",
       "Pour in the broth and remaining ½ cup oats, then gently tilt the pot side to side to distribute the oats without disturbing the meatballs. Bring to a gentle boil, then reduce the heat to maintain an active simmer. Season with salt. Cook, gently stirring occasionally so nothing sticks, until the oats have softened and the meatballs are cooked through, about 4 minutes more.",
       "Stir in the spinach and lemon juice until the spinach is wilted, about 2 minutes more. Adjust the seasoning to taste. Spoon into bowls, top with pepper and the remaining dill. Serve with lemon wedges."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-spicy-turkey-stir-fry-garlic-ginger",
@@ -1204,7 +365,8 @@
       "Stir in the turkey, raise the heat to medium-high, and cook, breaking up the meat with a spoon, until golden and crisp, about 7 minutes. Don't stir too much, so it can turn deep brown.",
       "Remove the pan from the heat and stir in the lime juice, fish sauce and soy sauce. Taste and add more lime juice, red-pepper flakes, soy sauce, and sugar or honey if you like.",
       "Gently mix about two-thirds of the fried garlic and ginger into the turkey. Serve over rice, topped with cilantro, basil, scallion greens and fresh chile, and garnished with the remaining fried ginger and garlic."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-thai-inspired-chicken-meatball-soup",
@@ -1243,7 +405,8 @@
       "Form into 2-inch meatballs (about 2 ounces each). In a large Dutch oven or pot, heat the oil over medium-high. Working in batches, add the meatballs in a single layer and cook, flipping halfway, until golden brown on two sides, 5 to 8 minutes. Transfer to a plate and repeat, adding oil as needed.",
       "Once all the meatballs are out of the pot, if the oil is burned, wipe it out and add a bit more. Reduce the heat to medium, add the reserved ginger mixture and sauté until fragrant, about 1 minute. Add the chicken broth, coconut milk, sugar and the remaining 1 tablespoon fish sauce, and bring to a simmer. Add the meatballs and any juices, and simmer until the flavors come together and the meatballs are cooked through, 5 to 8 minutes.",
       "Remove from heat and stir in the spinach and lime juice. Divide rice among bowls, then top with meatballs, broth and cilantro. Serve with lime wedges."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-italian-wedding-soup",
@@ -1292,7 +455,8 @@
       "Add the onion, carrots and celery to the pot and cook, stirring occasionally, until crisp-tender, about 10 minutes. Add the garlic, 1 teaspoon salt (or 2 teaspoons if using low-sodium broth) and ½ teaspoon black pepper. Cook until the garlic is fragrant, about 1 minute.",
       "Return the meatballs to the pot, add the broth and bring to a simmer over medium-high heat. Stir in the pasta, lower the heat and simmer, stirring occasionally, until the pasta is tender, about 10 minutes.",
       "Turn off the heat and stir in the spinach until wilted. Taste and season with salt and pepper if needed (the broth should taste pleasantly salty). Serve hot, topped with Parmesan. The pasta keeps absorbing liquid as it sits, so add broth when reheating. Keeps up to 5 days refrigerated or 3 months frozen."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-coconut-fish-tomato-bake",
@@ -1331,7 +495,8 @@
       "Place the tomatoes on a large sheet pan. Drizzle with 2 tablespoons olive oil, season with salt and toss to coat. Nestle the marinated fish between the tomatoes and spoon all the marinade over the fish. Drizzle 1 tablespoon oil over the fish. Roast on the lower-middle rack until the surface of the fish is opaque but the center is not cooked through, 8 to 10 minutes. Remove the pan and heat the broiler to high.",
       "Move the pan to the broiler and finish cooking, rotating once, until the fish is tender and the tomatoes are just beginning to brown in spots, 5 to 6 minutes. Slice the remaining lime into wedges.",
       "Divide the tomatoes and fish among dishes and tip the pan juices over the fish. Garnish with the remaining ¼ cup cilantro and serve with lime wedges for squeezing."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-salmon-cherry-tomato-curry",
@@ -1370,7 +535,8 @@
       "In a large lidded skillet or saucepan, melt the ghee over medium heat. Add the garlic, ginger and chile, and cook for 2 to 3 minutes, stirring frequently, until golden brown and fragrant. Season with salt and pepper. Add the cumin seeds and toast for 15 seconds, then stir in the tomatoes, coriander and turmeric.",
       "Stir in the coconut milk and season with salt to taste. Cook for 6 to 8 minutes, uncovered, until the liquid is slightly reduced and the tomato skins are bursting.",
       "Stir in the spinach and gently nestle the salmon fillets into the curry, submerging as much as possible. Cover and simmer over medium-low until the salmon is cooked through, 4 to 7 minutes. Serve over rice and garnish with herbs."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-roasted-zucchini-pasta-salad",
@@ -1408,7 +574,8 @@
       "In a large bowl, combine the lemon juice, tahini, garlic, the remaining 6 tablespoons oil and 3 tablespoons water; season with salt and pepper and whisk until well blended.",
       "Add the warm pasta, zucchini mixture, sunflower seeds and raisins to the dressing. Season with salt and pepper; toss to coat. Stir in the cheese and parsley.",
       "The pasta salad can be made a few hours ahead and kept refrigerated. Bring to room temperature and toss well before serving."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-weeknight-chicken-tagine",
@@ -1453,7 +620,8 @@
       "When the onions are soft, add the chicken and its marinade to the pan. Cover and simmer over medium-low for 15 to 20 minutes, stirring occasionally, until the meat is fully cooked.",
       "The sauce may have thickened slightly, but the pan should not be dry. If necessary, add 1 tablespoon stock or water at a time until the desired consistency. Taste and adjust seasoning with salt and preserved lemon.",
       "Garnish with olives and cilantro and serve with lemon wedges and torn pieces of baguette."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-skillet-meatballs-peaches-basil-lime",
@@ -1493,7 +661,8 @@
       "Uncover the pan. If the mixture seems too runny, let it cook down another minute or so — the peaches should break down into a chunky sauce. Hard or unripe peaches may take a few extra minutes.",
       "Add the onions and mix them in so they wilt slightly. Squeeze lime juice over everything, then taste and add salt and lime juice as needed (sweeter peaches need more lime, tart ones less).",
       "Serve the meatballs sprinkled with more cumin and garnished with torn basil leaves, over the rice or greens."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-chicken-stew-pelosi",
@@ -1538,7 +707,8 @@
       "Add the flour and stir for 1 minute. Add the chicken broth and vinegar and stir until the flour is incorporated.",
       "Add the chicken thighs, potatoes, green beans, heavy cream, sage, thyme, oregano, and 1 teaspoon each of salt and black pepper. Bring to a gentle boil over medium-high, then reduce the heat to maintain a simmer. Simmer, with the lid partially covering the pot, until the chicken is cooked through, about 20 minutes.",
       "Transfer the chicken to a plate. Cover the pot completely and let the vegetables cook 5 to 10 minutes more, until tender. Meanwhile, shred the chicken into bite-size pieces with two forks, then return it to the pot. Season to taste with more salt and pepper. Serve warm, garnished with parsley, with lemon wedges on the side if desired."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-one-pot-chicken-and-lentils",
@@ -1576,7 +746,8 @@
       "Add the tomato paste, cumin, turmeric and garlic to the carrots and onions, stirring as best you can. Flip the chicken, stack the pieces to make room to stir, and cook until the tomato paste intensifies and darkens, about 2 minutes.",
       "Add the lentils and 4 cups water (or more, to fully submerge the lentils and most of the chicken). Bring to a boil and season with salt. Cover with the lid slightly ajar, adjust the heat to maintain a simmer, and cook, stirring occasionally, until the lentils are tender and the chicken is cooked through, 40 to 45 minutes.",
       "Remove and discard the skin from the chicken. Stir in half the lime juice, spoon some sauce over the chicken, then taste and season with more lime juice or salt. Finish with a few grinds of pepper and sprinkle with the cilantro before dividing among bowls."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-tomato-ginger-chicken-rice-soup",
@@ -1612,7 +783,8 @@
       "Add the chicken broth, chicken thighs and rice. Season lightly with salt. Bring to a simmer over medium-high heat, then reduce the heat and simmer for 15 minutes.",
       "Meanwhile, chop the tomatoes until roughly quartered (a serrated knife helps). After the soup has simmered 15 minutes, add the tomatoes and simmer until the chicken is cooked through and the rice starts to break down, a further 10 to 15 minutes.",
       "Using tongs, remove the chicken and transfer to a bowl. Shred into pieces with two forks, then stir back into the soup. Stir in the fish sauce. Season to taste with more fish sauce (if flat) and pepper (if it needs heat). Serve with a squeeze of lime and a few drops of sesame or chile oil, if using."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-orzo-salad",
@@ -1650,7 +822,8 @@
       "Bring a pot of salted water to a boil. Add the orzo and cook, stirring occasionally, until tender (but al dente). Drain and transfer to a large serving bowl.",
       "While the orzo cooks, make the dressing: In a medium bowl, combine the olive oil, vinegar, red onion, garlic, oregano, ¾ teaspoon salt and ½ teaspoon pepper; whisk vigorously until smooth.",
       "Pour about half the dressing over the hot orzo, then add the tomatoes, chickpeas and olives; toss well. Set aside to come to room temperature, about 20 minutes. Add the feta, cucumbers and herbs along with the remaining dressing. Toss, taste for seasoning and serve."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-oven-roasted-chicken-shawarma",
@@ -1688,7 +861,8 @@
       "When ready to cook, heat oven to 425 degrees. Use the remaining tablespoon of olive oil to grease a rimmed sheet pan. Add the quartered onion to the chicken and marinade, toss once to combine, then remove the chicken and onion from the marinade and spread evenly across the pan.",
       "Roast until the chicken is browned, crisp at the edges and cooked through, about 30 to 40 minutes. Remove, rest 2 minutes, then slice into bits. (For extra crisp, sauté the sliced chicken in a large pan over high heat with a tablespoon of oil until everything curls tight.)",
       "Scatter the parsley over the top and serve with tomatoes, cucumbers, pita, white sauce, hot sauce, olives, fried eggplant, feta or rice — anything you desire."
-    ]
+    ],
+    "servings": 6
   },
   {
     "id": "nyt-sausage-ragu",
@@ -1729,7 +903,8 @@
       "Mix the tomato paste with 1 cup hot water and add to the pan. Reduce heat to very low and cook until the ragù is velvety and dark red and the top glistens with oil, about 10 minutes more. Remove the herb sprigs. Sprinkle with black pepper, stir and taste.",
       "Meanwhile, bring a large pot of salted water to a boil. Boil the pasta until just tender. Scoop out 2 cups cooking water, drain the pasta and return it to the pot over low heat. Add a ladleful of ragù and a splash of cooking water, stir and cook 1 minute. Repeat, adding more cooking water or ragù until the pasta is cooked through and seasoned to your liking.",
       "Pour hot pasta water into a large serving bowl to warm it, then pour it out and add the pasta. Top with the remaining ragù, sprinkle with parsley and serve immediately. Pass grated cheese at the table, if desired."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "nyt-coq-au-vin-blanc-meatballs",
@@ -1771,7 +946,8 @@
       "Add the 1 tablespoon olive oil to the skillet. When it shimmers, add the mushrooms and cook until slightly softened, about 3 minutes. Add the butter, shallots, thyme and a pinch each of salt, black pepper and crushed red pepper. Cook until the mushrooms are golden and the shallots have softened, 3 to 5 minutes. Add the garlic and stir until fragrant, 1 minute more. Transfer to the plate with the bacon and meatballs.",
       "Pour the wine and ½ cup water into the skillet. Cook, scraping up the browned bits, until reduced slightly, about 10 minutes. Whisk in the cream and mustard. Return the bacon, meatballs and mushroom mixture to the skillet and simmer over medium, stirring occasionally, until the sauce is slightly thickened and the meatballs are cooked through, 8 to 10 minutes, adding a few tablespoons of water if needed to keep it saucy.",
       "Transfer the meatballs to plates and spoon the sauce over them. Garnish with additional thyme."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "wok-of-life-taiwanese-braised-minced-pork-rice",
@@ -1818,7 +994,8 @@
       "After the pork has simmered 20 minutes, add the eggs, submerging them in the sauce (add another ½ to 1 cup water if needed). Cover and simmer 10 minutes more.",
       "Uncover. If the sauce is too thin, raise the heat to medium-high and reduce, stirring carefully so as not to break the eggs.",
       "Stir in the scallions and salt to taste. Serve each person an egg (halved if desired) with the pork ladled over rice."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "personal-risotto-alla-pesto",
@@ -1854,7 +1031,8 @@
       "Stirring constantly, add the broth one ladle at a time, letting each be absorbed before adding the next, until the rice is fully cooked.",
       "Stirring constantly, add the pesto, Parmesan, and the remaining butter if needed.",
       "Season with salt and pepper to taste and serve immediately."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "justonecookbook-mapo-tofu",
@@ -1899,7 +1077,8 @@
       "Give the sauce a final stir, then add it to the wok. Stir thoroughly as you bring it to a simmer.",
       "Add the tofu and gently coat it with the sauce. Stir frequently, without mashing the tofu, until heated through.",
       "Add most of the green onions and stir to incorporate just before taking the pan off the heat. Serve immediately over steamed rice, garnished with the reserved green onions and optional sansho pepper."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "recipetineats-coq-au-vin",
@@ -1955,7 +1134,8 @@
       "While stirring, slowly pour in the beef stock (this dissolves the flour lump-free), then add the reduced wine and mix until mostly smooth (a few lumps will dissolve during cooking).",
       "Add the chicken, bacon, mushrooms, thyme, bay leaf, salt and pepper back into the pot and stir. Bring to a simmer, then cover and transfer to the oven for 45 minutes, until the chicken is very tender but not falling apart.",
       "Taste the sauce and adjust salt. If time permits, cool and rest overnight before reheating gently (the flavor improves). Serve over mashed potato or tagliatelle, sprinkled with parsley."
-    ]
+    ],
+    "servings": 4
   },
   {
     "id": "cookieandkate-baba-ganoush",
@@ -1992,11 +1172,531 @@
       "Discard the drippings, wipe out the bowl, and add the drained eggplant. Add the garlic and lemon juice and stir vigorously with a fork until the eggplant breaks down. Stir in the tahini until incorporated, then slowly drizzle in the olive oil while stirring until pale and creamy, breaking up any long strings.",
       "Stir in the parsley, salt and cumin. Season to taste with more salt (about another ¼ tsp) and more lemon juice if you'd like it tarter.",
       "Transfer to a serving bowl, drizzle with olive oil, and sprinkle with parsley and smoked paprika. Serve with your chosen accompaniments — also great on sandwiches."
+    ],
+    "servings": 8
+  },
+  {
+    "id": "nyt-asparagus-goat-cheese-tarragon-tart",
+    "name": "Asparagus, Goat Cheese and Tarragon Tart",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "french",
+    "effort": "medium",
+    "mood": ["impressive", "fresh"],
+    "time": 60,
+    "meal": "lunch",
+    "dietary": ["vegetarian"],
+    "keyIngredients": ["asparagus", "goat cheese", "puff pastry", "crème fraîche", "tarragon", "parmesan", "lemon"],
+    "pantryFriendly": false,
+    "season": ["spring"],
+    "description": "A stunning, company-ready tart built on store-bought puff pastry — a tangy goat cheese and crème fraîche custard spread under neat stripes of asparagus, finished with shaved Parmesan and tarragon. Effortlessly chic for how simple it is.",
+    "notes": "Emma's note: also great with slices of courgette or halved cherry tomatoes in place of (or with) the asparagus. Buy a good all-butter puff pastry — it makes a difference. Best served warm within an hour of baking, but fine a few hours later. Swap tarragon for chives, basil or mint. Can be assembled a day ahead (hold the salt and grated Parmesan until just before baking).",
+    "ingredients": [
+      "1 cup soft goat cheese, at room temperature (4 ounces)",
+      "1 large egg, lightly beaten, at room temperature",
+      "1 large garlic clove, finely grated or minced",
+      "1½ tablespoons chopped fresh tarragon leaves, plus more for serving",
+      "½ tablespoon finely grated lemon zest",
+      "½ teaspoon fine sea salt, plus more for sprinkling",
+      "Pinch of freshly grated nutmeg",
+      "1 cup crème fraîche, at room temperature (8 ounces)",
+      "All-purpose flour, for dusting",
+      "1 sheet or square all-butter puff pastry, thawed if frozen (about 9 to 14 ounces)",
+      "8 ounces thin asparagus, woody ends trimmed",
+      "Extra-virgin olive oil",
+      "2 tablespoons grated Parmesan",
+      "Freshly ground black pepper",
+      "Red-pepper flakes (optional)",
+      "1½ ounces Parmesan, shaved with a vegetable peeler (about ½ cup)"
+    ],
+    "method": [
+      "Heat the oven to 425°F. In a medium bowl, use a fork or wooden spoon to mash together the goat cheese, egg, garlic, tarragon, lemon zest, salt and nutmeg until smooth. Switch to a whisk and beat in the crème fraîche until smooth.",
+      "On a lightly floured surface, roll out the puff pastry into a 13-by-11-inch rectangle about ⅛-inch thick. Transfer to a parchment-lined cookie sheet. With a sharp knife, lightly score a ½-inch border around the edges.",
+      "Spread the crème fraîche mixture evenly inside the scored border. Line up the asparagus spears on top and brush them with olive oil. Sprinkle some salt and the grated Parmesan over the asparagus.",
+      "Bake until the pastry is puffed and golden, 25 to 30 minutes. Let cool on the sheet for at least 15 minutes (or up to 4 hours). Sprinkle with black pepper, red-pepper flakes (if using), the shaved Parmesan and tarragon leaves, and drizzle with a little oil before serving."
+    ],
+    "servings": 6
+  },
+  {
+    "id": "ali-slagle-sheet-pan-sausages-brussels-sprouts",
+    "name": "Sheet-Pan Sausages and Brussels Sprouts With Honey Mustard",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "american",
+    "effort": "low",
+    "mood": ["comforting", "quick-fix"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["sausage", "brussels sprouts", "potatoes", "honey", "dijon mustard", "olive oil"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "A hearty sheet-pan dinner of sticky honey mustard-glazed sausages roasted with brussels sprouts and potatoes. The sausages render their fat to season the caramelised vegetables as everything cooks together.",
+    "notes": "Use any fresh sausage that pairs well with honey mustard. Optional mustard seeds and chopped almonds or walnuts add crunch. Swap in other veg like squash, cherry tomatoes, broccoli, or carrots.",
+    "ingredients": [
+      "1 pound fresh sausage, such as sweet or hot Italian, or bratwurst",
+      "1 pound brussels sprouts, trimmed and halved lengthwise",
+      "1 pound small potatoes, like baby Yukon gold or red potatoes, halved",
+      "2 tablespoons extra-virgin olive oil, plus more as needed",
+      "Kosher salt and black pepper",
+      "4 teaspoons honey",
+      "1 tablespoon Dijon mustard",
+      "1 tablespoon yellow mustard seeds (optional)",
+      "¼ cup almonds or walnuts, chopped (optional)"
+    ],
+    "method": [
+      "Heat oven to 450°F and place a sheet pan in the oven to preheat. Score the sausages in a few places on both sides, making sure not to cut all the way through.",
+      "Transfer sausages to a large bowl with the brussels sprouts, potatoes and 2 tablespoons olive oil; stir until coated (add a little more oil if the mixture seems dry). Season with salt and pepper.",
+      "Spread the mixture in an even layer on the heated baking sheet and arrange the vegetables cut-sides down. Roast 15 minutes, until the brussels sprouts and potatoes start to soften.",
+      "Meanwhile, stir together the honey, mustard and mustard seeds (if using) in a small bowl.",
+      "Drizzle the honey mustard over the sausages and vegetables and toss or shake to coat. Flip the sausages. Sprinkle with almonds if using. Roast until the sausages are cooked through and the vegetables are golden and tender, about 10 minutes more. Season to taste."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "ali-slagle-sheet-pan-feta-chickpeas-tomatoes",
+    "name": "Sheet-Pan Feta With Chickpeas and Tomatoes",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "medium",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 40,
+    "meal": "dinner",
+    "dietary": ["vegetarian", "gluten-free"],
+    "keyIngredients": ["feta", "chickpeas", "cherry tomatoes", "honey", "chile flakes", "shallot", "olive oil"],
+    "pantryFriendly": true,
+    "season": ["summer"],
+    "description": "Blocks of feta roasted on a sheet pan with chickpeas, cherry tomatoes, honey and chile until the cheese is soft and creamy and the chickpeas are golden and sticky. Inspired by Greek meze, it's endlessly riffable.",
+    "notes": "Use sheep's or goat's milk feta — cow's milk feta lacks the fat to withstand roasting. Serve with pita, grains, salad greens, hummus or yogurt. Swap tomatoes for mini peppers, olives or cauliflower; swap honey for harissa, anchovies or smoked paprika.",
+    "ingredients": [
+      "3 cups cooked chickpeas (homemade or two 15-ounce cans), drained, rinsed and shaken dry",
+      "2 pints (16 to 20 ounces) cherry or Sungold tomatoes",
+      "1 shallot, thinly sliced",
+      "¼ cup extra-virgin olive oil",
+      "2 tablespoons honey",
+      "1 teaspoon mild chile flakes (like gochugaru) or ½ teaspoon red-pepper flakes",
+      "Salt",
+      "2 (6- to 8-ounce) blocks of feta, sliced 1-inch-thick"
+    ],
+    "method": [
+      "Heat the oven to 400°F. On a sheet pan, stir together the chickpeas, tomatoes, shallot, olive oil, honey and chile flakes. Season with salt, then spread in an even layer. Arrange the feta blocks among the chickpeas.",
+      "Roast until the feta and tomatoes are soft and the chickpeas are golden brown, 30 to 35 minutes (no need to stir). Eat right away — the feta will harden as it cools, but leftovers reheat well."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "melissa-clark-roasted-cabbage-parmesan-walnuts-anchovies",
+    "name": "Roasted Cabbage With Parmesan, Walnuts and Anchovies",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "mediterranean",
+    "effort": "medium",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 45,
+    "meal": "dinner",
+    "dietary": ["gluten-free"],
+    "keyIngredients": ["cabbage", "parmesan", "anchovies", "walnuts", "garlic", "olive oil", "dill"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "Cabbage wedges roasted at high heat until caramelised, with a piquant anchovy, Parmesan and walnut paste massaged into every crevice. Crisp-edged and deeply savoury, it works as a light main or a hearty side.",
+    "notes": "Serve with noodles, rice or crusty bread as a main, or alongside roast chicken or fish. Swap walnuts for almonds or hazelnuts; use dill or cilantro (or both).",
+    "ingredients": [
+      "1 medium head green cabbage (about 2½ pounds)",
+      "½ cup extra-virgin olive oil, plus more as needed",
+      "Salt, as needed",
+      "¾ cup finely grated Parmesan, plus more for serving",
+      "6 anchovy fillets, minced",
+      "2 fat garlic cloves, finely grated or minced",
+      "1 teaspoon fresh thyme leaves",
+      "½ teaspoon freshly ground black pepper, plus more as needed",
+      "⅔ cup chopped walnuts or other nuts, such as almonds or hazelnuts",
+      "½ cup chopped fresh dill or cilantro"
+    ],
+    "method": [
+      "Heat oven to 450°F. Cut the cabbage in quarters lengthwise through the core, then cut out the cores and stem. Slice the quarters lengthwise into 1½-inch-thick wedges.",
+      "Place wedges on a rimmed sheet pan, flat sides down (it's OK if slightly crowded; try not to overlap). Lightly drizzle with oil and season with salt.",
+      "In a small bowl, combine Parmesan, anchovies, garlic, thyme and black pepper. Stir in ½ cup oil to make a loose paste. Massage the paste into each cabbage wedge, stuffing it between the leaves.",
+      "Drizzle cabbage with a little more oil. Roast until lightly browned in spots, 25 to 30 minutes.",
+      "Remove from oven and sprinkle walnuts over the top. Roast for another 5 minutes, until cabbage is tender and caramelised and the walnuts are golden.",
+      "Sprinkle with dill and more Parmesan and black pepper. Serve immediately."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "nisha-vora-grated-tofu-not-chicken",
+    "name": "I Can't Believe It's Not Chicken (Super-Savory Grated Tofu)",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "east-asian",
+    "effort": "low",
+    "mood": ["comforting", "quick-fix", "adventurous"],
+    "time": 30,
+    "meal": "dinner",
+    "dietary": ["vegan", "vegetarian", "dairy-free"],
+    "keyIngredients": ["tofu", "gochugaru", "sesame oil", "soy sauce", "black vinegar", "scallions", "garlic"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "Super-firm tofu grated on a box grater, pan-fried until golden, then coated in a bold pan-Asian sauce of gochugaru, sesame oil, soy sauce and black vinegar. Shockingly meaty and deeply savoury — serve over rice.",
+    "notes": "Must use super-firm or high-protein tofu; if using extra-firm, press 10 min first. No gochugaru? Sub 1–1½ tsp Sichuan chile flakes or sriracha. For gluten-free: use tamari and swap black vinegar for 2 parts rice vinegar + 1 part aged balsamic. Leftovers keep 4–5 days in the fridge.",
+    "ingredients": [
+      "1 to 1½ cups (190–285g) uncooked white or brown rice",
+      "1 (280–340g) package super-firm tofu",
+      "1½ tablespoons neutral-flavored oil",
+      "4 scallions, sliced at an angle (reserve dark green tops for garnish)",
+      "1 to 2 Thai chiles or 1 small serrano pepper, thinly sliced (optional)",
+      "3 garlic cloves, thinly sliced",
+      "1 tablespoon roasted black or white sesame seeds",
+      "3 tablespoons tamari or soy sauce",
+      "1 tablespoon Chinese black vinegar",
+      "1 teaspoon cane sugar, maple syrup or agave",
+      "1 tablespoon gochugaru (Korean chile flakes)",
+      "1 tablespoon toasted sesame oil",
+      "1 handful cilantro leaves and tender stems, roughly chopped"
+    ],
+    "method": [
+      "Cook the rice using your preferred method, or use leftover cooked rice.",
+      "Wrap the tofu in a thin dish towel and gently squeeze to remove some water. Using the large holes of a box grater, grate the tofu (thinly slice any small pieces that break off).",
+      "Heat the oil in a large nonstick skillet over medium-high. Add the scallions, chiles (if using) and garlic. Cook, stirring frequently, until the garlic is slightly golden and scallions are softened, about 2 minutes.",
+      "Add the grated tofu and toss to coat in the oil. Cook undisturbed for 2 minutes, then stir. Continue cooking, stirring every 2 minutes, until golden brown in spots, 10 to 14 minutes total.",
+      "Meanwhile, whisk together the tamari, black vinegar, sugar, gochugaru and sesame oil in a small bowl.",
+      "Pour the sauce into the pan — it will bubble rapidly. Stir to coat the tofu evenly and cook for 1 minute. Remove from heat and sprinkle with sesame seeds.",
+      "Serve over rice, topped with the reserved scallion greens and cilantro."
+    ],
+    "servings": 2
+  },
+  {
+    "id": "ottolenghi-tomato-pomegranate-salad",
+    "name": "Yotam Ottolenghi's Tomato and Pomegranate Salad",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "low",
+    "mood": ["fresh", "impressive"],
+    "time": 30,
+    "meal": "any",
+    "dietary": ["vegetarian", "gluten-free"],
+    "keyIngredients": ["cherry tomatoes", "pomegranate", "feta", "za'atar", "mint", "basil", "red onion"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "A jewel-bright summer salad of cherry tomatoes and pomegranate seeds tossed with fresh herbs, lemon and red onion, dotted with feta and drizzled with a za'atar oil. Vibrant, fresh and impressive with almost no effort.",
+    "notes": "Any good summer tomatoes work in place of cherry tomatoes. Manouri cheese is a softer, milder alternative to feta if you can find it. Serve alongside grilled meat.",
+    "ingredients": [
+      "2 pints mixed small or cherry tomatoes, of varying colors",
+      "2 teaspoons za'atar",
+      "3½ tablespoons extra-virgin olive oil",
+      "Seeds from 1 pomegranate",
+      "½ yellow bell pepper, seeds removed and very thinly sliced",
+      "½ small red onion, peeled and very thinly sliced",
+      "⅓ cup loosely packed fresh basil leaves, torn",
+      "⅓ cup loosely packed fresh mint leaves, torn",
+      "1½ teaspoons freshly squeezed lemon juice",
+      "Flaky sea salt",
+      "3½ ounces manouri or feta cheese, broken into small chunks"
+    ],
+    "method": [
+      "Halve or quarter the tomatoes so they are all roughly the same size. Place in a large mixing bowl.",
+      "Mix the za'atar with 1½ tablespoons of olive oil in a small bowl and set aside.",
+      "Add the pomegranate seeds, sliced pepper, red onion, herbs, lemon juice, remaining 2 tablespoons of oil and 1 teaspoon of salt to the tomatoes. Gently mix, then transfer to a large shallow bowl or serving platter. Dot with the cheese, drizzle the za'atar oil over the top, and serve."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "ottolenghi-chicken-cardamom-rice",
+    "name": "Chicken With Caramelized Onion and Cardamom Rice",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "high",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 100,
+    "meal": "dinner",
+    "dietary": ["gluten-free"],
+    "keyIngredients": ["chicken thighs", "basmati rice", "cardamom", "caramelized onion", "cinnamon", "barberries", "dill"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "A stunningly fragrant one-pot chicken and rice from Ottolenghi's Jerusalem, scented with cardamom, cinnamon and cloves, sweetened with caramelized onions and barberries, and finished with a shower of fresh herbs. Elegant dinner party food that is also deeply comforting.",
+    "notes": "Searing the chicken before it goes into the rice is essential — don't skip it. Barberries can be swapped for currants (no soaking needed). Serve with the optional yogurt-oil mixture on the side. The tea-towel trick at the end helps absorb steam for fluffy rice.",
+    "ingredients": [
+      "3 tablespoons sugar (40g)",
+      "2½ tablespoons barberries, or currants (25g)",
+      "4 tablespoons olive oil",
+      "2 medium onions, thinly sliced",
+      "2¼ pounds (1kg) skin-on, bone-in chicken thighs, or 1 whole chicken quartered",
+      "Salt and freshly ground black pepper",
+      "10 cardamom pods",
+      "Rounded ¼ teaspoon whole cloves",
+      "2 long cinnamon sticks, broken in two",
+      "1⅔ cups (300g) basmati rice",
+      "2¼ cups (550ml) boiling water",
+      "1½ tablespoons flat-leaf parsley leaves, chopped",
+      "½ cup dill leaves, chopped",
+      "¼ cup cilantro leaves, chopped",
+      "⅓ cup (100g) Greek yogurt mixed with 2 tablespoons olive oil (optional, to serve)"
+    ],
+    "method": [
+      "Dissolve the sugar in scant 3 tablespoons water in a small saucepan over heat. Remove from heat, add the barberries and set aside to soak. (If using currants, skip this step.)",
+      "Heat half the olive oil in a large lidded sauté pan over medium heat. Add the onions and cook for 10–15 minutes, stirring occasionally, until deep golden brown. Transfer to a bowl and wipe the pan clean.",
+      "Season the chicken with 1½ teaspoons each salt and black pepper. Add the remaining olive oil, cardamom, cloves and cinnamon and mix well with your hands. Heat the pan again and sear the chicken with the spices for 5 minutes each side, then remove. Remove most of the oil, leaving a thin film.",
+      "Add the rice, caramelized onion, 1 teaspoon salt and plenty of pepper to the pan. Drain the barberries and add them too. Stir well. Return the seared chicken to the pan, pushing it into the rice.",
+      "Pour the boiling water over the rice and chicken, cover, and cook over very low heat for 30 minutes.",
+      "Take the pan off the heat. Remove the lid, place a clean tea towel over the pan, and seal again with the lid. Leave undisturbed for 10 minutes.",
+      "Add the herbs and use a fork to stir them in and fluff up the rice. Taste, adjust seasoning, and serve hot or warm with the yogurt mixture alongside if you like."
+    ]
+  },
+  {
+    "id": "ottolenghi-chermoula-eggplant-bulgur",
+    "name": "Yotam Ottolenghi's Chermoula Eggplant With Bulgur and Yogurt",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "high",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 90,
+    "meal": "dinner",
+    "dietary": ["vegetarian"],
+    "keyIngredients": ["eggplant", "bulgur", "preserved lemon", "chermoula", "almonds", "green olives", "raisins"],
+    "pantryFriendly": false,
+    "season": [],
+    "description": "Roasted eggplant halves slathered in chermoula — a North African spice paste of cumin, coriander, paprika and preserved lemon — served on a tabbouleh-like bulgur salad with olives, raisins and toasted almonds. From Ottolenghi's Jerusalem.",
+    "notes": "Preserved lemon peel is widely available in jars; it's essential to the flavour. Serve at room temperature if making ahead. The yogurt is optional but recommended. Can be served as a vegetarian main or a generous side.",
+    "ingredients": [
+      "2 cloves garlic, crushed",
+      "2 teaspoons ground cumin",
+      "2 teaspoons ground coriander",
+      "1 teaspoon chili flakes",
+      "1 teaspoon sweet paprika",
+      "2 tablespoons finely chopped preserved lemon peel",
+      "⅔ cup olive oil, plus extra to finish",
+      "2 medium eggplants",
+      "1 cup fine bulgur",
+      "⅔ cup boiling water",
+      "⅓ cup golden raisins",
+      "3½ tablespoons warm water",
+      "2 teaspoons cilantro, chopped, plus extra to finish",
+      "2 teaspoons mint, chopped",
+      "⅓ cup pitted green olives, halved",
+      "⅓ cup sliced almonds, toasted",
+      "3 green onions, chopped",
+      "1½ tablespoons freshly squeezed lemon juice",
+      "Salt",
+      "½ cup Greek yogurt (optional, to serve)"
+    ],
+    "method": [
+      "Preheat oven to 400°F.",
+      "Make the chermoula: mix together the garlic, cumin, coriander, chili flakes, paprika, preserved lemon, two-thirds of the olive oil and ½ teaspoon salt in a small bowl.",
+      "Cut the eggplants in half lengthwise. Score the flesh deeply in a diagonal crisscross pattern, being careful not to pierce the skin. Spoon the chermoula over each half, spreading it evenly. Place cut-side up on a baking sheet and roast for 40 minutes, or until completely soft.",
+      "Meanwhile, place the bulgur in a large bowl and cover with the boiling water. Set aside.",
+      "Soak the raisins in the warm water for 10 minutes, then drain. Add the raisins to the bulgur along with the remaining olive oil, herbs, olives, almonds, green onions, lemon juice and a pinch of salt. Stir to combine and taste for seasoning.",
+      "Serve the eggplants warm or at room temperature. Place half an eggplant cut-side up on each plate, spoon the bulgur generously on top (letting some spill to the sides), add a dollop of yogurt if using, scatter extra cilantro and finish with a drizzle of oil."
+    ]
+  },
+  {
+    "id": "ottolenghi-baked-rice-slow-roasted-tomatoes",
+    "name": "Baked Rice With Slow-Roasted Tomatoes and Garlic",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "high",
+    "mood": ["comforting", "impressive"],
+    "time": 105,
+    "meal": "dinner",
+    "dietary": ["vegan", "vegetarian", "gluten-free", "dairy-free"],
+    "keyIngredients": ["cherry tomatoes", "basmati rice", "garlic", "shallots", "cinnamon", "thyme", "cilantro"],
+    "pantryFriendly": false,
+    "season": ["summer", "fall"],
+    "description": "Basmati rice baked directly on a casserole of slowly roasted cherry tomatoes, garlic, shallots and cinnamon until fragrant and tender. From Ottolenghi Simple — mostly hands-off and virtually foolproof.",
+    "notes": "Don't stir when adding the rice — just scatter it over the vegetables. Crumbled feta and pine nuts on top make it a more substantial vegetarian main. Also works as a side to pan-seared meat or fish.",
+    "ingredients": [
+      "1¾ pounds cherry tomatoes",
+      "12 large garlic cloves",
+      "4 large shallots, cut into 1¼-inch pieces",
+      "1¼ cup cilantro stems, cut into 1½-inch pieces",
+      "3 tablespoons fresh thyme leaves",
+      "4 small cinnamon sticks",
+      "1 teaspoon fine sea salt, plus more as needed",
+      "Black pepper, as needed",
+      "7 tablespoons extra-virgin olive oil",
+      "1½ cups basmati rice",
+      "2½ cups boiling water",
+      "½ cup cilantro leaves, roughly chopped"
+    ],
+    "method": [
+      "Heat oven to 350°F.",
+      "In an 8-by-12-inch casserole dish, toss together the tomatoes, garlic, shallots, cilantro stems, thyme, cinnamon sticks, ½ teaspoon salt and pepper to taste. Pour the oil over everything. Bake until the vegetables are soft, about 1 hour. Remove from oven and increase temperature to 450°F.",
+      "Without stirring, sprinkle the rice evenly over the vegetables. Top with the remaining ½ teaspoon salt and plenty of black pepper.",
+      "Carefully pour the boiling water over the rice. Cover the dish tightly with foil and bake for 25 minutes, until the rice is cooked.",
+      "Remove from oven and leave to rest, still covered, for 10 minutes. Remove the foil, gently stir in the cilantro leaves, taste for salt, and serve."
+    ]
+  },
+  {
+    "id": "ottolenghi-hummus-jerusalem",
+    "name": "Hummus from 'Jerusalem'",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "medium",
+    "mood": ["comforting", "impressive"],
+    "time": 45,
+    "meal": "snack",
+    "dietary": ["vegan", "vegetarian", "gluten-free", "dairy-free"],
+    "keyIngredients": ["chickpeas", "tahini", "lemon", "garlic"],
+    "pantryFriendly": true,
+    "season": [],
+    "description": "Ottolenghi's legendary hummus from Jerusalem — dried chickpeas cooked with baking soda until ultra-soft, then blended with a generous amount of tahini, lemon and garlic until impossibly smooth and creamy. Worth every minute.",
+    "notes": "Requires overnight soaking of chickpeas — plan ahead. Baking soda is key: it softens the chickpeas faster and makes the hummus silkier. If too stiff, loosen with a little water. Rest for at least 30 minutes before serving; remove from fridge 30 min before eating. Keeps refrigerated for 2 days.",
+    "ingredients": [
+      "1¼ cups (250g) dried chickpeas",
+      "1 teaspoon baking soda",
+      "1 cup plus 2 tablespoons (270g) light tahini paste",
+      "4 tablespoons freshly squeezed lemon juice",
+      "4 cloves garlic, crushed",
+      "Salt",
+      "6½ tablespoons (100ml) ice-cold water"
+    ],
+    "method": [
+      "Put the chickpeas in a large bowl and cover with cold water at least twice their volume. Leave to soak overnight.",
+      "The next day, drain the chickpeas. In a medium saucepan, combine with the baking soda over high heat and cook for 3 minutes, stirring constantly. Add 6½ cups water, bring to a boil, then simmer for 20–40 minutes, skimming off foam and any skins. They're ready when very tender and almost — but not quite — mushy.",
+      "Drain the chickpeas (you should have about 3 cups/600g). Process in a food processor until a stiff paste forms. With the machine running, add the tahini, lemon juice, garlic and 1½ teaspoons salt. Slowly drizzle in the ice water and process for 5 minutes until very smooth and creamy.",
+      "Transfer to a bowl, press plastic wrap directly onto the surface, and rest for at least 30 minutes before serving. Refrigerate if making ahead (up to 2 days); bring to room temperature before serving."
+    ]
+  },
+  {
+    "id": "ottolenghi-caramelized-peaches-rum-cream",
+    "name": "Caramelized Peaches With Rum and Cream",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "other",
+    "effort": "medium",
+    "mood": ["comforting", "impressive", "fresh"],
+    "time": 35,
+    "meal": "dessert",
+    "dietary": ["vegetarian", "gluten-free"],
+    "keyIngredients": ["peaches", "rum", "mascarpone", "muscovado sugar", "greek yogurt", "butter", "sesame seeds"],
+    "pantryFriendly": false,
+    "season": ["summer"],
+    "description": "Pan-caramelized peach wedges finished with dark rum and muscovado sugar, served with a cloud of mascarpone and yogurt cream, a sprinkle of toasted sesame and flaked salt. A simple, sultry summer dessert.",
+    "notes": "Use firm, just-ripe peaches — overripe ones will turn to mush. To make ahead: prepare all elements separately, then warm the peaches over medium heat for 5 minutes before assembling and serving.",
+    "ingredients": [
+      "3 tablespoons unsalted butter",
+      "4 tablespoons dark muscovado sugar, divided",
+      "4 firm, just-ripe peaches, cut into 6 wedges each",
+      "¼ cup plus 1 teaspoon dark rum, divided",
+      "⅔ cup plain Greek yogurt",
+      "½ cup mascarpone",
+      "2 teaspoons sesame seeds, lightly toasted and lightly ground",
+      "Flaked sea salt"
+    ],
+    "method": [
+      "Add the butter and 3 tablespoons of sugar to a large skillet over medium-high heat, stirring occasionally. Once melted, add the peaches flesh-side down and cook for 10 minutes, turning halfway, until both sides are golden brown.",
+      "Add the ¼ cup rum and 1 tablespoon water and cook for 2 minutes, swirling the pan, until the caramel coats the peaches. Remove from heat and leave to cool slightly for 5 minutes.",
+      "Mix the yogurt and mascarpone together in a medium bowl.",
+      "Mix the remaining 1 teaspoon rum and 1 tablespoon sugar together in a small bowl.",
+      "To serve, dollop the yogurt mixture into the pan with the peaches. Sprinkle with the rum-sugar mixture, the sesame seeds and a pinch of flaked salt."
+    ]
+  },
+  {
+    "id": "ottolenghi-lamb-meatball-semolina-dumpling-soup",
+    "name": "Lamb Meatball and Semolina Dumpling Soup With Collard Greens",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "middle-eastern",
+    "effort": "medium",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 50,
+    "meal": "dinner",
+    "dietary": [],
+    "keyIngredients": ["lamb", "semolina", "collard greens", "chicken stock", "tomato paste", "lemon", "buttermilk"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "A hearty, sour-broth soup inspired by Iraqi kubba hamuth, with spiced lamb meatballs and fluffy semolina dumplings simmered in a tomato, lemon and collard green broth. A deeply comforting meal in a bowl.",
+    "notes": "Inspired by Iraqi kubba hamuth — 'hamuth' means sour, referring to the tomato-lemon broth. Swap collard greens for Tuscan kale if needed. Don't stir after adding the dumplings. Fresh bread crumbs are best: blitz crustless white bread in a food processor.",
+    "ingredients": [
+      "10 ounces ground lamb",
+      "⅓ cup (30g) fresh bread crumbs",
+      "¼ cup coarsely grated onion",
+      "Scant ¼ cup finely chopped fresh parsley",
+      "1½ teaspoons ground allspice",
+      "1 teaspoon ground cumin",
+      "¾ teaspoon fine sea salt",
+      "1 tablespoon olive oil, plus more for hands",
+      "1 small onion, roughly chopped",
+      "5 garlic cloves, roughly chopped",
+      "2 jalapeños, halved, seeded and roughly chopped",
+      "¼ cup olive oil",
+      "6 tablespoons (90g) tomato paste",
+      "½ cup finely chopped fresh cilantro, plus more to garnish",
+      "1½ teaspoons ground cumin",
+      "1½ teaspoons ground coriander",
+      "½ teaspoon ground turmeric",
+      "1 small (10-ounce) bunch collard greens, stems removed, leaves finely shredded",
+      "1 tablespoon fine semolina",
+      "¾ teaspoon granulated sugar",
+      "1 quart chicken stock",
+      "Fine sea salt and black pepper",
+      "¼ cup fresh lemon juice",
+      "¼ cup buttermilk, plus ¼ cup extra for serving",
+      "3 tablespoons unsalted butter, melted",
+      "1 large egg",
+      "½ teaspoon baking powder",
+      "½ cup (50g) fresh bread crumbs",
+      "½ cup fine semolina"
+    ],
+    "method": [
+      "Make the meatballs: combine all meatball ingredients except the oil in a bowl and knead well. With oiled hands, roll into 18 small balls.",
+      "Heat 1 tablespoon oil in a large nonstick pan over medium-high. Brown the meatballs for 3–4 minutes, turning, until browned but not cooked through. Transfer to a bowl with any juices and set aside.",
+      "Make the broth: blitz the onion, garlic and jalapeños in a food processor to a rough paste. Heat the oil in a deep lidded saucepan over medium-high. Cook the paste for 6 minutes until softened and browned. Add tomato paste, cilantro, cumin, coriander and turmeric and cook for 2 minutes, stirring, until deeply red. Add the collard greens in handfuls, stirring to wilt. Stir in the semolina and sugar, then add the stock, 1 cup water, 1½ teaspoons salt and pepper. Bring to a boil, then simmer on medium for 15 minutes.",
+      "Make the dumplings: whisk buttermilk, butter, egg, baking powder, ½ teaspoon salt and pepper until just combined. Add bread crumbs and semolina and mix until just combined — don't overwork. Rest for 5 minutes, then shape into 18 compact balls.",
+      "Reduce the broth to medium-low and stir in the meatballs. Gently lower in the dumplings one by one without stirring. Cover and cook for 10 minutes until the dumplings are puffed and cooked through. Stir in the lemon juice.",
+      "Divide among bowls, drizzle with extra buttermilk, scatter cilantro and serve warm."
+    ]
+  },
+  {
+    "id": "ottolenghi-winter-minestrone-cabbage-pesto",
+    "name": "Winter Minestrone With Cabbage Pesto",
+    "source": "NYT Cooking",
+    "sourceUrl": "",
+    "cuisine": "italian",
+    "effort": "high",
+    "mood": ["comforting", "impressive", "adventurous"],
+    "time": 70,
+    "meal": "dinner",
+    "dietary": ["vegetarian", "vegan", "dairy-free"],
+    "keyIngredients": ["savoy cabbage", "black beans", "orzo", "spinach", "celery", "carrot", "parsley", "pine nuts"],
+    "pantryFriendly": false,
+    "season": ["fall", "winter"],
+    "description": "A deeply flavourful winter minestrone of slowly caramelized vegetables, black beans and orzo, crowned with a vibrant cabbage and parsley pesto. Ottolenghi's vegetable-forward take on a classic — flexible and forgiving.",
+    "notes": "Use vegetable stock to keep it vegan. Swap spinach for chard, orzo for rice, or black beans for chickpeas (adjust cook times). Remove from heat while orzo still has a little bite — it finishes cooking off the heat.",
+    "ingredients": [
+      "½ cup plus ⅓ cup extra-virgin olive oil",
+      "4 celery stalks, diced",
+      "2 medium carrots, peeled and diced",
+      "1 large yellow onion, peeled and diced",
+      "1 tablespoon minced fresh rosemary",
+      "Fine sea salt and freshly ground black pepper",
+      "5 garlic cloves, minced, plus 1 extra for the pesto",
+      "1 (14-ounce) can diced tomatoes, drained",
+      "½ savoy cabbage, quartered, cored and thinly sliced (reserve some for pesto)",
+      "2¼ cups chicken or vegetable stock",
+      "½ cup orzo (or similar small pasta)",
+      "5 cups baby spinach",
+      "1 (14-ounce) can black beans, rinsed",
+      "1 lightly packed cup fresh parsley leaves",
+      "3 tablespoons pine nuts"
+    ],
+    "method": [
+      "Add ½ cup olive oil, celery, carrots, onion, rosemary, 1½ teaspoons salt and a good grind of pepper to a large casserole or saucepan. Cook over medium-high heat, stirring occasionally, for 25 minutes until the vegetables have softened and slightly caramelized.",
+      "Add the 5 minced garlic cloves and stir for 2 minutes. Add the tomatoes and cook for 2 minutes more, stirring, until they start to break down.",
+      "Add 4 cups of the sliced cabbage and cook for 4 minutes, stirring, until softened. Add the stock and 3¼ cups water, stir to combine, and simmer on medium for 20 minutes.",
+      "Add the orzo and cook for 5 minutes, stirring occasionally to prevent sticking.",
+      "Remove from heat while the orzo still has a little bite. Stir in the spinach and black beans. Set aside for 5 minutes to let the orzo finish cooking.",
+      "Make the pesto: pulse the parsley, pine nuts, remaining sliced cabbage, extra garlic clove and ½ teaspoon salt in a food processor to a coarse paste. Stir in the remaining ⅓ cup oil and a crack of pepper.",
+      "Ladle the minestrone into bowls and top each with a spoonful of cabbage pesto."
     ]
   }
 ];
 
-  var BUILTIN_TREE = {"questions":[{"id":"meal","text":"What are we eating?","subtitle":"Pick one to get started.","field":"meal","type":"single","options":[{"value":"breakfast","label":"Breakfast"},{"value":"lunch","label":"Lunch"},{"value":"dinner","label":"Dinner"},{"value":"snack","label":"Snack"},{"value":"any","label":"No preference"}],"allowSkip":false,"filterLogic":"match-or-any"},{"id":"mood","text":"What's the vibe?","subtitle":"Pick as many as feel right.","field":"mood","type":"multi","options":[{"value":"comforting","label":"Something cozy & comforting"},{"value":"fresh","label":"Something fresh & light"},{"value":"impressive","label":"Something to show off"},{"value":"quick-fix","label":"Just feed me, fast"},{"value":"adventurous","label":"Something new & different"}],"allowSkip":true,"filterLogic":"overlap"},{"id":"effort","text":"How much energy do you have?","subtitle":"Be honest with yourself.","field":"effort","type":"single","options":[{"value":"low","label":"Minimal — under 30 min, easy"},{"value":"medium","label":"Some — 30 to 60 min"},{"value":"high","label":"I want a project — 60+ min"}],"allowSkip":true,"filterLogic":"match-or-below"},{"id":"cuisine","text":"Any cuisine calling to you?","subtitle":"Pick one, or skip to keep options open.","field":"cuisine","type":"single","options":[{"value":"mediterranean","label":"Mediterranean"},{"value":"east-asian","label":"East Asian"},{"value":"south-asian","label":"South Asian"},{"value":"mexican","label":"Mexican"},{"value":"italian","label":"Italian"},{"value":"middle-eastern","label":"Middle Eastern"},{"value":"american","label":"American"},{"value":"french","label":"French"}],"allowSkip":true,"filterLogic":"match"},{"id":"dietary","text":"Any dietary needs today?","subtitle":"Select all that apply, or skip.","field":"dietary","type":"multi","options":[{"value":"vegetarian","label":"Vegetarian"},{"value":"vegan","label":"Vegan"},{"value":"gluten-free","label":"Gluten-free"},{"value":"dairy-free","label":"Dairy-free"}],"allowSkip":true,"filterLogic":"subset"},{"id":"pantry","text":"Working with what's on hand?","subtitle":"Only show recipes you can make from pantry staples.","field":"pantryFriendly","type":"single","options":[{"value":"yes","label":"Yes, pantry raid mode"},{"value":"no","label":"I can shop"}],"allowSkip":true,"filterLogic":"boolean-filter-if-true"}]};
+  var BUILTIN_TREE = {"questions":[{"id":"meal","text":"What are we eating?","subtitle":"Pick one to get started.","field":"meal","type":"single","options":[{"value":"breakfast","label":"Breakfast"},{"value":"lunch","label":"Lunch"},{"value":"dinner","label":"Dinner"},{"value":"snack","label":"Snack"},{"value":"dessert","label":"Dessert"},{"value":"drinks","label":"Drinks"},{"value":"any","label":"No preference"}],"allowSkip":false,"filterLogic":"match-or-any"},{"id":"mood","text":"What's the vibe?","subtitle":"Pick as many as feel right.","field":"mood","type":"multi","options":[{"value":"comforting","label":"Something cozy & comforting"},{"value":"fresh","label":"Something fresh & light"},{"value":"impressive","label":"Something to show off"},{"value":"quick-fix","label":"Just feed me, fast"},{"value":"adventurous","label":"Something new & different"}],"allowSkip":true,"filterLogic":"overlap"},{"id":"effort","text":"How much energy do you have?","subtitle":"Be honest with yourself.","field":"effort","type":"single","options":[{"value":"low","label":"Minimal — under 30 min, easy"},{"value":"medium","label":"Some — 30 to 60 min"},{"value":"high","label":"I want a project — 60+ min"}],"allowSkip":true,"filterLogic":"match-or-below"},{"id":"cuisine","text":"Any cuisine calling to you?","subtitle":"Pick as many as you like, or choose No preference.","field":"cuisine","type":"multi","options":[{"value":"mediterranean","label":"Mediterranean"},{"value":"east-asian","label":"East Asian"},{"value":"south-asian","label":"South Asian"},{"value":"mexican","label":"Mexican"},{"value":"italian","label":"Italian"},{"value":"middle-eastern","label":"Middle Eastern"},{"value":"american","label":"American"},{"value":"french","label":"French"}],"allowSkip":true,"filterLogic":"overlap"},{"id":"dietary","text":"Any dietary needs today?","subtitle":"Select all that apply, or choose No preference.","field":"dietary","type":"multi","options":[{"value":"vegetarian","label":"Vegetarian"},{"value":"vegan","label":"Vegan"},{"value":"gluten-free","label":"Gluten-free"},{"value":"dairy-free","label":"Dairy-free"}],"allowSkip":true,"filterLogic":"subset"},{"id":"pantry","text":"Working with what's on hand?","subtitle":"Only show recipes you can make from pantry staples.","field":"pantryFriendly","type":"single","options":[{"value":"yes","label":"Yes, pantry raid mode"},{"value":"no","label":"I can shop"}],"allowSkip":true,"filterLogic":"boolean-filter-if-true"}]};
 
   var allRecipes = [];
   var tree = null;
@@ -2149,6 +1849,7 @@
     var target = document.getElementById("screen-" + name);
     var gear = document.getElementById("btn-settings");
     gear.style.display = name === "landing" ? "" : "none";
+    document.getElementById("btn-home").style.display = name === "landing" ? "none" : "";
 
     function doSwitch() {
       document.querySelectorAll(".screen").forEach(function (el) {
@@ -2198,6 +1899,7 @@
     document.getElementById("btn-planner").addEventListener("click", openPlanner);
     document.getElementById("btn-add").addEventListener("click", function () { openAddRecipe(null); });
     document.getElementById("btn-settings").addEventListener("click", showSettings);
+    document.getElementById("btn-home").addEventListener("click", startOver);
 
     document.getElementById("btn-back").addEventListener("click", goBack);
     document.getElementById("btn-start-over").addEventListener("click", startOver);
@@ -2234,6 +1936,7 @@
     document.getElementById("party-name").addEventListener("input", function () {
       var p = currentParty();
       if (p) { p.name = this.value; saveUserData(); }
+      resizePartyNameInput(this);
     });
     document.getElementById("party-date").addEventListener("change", function () {
       var p = currentParty();
@@ -2653,6 +2356,8 @@
     if (answers.meal === "breakfast") params.type = "breakfast";
     else if (answers.meal === "lunch" || answers.meal === "dinner") params.type = "main course";
     else if (answers.meal === "snack") params.type = "snack";
+    else if (answers.meal === "dessert") params.type = "dessert";
+    else if (answers.meal === "drinks") params.type = "beverage";
 
     var maxTime = null;
     if (answers.effort === "low") maxTime = 30;
@@ -2728,6 +2433,8 @@
     var meal = "any";
     var dishTypes = (r.dishTypes || []).map(function (d) { return String(d).toLowerCase(); });
     if (dishTypes.indexOf("breakfast") !== -1) meal = "breakfast";
+    else if (dishTypes.indexOf("dessert") !== -1) meal = "dessert";
+    else if (dishTypes.indexOf("beverage") !== -1 || dishTypes.indexOf("drink") !== -1) meal = "drinks";
     else if (dishTypes.indexOf("snack") !== -1 || dishTypes.indexOf("appetizer") !== -1) meal = "snack";
     else if (dishTypes.indexOf("lunch") !== -1) meal = "lunch";
     else if (dishTypes.indexOf("main course") !== -1 || dishTypes.indexOf("dinner") !== -1) meal = "dinner";
@@ -2802,7 +2509,7 @@
         if (isRemoved(r.id)) return false;
         var nameLower = r.name.toLowerCase();
         return !allRecipes.some(function (e) { return e.name.toLowerCase() === nameLower; });
-      }).slice(0, 3);
+      }).slice(0, 4);
 
       if (!fresh.length) {
         status.textContent = "No new ideas this time — your collection already covers it.";
@@ -3006,8 +2713,11 @@
 
     var topContainer = document.getElementById("top-picks");
     topContainer.innerHTML = "";
+    // Assign tiles across top picks + more options together so no adjacent pair matches
+    var allResultRecipes = topPicks.map(function (p) { return p.recipe; }).concat(moreOptions);
+    var resultTiles = assignTilesNoAdjacent(allResultRecipes.map(function (r) { return r.id; }));
     topPicks.forEach(function (pick, i) {
-      var card = renderRecipeCard(pick.recipe, { featured: true, wildcard: pick.wildcard });
+      var card = renderRecipeCard(pick.recipe, { featured: true, wildcard: pick.wildcard, tileIndex: resultTiles[i] });
       card.style.setProperty("--card-index", i);
       topContainer.appendChild(card);
     });
@@ -3022,7 +2732,7 @@
       document.getElementById("btn-more-toggle").textContent =
         "See " + moreOptions.length + " more option" + (moreOptions.length !== 1 ? "s" : "");
       moreOptions.forEach(function (r, i) {
-        var card = renderRecipeCard(r, {});
+        var card = renderRecipeCard(r, { tileIndex: resultTiles[topPicks.length + i] });
         card.style.setProperty("--card-index", i);
         moreGrid.appendChild(card);
       });
@@ -3094,7 +2804,7 @@
     opts = opts || {};
     var card = document.createElement("div");
     card.className = "recipe-card" + (opts.featured ? " featured" : "");
-    card.classList.add("tile-" + tileIndexForRecipe(recipe.id));
+    card.classList.add("tile-" + (opts.tileIndex !== undefined ? opts.tileIndex : tileIndexForRecipe(recipe.id)));
     card.dataset.id = recipe.id;
 
     if (opts.draggable) {
@@ -3103,12 +2813,14 @@
     }
 
     var html = "";
-    if (opts.wildcard) html += '<span class="wildcard-badge">Wildcard</span>';
     if (recipe.web) html += '<span class="web-badge">From the web</span>';
 
     html += '<div class="card-top">';
     html += '<span class="recipe-name">' + escapeHtml(recipe.name) + "</span>";
+    html += '<div class="card-badges">';
     html += '<span class="source-badge ' + sourceClass(recipe.source) + '">' + escapeHtml(recipe.source) + "</span>";
+    if (opts.wildcard) html += '<span class="wildcard-badge">Wildcard</span>';
+    html += "</div>";
     html += "</div>";
 
     html += '<div class="card-pills">';
@@ -3222,7 +2934,7 @@
   function card_of(row) {
     var el = row;
     while (el && !el.classList.contains("recipe-card")) el = el.parentElement;
-    return el;
+    return el || row.parentElement;
   }
 
   function renderStars(container, id) {
@@ -3352,14 +3064,22 @@
 
   function renderBrowseGrid(recipes) {
     var grid = document.getElementById("browse-grid");
+    var countEl = document.getElementById("browse-count");
+    var total = visibleRecipes().length;
     grid.innerHTML = "";
     if (recipes.length === 0) {
       grid.innerHTML = '<p class="browse-empty">No recipes match your filters.</p>';
+      if (countEl) countEl.textContent = "0 of " + total + " recipes";
       return;
     }
-    recipes.slice()
-      .sort(function (a, b) { return a.name.localeCompare(b.name); })
-      .forEach(function (r) { grid.appendChild(renderRecipeCard(r, {})); });
+    if (countEl) {
+      countEl.textContent = recipes.length === total
+        ? recipes.length + " recipe" + (recipes.length !== 1 ? "s" : "")
+        : recipes.length + " of " + total + " recipes";
+    }
+    var sorted = recipes.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var tiles = assignTilesNoAdjacent(sorted.map(function (r) { return r.id; }));
+    sorted.forEach(function (r, i) { grid.appendChild(renderRecipeCard(r, { tileIndex: tiles[i] })); });
   }
 
   // ---- Add / Edit recipe form ----
@@ -3607,6 +3327,21 @@
     });
   }
 
+  function resizePartyNameInput(input) {
+    var sizer = document.getElementById("party-name-sizer");
+    if (!sizer) {
+      sizer = document.createElement("span");
+      sizer.id = "party-name-sizer";
+      sizer.style.cssText = "position:absolute;visibility:hidden;white-space:pre;pointer-events:none;top:-9999px;left:-9999px;";
+      document.body.appendChild(sizer);
+    }
+    var cs = getComputedStyle(input);
+    sizer.style.font = cs.font;
+    sizer.style.letterSpacing = cs.letterSpacing;
+    sizer.textContent = input.value || input.placeholder || "";
+    input.style.width = Math.max(sizer.offsetWidth + 6, 80) + "px";
+  }
+
   function createParty() {
     var party = {
       id: "party-" + Date.now(),
@@ -3629,6 +3364,10 @@
     saveUserData();
     renderPartyEditor();
     showScreen("dinner-party");
+    document.fonts.ready.then(function () {
+      var input = document.getElementById("party-name");
+      if (input) resizePartyNameInput(input);
+    });
   }
 
   function deleteParty(id) {
@@ -3657,7 +3396,9 @@
     if (!p.menu || typeof p.menu !== "object") p.menu = {};
     PARTY_COURSES.forEach(function (c) { if (!Array.isArray(p.menu[c.key])) p.menu[c.key] = []; });
 
-    document.getElementById("party-name").value = p.name || "";
+    var nameInput = document.getElementById("party-name");
+    nameInput.value = p.name || "";
+    resizePartyNameInput(nameInput);
     document.getElementById("party-date").value = p.date || "";
 
     renderDietaryBox();
@@ -3975,21 +3716,25 @@
 
     var dishes = document.createElement("div");
     dishes.className = "course-dishes";
-    var ids = p.menu[course.key] || [];
-    if (!ids.length) {
+    var items = p.menu[course.key] || [];
+    if (!items.length) {
       dishes.innerHTML = '<p class="planner-hint course-empty">Nothing here yet.</p>';
     } else {
-      ids.forEach(function (id) {
-        var r = recipeById(id);
-        if (!r) return;
-        var card = renderRecipeCard(r, { showActions: false });
-        var rm = document.createElement("button");
-        rm.type = "button";
-        rm.className = "btn btn-small course-remove";
-        rm.textContent = "✕ Remove from menu";
-        rm.addEventListener("click", function () { removeDishFromCourse(course.key, id); });
-        card.appendChild(rm);
-        dishes.appendChild(card);
+      items.forEach(function (item) {
+        if (typeof item === "string") {
+          var r = recipeById(item);
+          if (!r) return;
+          var card = renderRecipeCard(r, { showActions: false });
+          var rm = document.createElement("button");
+          rm.type = "button";
+          rm.className = "btn btn-small course-remove";
+          rm.textContent = "✕ Remove from menu";
+          rm.addEventListener("click", function () { removeDishFromCourse(course.key, item); });
+          card.appendChild(rm);
+          dishes.appendChild(card);
+        } else if (item && item.custom) {
+          dishes.appendChild(renderCustomDish(course.key, item));
+        }
       });
     }
     section.appendChild(dishes);
@@ -4005,25 +3750,88 @@
     input.addEventListener("input", function () {
       renderCourseSearchResults(course.key, input.value, results, input);
     });
+    // Dessert/Drinks courses suggest tagged recipes before any typing.
+    input.addEventListener("focus", function () {
+      renderCourseSearchResults(course.key, input.value, results, input);
+    });
     searchWrap.appendChild(input);
     searchWrap.appendChild(results);
     section.appendChild(searchWrap);
 
+    // "Type your own" row — for items not in the recipe folder (wine, shop-bought desserts, etc.)
+    var customRow = document.createElement("div");
+    customRow.className = "course-custom-row";
+    var customInput = document.createElement("input");
+    customInput.type = "text";
+    customInput.className = "search-input course-custom-input";
+    customInput.placeholder = "Or type your own…";
+    var addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.className = "btn btn-small course-custom-add";
+    addBtn.textContent = "Add";
+    function submitCustom() {
+      var val = customInput.value.trim();
+      if (!val) return;
+      addCustomToCourse(course.key, val);
+      customInput.value = "";
+    }
+    addBtn.addEventListener("click", submitCustom);
+    customInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); submitCustom(); }
+    });
+    customRow.appendChild(customInput);
+    customRow.appendChild(addBtn);
+    section.appendChild(customRow);
+
     return section;
   }
+
+  function renderCustomDish(courseKey, item) {
+    var el = document.createElement("div");
+    el.className = "course-custom-dish";
+    var swatch = document.createElement("span");
+    swatch.className = "course-custom-tile";
+    swatch.style.backgroundImage = 'url("images/tiles/t' + (tileIndexForGuest(item.name) + 1) + '.jpg")';
+    var name = document.createElement("span");
+    name.className = "course-custom-name";
+    name.textContent = item.name;
+    var rm = document.createElement("button");
+    rm.type = "button";
+    rm.className = "btn btn-small course-remove";
+    rm.textContent = "✕";
+    rm.title = "Remove from menu";
+    rm.addEventListener("click", function () { removeDishFromCourse(courseKey, item); });
+    el.appendChild(swatch);
+    el.appendChild(name);
+    el.appendChild(rm);
+    return el;
+  }
+
+  // Courses that suggest tagged recipes when their search box is empty.
+  var COURSE_MEAL = { dessert: "dessert", drinks: "drinks" };
 
   function renderCourseSearchResults(courseKey, q, box, input) {
     var p = currentParty();
     box.innerHTML = "";
     q = (q || "").toLowerCase().trim();
-    if (!q) return;
     var existing = p.menu[courseKey] || [];
-    var matches = visibleRecipes().filter(function (r) {
-      if (existing.indexOf(r.id) !== -1) return false;
-      if (!recipeMatchesDietary(r, p.dietary)) return false;
-      var haystack = (r.name + " " + (r.keyIngredients || []).join(" ")).toLowerCase();
-      return haystack.indexOf(q) !== -1;
-    }).slice(0, 8);
+    var matches;
+    if (!q) {
+      var mealTag = COURSE_MEAL[courseKey];
+      if (!mealTag) return; // other courses: no suggestions until the user types
+      matches = visibleRecipes().filter(function (r) {
+        if (existing.indexOf(r.id) !== -1) return false;
+        if (!recipeMatchesDietary(r, p.dietary)) return false;
+        return r.meal === mealTag;
+      }).slice(0, 8);
+    } else {
+      matches = visibleRecipes().filter(function (r) {
+        if (existing.indexOf(r.id) !== -1) return false;
+        if (!recipeMatchesDietary(r, p.dietary)) return false;
+        var haystack = (r.name + " " + (r.keyIngredients || []).join(" ")).toLowerCase();
+        return haystack.indexOf(q) !== -1;
+      }).slice(0, 8);
+    }
 
     if (!matches.length) {
       box.innerHTML = '<div class="search-result-empty">No matches</div>';
@@ -4052,10 +3860,20 @@
     renderPartyMenu();
   }
 
-  function removeDishFromCourse(courseKey, id) {
+  function addCustomToCourse(courseKey, name) {
+    name = (name || "").trim();
+    if (!name) return;
+    var p = currentParty();
+    if (!p.menu[courseKey]) p.menu[courseKey] = [];
+    p.menu[courseKey].push({ custom: true, name: name });
+    saveUserData();
+    renderPartyMenu();
+  }
+
+  function removeDishFromCourse(courseKey, item) {
     var p = currentParty();
     var arr = p.menu[courseKey] || [];
-    var i = arr.indexOf(id);
+    var i = arr.indexOf(item);
     if (i !== -1) arr.splice(i, 1);
     saveUserData();
     renderPartyMenu();
@@ -4063,13 +3881,19 @@
 
   // --- Printable menu ---
 
+  // Returns the dish blurb up to (and including) the first full stop, for the printed menu.
+  function firstSentence(text) {
+    text = (text || "").trim();
+    if (!text) return "";
+    var dot = text.indexOf(". ");
+    if (dot !== -1) return text.slice(0, dot + 1);
+    if (text.charAt(text.length - 1) === ".") return text;
+    return text;
+  }
+
   function printMenu() {
     var p = currentParty();
     if (!p) return;
-
-    // Pick a tile index to decorate the header strip
-    var tileIdx = Math.abs(p.id.split("").reduce(function (a, c) { return a + c.charCodeAt(0); }, 0)) % 45;
-    var tileUrl = "images/tiles/t" + (tileIdx + 1) + ".jpg";
 
     // Build or reuse the print container
     var el = document.getElementById("print-menu");
@@ -4080,8 +3904,6 @@
     }
 
     var html = "";
-    // Tile header band
-    html += '<div class="pm-tile-band" style="background-image:url(\'' + escapeHtml(tileUrl) + '\')"></div>';
     // Inner body
     html += '<div class="pm-body">';
     html += '<h1 class="pm-title">' + escapeHtml(p.name || "Dinner party") + "</h1>";
@@ -4093,20 +3915,36 @@
     }
     html += '<div class="pm-courses">';
     PARTY_COURSES.forEach(function (course) {
-      var ids = (p.menu[course.key] || []);
-      if (!ids.length) return;
+      var items = (p.menu[course.key] || []);
+      if (!items.length) return;
       html += '<div class="pm-course">';
       html += '<h2 class="pm-course-label">' + escapeHtml(course.label) + "</h2>";
       html += "<ul class='pm-dish-list'>";
-      ids.forEach(function (id) {
-        var r = recipeById(id);
-        if (r) html += "<li>" + escapeHtml(r.name) + "</li>";
+      items.forEach(function (item) {
+        var dishName, dishTileIdx, dishDesc = "";
+        if (typeof item === "string") {
+          var r = recipeById(item);
+          if (!r) return;
+          dishName = r.name;
+          dishTileIdx = tileIndexForRecipe(r.id);
+          dishDesc = firstSentence(r.description);
+        } else if (item && item.custom) {
+          dishName = item.name;
+          dishTileIdx = tileIndexForGuest(item.name);
+        } else {
+          return;
+        }
+        var dishTileUrl = "images/tiles/t" + (dishTileIdx + 1) + ".jpg";
+        html += "<li>";
+        html += '<img class="pm-dish-tile" src="' + escapeHtml(dishTileUrl) + '" alt="">';
+        html += '<span class="pm-dish-text">';
+        html += '<span class="pm-dish-name">' + escapeHtml(dishName) + "</span>";
+        if (dishDesc) html += '<span class="pm-dish-desc">' + escapeHtml(dishDesc) + "</span>";
+        html += "</span></li>";
       });
       html += "</ul></div>";
     });
     html += "</div>";
-    // Bottom tile strip
-    html += '<div class="pm-tile-band pm-tile-bottom" style="background-image:url(\'' + escapeHtml(tileUrl) + '\')"></div>';
     html += "</div>";
 
     el.innerHTML = html;
@@ -4599,10 +4437,19 @@
   }
 
   function isStapleName(key) {
-    return STAPLES.some(function (st) {
-      var re = new RegExp("(^|\\b)" + st.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(\\b|$)");
-      return re.test(key);
-    });
+    var k = String(key).toLowerCase().trim();
+    // Strip common descriptors so "caster sugar"/"sea salt"/"ground black pepper" still match,
+    // but multi-word ingredients like "sugar snap peas" or "bell pepper" do not.
+    var ADJ = ["caster", "granulated", "brown", "white", "sea", "kosher", "table",
+               "fine", "flaky", "ground", "unsalted", "salted", "fresh", "dried",
+               "extra", "virgin"];
+    function matchesStaple(s) {
+      var stripped = s.split(/\s+/).filter(function (w) { return ADJ.indexOf(w) === -1; }).join(" ");
+      return STAPLES.indexOf(stripped) !== -1 || STAPLES.indexOf(s) !== -1;
+    }
+    // A combined line like "salt and pepper" counts only if every part is itself a staple.
+    var parts = k.split(/\s+(?:and|&)\s+/);
+    return parts.every(function (p) { return matchesStaple(p.trim()); });
   }
 
   function combineIngredients(parsedList) {

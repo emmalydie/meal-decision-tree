@@ -25,6 +25,10 @@ Everything runs in a single IIFE in `app.js`. There is no module system.
 
 **Screen system:** All screens exist in the HTML simultaneously as `.screen` divs. `showScreen(name)` removes `active` from all and adds it to `#screen-{name}`. The active `state.screen` string tracks where the user is. Screens: `landing`, `question`, `results`, `browse`, `planner`, `add-recipe`, `recipe`, `shopping`, `settings`, `error`, `parties`, `dinner-party`.
 
+Two fixed global buttons live outside the screens (siblings of the `.screen` divs): the `.settings-gear` (top-right, `#btn-settings`) shown **only** on landing, and the `.home-btn` (top-left, `#btn-home`, 🏠 → `startOver()`) shown on **every screen except** landing. `showScreen()` toggles both. On the question screen, `.question-header` carries extra `padding-left` so its back arrow clears the home button.
+
+In the decision tree, skippable questions (`allowSkip: true`) show a **"No preference"** button (`#btn-skip` → `skipQuestion()`), which advances without applying that question's filter. (The label was formerly "Skip this question"; behavior is unchanged.)
+
 **Filtering pipeline (`filterRecipes`):**
 1. Starts from `eligibleForSuggestions()` (all recipes minus removed and 1-star rated)
 2. Applies each answered question's `filterLogic` against the recipe's corresponding field
@@ -57,7 +61,7 @@ Valid enum values:
 - `cuisine`: mediterranean, east-asian, south-asian, mexican, italian, middle-eastern, american, french, other
 - `effort`: low, medium, high
 - `mood`: comforting, fresh, impressive, quick-fix, adventurous
-- `meal`: breakfast, lunch, dinner, snack, any
+- `meal`: breakfast, lunch, dinner, snack, dessert, drinks, any
 - `dietary`: vegetarian, vegan, gluten-free, dairy-free
 
 ## Adding recipes — `/add` command
@@ -128,7 +132,7 @@ Each recipe card has a decorative ceramic tile frame (Mediterranean/Middle-Easte
 
 **Weekly planner** stores data keyed by ISO date string (`YYYY-MM-DD`) for the current Mon–Sun week. `pruneOldPlan()` removes any keys outside the current week on every planner open.
 
-**Shopping list** (`#screen-shopping`, opened via "🛒 Make shopping list" on the planner) is generated from all recipes planned into the week. `buildShoppingList()` gathers each recipe's ingredients via `getRecipeIngredients()` (priority: `userData.ingredientOverrides[id]` → `recipe.ingredients` → none), then `parseIngredient()` + `combineIngredients()` sum amounts across recipes (best-effort: same units sum, mismatches list side-by-side; quantities render as fractions via `formatQty`). Items are split into a **main list** and a **Staples** section using the `STAPLES` array. Recipes with no stored ingredients appear in a "needs ingredients" section with a source link and a paste box; pasted lines are saved to `userData.ingredientOverrides` (which also enriches the recipe detail screen). Tick state (`userData.shopping.checked`) and user-added extras (`userData.shopping.extras`) persist in localStorage. "Copy list" uses `navigator.clipboard` with an `execCommand` fallback for `file://`.
+**Shopping list** (`#screen-shopping`, opened via "🛒 Make shopping list" on the planner) is generated from all recipes planned into the week. `buildShoppingList()` gathers each recipe's ingredients via `getRecipeIngredients()` (priority: `userData.ingredientOverrides[id]` → `recipe.ingredients` → none), then `parseIngredient()` + `combineIngredients()` sum amounts across recipes (best-effort: same units sum, mismatches list side-by-side; quantities render as fractions via `formatQty`). Items are split into a **main list** and a **Staples** section using the `STAPLES` array. `isStapleName(key)` decides which: it strips common descriptor adjectives (caster, sea, ground, extra, virgin, etc.) and then requires the result to **equal** a `STAPLES` entry (not a substring match) — so "caster sugar"/"sea salt" count as staples but "sugar snap peas"/"bell pepper" do not. A combined line like "salt and pepper" counts only if every "and"/"&" part is itself a staple. Recipes with no stored ingredients appear in a "needs ingredients" section with a source link and a paste box; pasted lines are saved to `userData.ingredientOverrides` (which also enriches the recipe detail screen). Tick state (`userData.shopping.checked`) and user-added extras (`userData.shopping.extras`) persist in localStorage. "Copy list" uses `navigator.clipboard` with an `execCommand` fallback for `file://`.
 
 **Metric/Imperial toggle** — an iOS-style toggle (app colour scheme, not Apple green) present in two places:
 - **Shopping list header** — controls `shoppingUnitMode` (non-persisted, default `"metric"`), applied in `combineIngredients()` via `applyUnitMode()` after quantities are summed.

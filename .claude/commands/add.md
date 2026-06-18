@@ -11,7 +11,7 @@ Your job is to:
    - `effort` — `"low"` (under 30 min), `"medium"` (30–60 min), or `"high"` (60+ min), inferred from cooking time
    - `mood` — array of any that apply: `"comforting"`, `"fresh"`, `"impressive"`, `"quick-fix"`, `"adventurous"`
    - `time` — total time in minutes as a number
-   - `meal` — one of: `"breakfast"`, `"lunch"`, `"dinner"`, `"snack"`, `"any"`
+   - `meal` — one of: `"breakfast"`, `"lunch"`, `"dinner"`, `"snack"`, `"dessert"`, `"drinks"`, `"any"`
    - `dietary` — array of any that apply: `"vegetarian"`, `"vegan"`, `"gluten-free"`, `"dairy-free"`
    - `keyIngredients` — array of 4–8 main ingredient names (lowercase, no quantities), e.g. `["aubergine", "tahini", "lemon"]`
    - `pantryFriendly` — `true` if makeable from common storecupboard items, otherwise `false`
