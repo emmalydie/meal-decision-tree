@@ -1,4 +1,4 @@
-The user wants to add a new recipe to the meal decision tree app. They will paste raw recipe text (copied from a website, cookbook, or anywhere else).
+The user wants to add a new recipe to the meal decision tree app. They will either paste raw recipe text or share a screenshot or photo of the recipe (from a website, cookbook, handwritten card, or anywhere else). If they share an image, read it carefully before extracting fields — zoom in mentally on ingredient lists and method steps, which are often small or dense. If part of the image is cut off or illegible, note what's missing rather than guessing.
 
 Your job is to:
 

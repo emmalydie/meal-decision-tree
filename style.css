@@ -684,6 +684,10 @@ body {
   margin-bottom: 24px;
 }
 
+.more-options-section .recipe-card {
+  text-align: left;
+}
+
 .more-options-section::before {
   content: "✦ ✦ ✦";
   display: block;
